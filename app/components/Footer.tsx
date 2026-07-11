@@ -95,7 +95,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="label c-muted" style={{ marginBottom: 3 }}>Education</p>
-              <p className="body-sm c-muted">M.S. CS · CSUN · 3.9 GPA</p>
+              <p className="body-sm c-muted">M.S. CS · CSUN · 3.92 GPA</p>
             </div>
           </div>
         </motion.div>

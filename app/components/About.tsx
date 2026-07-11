@@ -10,8 +10,8 @@ const TIMELINE = [
   { year: "2022", title: "Community Chef",            desc: "GDSC Content Lead — organized workshops for 200+ students, led a team of 8.", sym: "◈" },
   { year: "2023", title: "First Production System",   desc: "Freelance ML Engineer — deep learning models, Docker pipelines, production APIs.", sym: "◇" },
   { year: "2024", title: "Crossed the Ocean",         desc: "B.Tech complete (9.21 GPA). Relocated to Los Angeles for M.S. CS at CSUN.", sym: "◆" },
-  { year: "2025", title: "Quality Tasting Specialist",desc: "Handshake AI — evaluated 1,000+ LLM outputs, reduced inconsistencies by 20%.", sym: "◉" },
-  { year: "2026", title: "Kitchen is Open",           desc: "M.S. complete (3.9 GPA, May 2026). Ready to ship intelligent systems full-time.", sym: "▲" },
+  { year: "2025", title: "Generative AI Analyst",     desc: "Handshake AI — evaluated 1,000+ LLM outputs, reduced inconsistencies by 20%.", sym: "◉" },
+  { year: "2026", title: "Kitchen is Open",           desc: "M.S. complete (3.92 GPA, May 2026). Ready to ship intelligent systems full-time.", sym: "▲" },
 ];
 
 function ProfilePhoto() {
@@ -62,7 +62,7 @@ export default function About() {
                 {[
                   { sym: "◉", label: "Location",   val: resume.location },
                   { sym: "◎", label: "Education",  val: "M.S. Computer Science, CSUN" },
-                  { sym: "◆", label: "GPA",        val: "3.9 / 4.0" },
+                  { sym: "◆", label: "GPA",        val: "3.92 / 4.0" },
                   { sym: "◈", label: "Experience", val: "3+ years ML Engineering" },
                   { sym: "▲", label: "Email",      val: resume.email },
                 ].map(({ sym, label, val }) => (

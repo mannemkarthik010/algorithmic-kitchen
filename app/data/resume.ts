@@ -65,7 +65,7 @@ export const resume = {
       finalTaste: "Automated expense parsing · Real-time balance calculation",
       complexity: 4,
       github: "https://github.com/mannemkarthik010/splitwise-pro",
-      demo: null,
+      demo: "https://web-karthik-mannem.vercel.app/auth/login",
       problem: "Group expense tracking apps require manual data entry. Receipts get lost, splits are miscalculated, and settlement is tedious.",
       solution: "Combined OCR (Google Vision) with an LLM extraction step to automatically parse receipt images into structured expense records, then calculate optimal settlement paths.",
       architecture: [
@@ -203,10 +203,10 @@ export const resume = {
 
   experience: [
     {
-      role: "AI Model Evaluation Analyst",
+      role: "Generative AI Analyst",
       kitchenRole: "Quality Tasting Specialist",
       company: "Handshake AI",
-      period: "Sep 2025 – Present",
+      period: "Sep 2025 – Apr 2026",
       icon: "◈",
       bullets: [
         "Evaluated 1,000+ LLM outputs using structured quality benchmarks",
@@ -219,7 +219,7 @@ export const resume = {
       role: "Machine Learning Engineer",
       kitchenRole: "Custom AI Recipe Builder",
       company: "Freelance",
-      period: "Aug 2023 – Present",
+      period: "Aug 2023 – Jun 2024",
       icon: "◇",
       bullets: [
         "Designed and deployed deep learning models (LSTM, CNN) for 3+ client applications",
@@ -240,22 +240,10 @@ export const resume = {
         "Coordinated cross-campus technical collaborations",
       ],
     },
-    {
-      role: "Board of Directors – Facilities & Operations",
-      kitchenRole: "Kitchen Infrastructure Lead",
-      company: "University Student Union, CSUN",
-      period: "Aug 2024 – Present",
-      icon: "◆",
-      bullets: [
-        "Oversaw campus infrastructure impacting 38,000+ students",
-        "Managed a $5M operational budget",
-        "Improved sustainability, accessibility, and space utilization",
-      ],
-    },
   ],
 
   education: [
-    { degree: "M.S. Computer Science", school: "California State University, Northridge", period: "Aug 2024 – May 2026", gpa: "3.9 / 4.0", location: "Los Angeles, CA" },
+    { degree: "M.S. Computer Science", school: "California State University, Northridge", period: "Aug 2024 – May 2026", gpa: "3.92 / 4.0", location: "Los Angeles, CA" },
     { degree: "B.Tech Computer Science & Engineering", school: "Vel Tech Rangarajan Dr. Sagunthala R&D Institute", period: "Aug 2020 – May 2024", gpa: "9.21 / 10.00", location: "Chennai, India" },
   ],
 
@@ -517,16 +505,16 @@ export const careerTimeline = [
   {
     year: "2024",
     title: "LLM Systems & CSUN",
-    desc: "M.S. CS at CSUN. Built RAG pipelines, SplitWise AI, joined Handshake AI for LLM evaluation.",
-    tags: ["LangChain", "RAG", "FAISS", "LLM Eval", "GPA 3.9"],
+    desc: "M.S. CS at CSUN. Built RAG pipelines and SplitWise AI.",
+    tags: ["LangChain", "RAG", "FAISS", "GPA 3.92"],
     milestone: true,
   },
   {
     year: "2025",
-    title: "Advanced AI Engineering",
-    desc: "Deep RAG workflows, production evaluation frameworks, LLM alignment research at CSUN.",
-    tags: ["RAG", "Alignment", "Production Systems", "Research"],
-    milestone: false,
+    title: "Generative AI Analyst",
+    desc: "Joined Handshake AI as a Generative AI Analyst — deep RAG workflows, production evaluation frameworks, LLM alignment research at CSUN.",
+    tags: ["RAG", "Alignment", "LLM Eval", "Handshake AI"],
+    milestone: true,
   },
   {
     year: "2026",
