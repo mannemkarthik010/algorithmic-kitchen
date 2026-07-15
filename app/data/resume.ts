@@ -29,7 +29,7 @@ export const resume = {
       finalTaste: "Reduced hallucinations · Personalized healthcare recommendations",
       complexity: 4,
       github: "https://github.com/mannemkarthik010/preventive-care-agent",
-      demo: null,
+      demo: "https://preventive-care-recommendation.streamlit.app/",
       problem: "Healthcare professionals lack accessible, personalized preventive care guidance. Generic checklists don't account for patient-specific risk factors, age, or medical history.",
       solution: "Built a RAG pipeline that ingests CDC preventive care guidelines as a knowledge base, then retrieves the most relevant documents for each patient profile before generating personalized recommendations via an LLM.",
       architecture: [
