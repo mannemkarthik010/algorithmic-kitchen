@@ -10,7 +10,7 @@ const CMD: Record<string, () => Line[]> = {
     { text: "Available commands:", type: "system" },
     { text: "  load projects          — list all signature recipes", type: "output" },
     { text: "  inspect <slug>         — deep dive a project", type: "output" },
-    { text: "    slugs: rag-agent  splitwise  cnn  recommender  bert", type: "gold" },
+    { text: "    slugs: rag-agent  splitwise  cnn  recommender  bert  retail", type: "gold" },
     { text: "  inspect skills         — ingredient shelf", type: "output" },
     { text: "  show bookshelf         — the reading archive", type: "output" },
     { text: "  open currently-reading — current book spotlight", type: "output" },
@@ -77,6 +77,17 @@ const CMD: Record<string, () => Line[]> = {
       { text: `   R²         : 0.81 on test set`, type: "output" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Key lesson : ${p.learned}`, type: "output" },
+    ];
+  },
+  "inspect retail": () => {
+    const p = resume.projects[5];
+    return [
+      { text: `◈  ${p.title}`, type: "gold" },
+      { text: `   WAPE       : 7.9% (won 154/240 series)`, type: "output" },
+      { text: `   Coverage   : 74.2% measured vs. 80% nominal`, type: "output" },
+      { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
+      { text: `   Key lesson : ${p.learned}`, type: "output" },
+      { text: `   GitHub     : ${p.github}`, type: "gold" },
     ];
   },
 

@@ -200,7 +200,7 @@ export default function Projects() {
             index="§ 03"
             label="Signature Recipes"
             title={<>Tonight&apos;s <span className="t-grad">Menu</span></>}
-            subtitle="Five production-grade AI systems — crafted from raw data, seasoned with algorithms, served ready to ship."
+            subtitle="Six production-grade AI systems — crafted from raw data, seasoned with algorithms, served ready to ship."
           />
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: "var(--space-3)" }}>
