@@ -208,6 +208,7 @@ function CurrentlyReadingHero() {
   const book = bookArchive.engineering[0];
   return (
     <motion.div
+      className="current-read-hero"
       initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

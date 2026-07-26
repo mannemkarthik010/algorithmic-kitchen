@@ -979,6 +979,25 @@ section#reading .bookshelf-row::-webkit-scrollbar { display: none; }
 
   /* CTA button group stacks */
   .btn { font-size: 11px; padding: 11px 22px; }
+
+  /* Experience card — date wraps below content instead of overflowing off-screen */
+  .exp-card-grid {
+    grid-template-columns: auto 1fr !important;
+  }
+  .exp-period {
+    grid-column: 1 / -1 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  /* Currently-reading spotlight card — stack book above text instead of overflowing off-screen */
+  .current-read-hero {
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+    text-align: center !important;
+  }
 }
 
 /* ── 480px and below (small mobile) ── */

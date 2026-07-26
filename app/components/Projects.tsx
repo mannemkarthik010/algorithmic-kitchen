@@ -109,9 +109,9 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
             style={{ position: "absolute", top: 12, right: 12, padding: "3px 9px", background: "rgba(200,145,58,0.08)", border: "1px solid rgba(200,145,58,0.2)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(200,145,58,0.55)", cursor: "pointer", zIndex: 2 }}
           >flip ↺</div>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-1)", zIndex: 1 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 22, marginBottom: "var(--space-1)", zIndex: 1 }}>
             <Badge>{project.category}</Badge>
-            <span className="label c-muted" style={{ fontSize: 8, opacity: 0.45 }}>{project.dishName}</span>
+            <span className="label c-muted" style={{ fontSize: 8, opacity: 0.45, paddingRight: 2 }}>{project.dishName}</span>
           </div>
           <h3 className="heading-lg c-cream" style={{ marginBottom: "var(--space-1)", lineHeight: 1.2 }}>{project.title}</h3>
           <div><MiniPipeline steps={project.architecture} /></div>

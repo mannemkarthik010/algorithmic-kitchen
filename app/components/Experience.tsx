@@ -22,7 +22,7 @@ export default function Experience() {
               <motion.div whileHover={{ y: -3, borderColor: "var(--border-hover)" }}
                 className="card"
                 style={{ padding: "var(--space-3) var(--space-4)", transition: "border-color 0.22s" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "var(--space-3)", alignItems: "flex-start" }}>
+                <div className="exp-card-grid" style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "var(--space-3)", alignItems: "flex-start" }}>
                   <div style={{ width: 42, height: 42, borderRadius: "var(--radius-md)", background: "rgba(200,145,58,0.08)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <span className="mono c-gold" style={{ fontSize: 14, opacity: 0.58 }}>{exp.icon}</span>
                   </div>
@@ -43,7 +43,7 @@ export default function Experience() {
                     </ul>
                   </div>
 
-                  <span className="mono c-muted" style={{ fontSize: 11, whiteSpace: "nowrap", textAlign: "right", flexShrink: 0 }}>{exp.period}</span>
+                  <span className="mono c-muted exp-period" style={{ fontSize: 11, whiteSpace: "nowrap", textAlign: "right", flexShrink: 0 }}>{exp.period}</span>
                 </div>
               </motion.div>
             </Item>
