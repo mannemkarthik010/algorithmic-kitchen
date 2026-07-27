@@ -44,3 +44,13 @@ next-env.d.ts
 # macOS
 __MACOSX
 .DS_Store
+
+# LaTeX build artifacts — only resume/resume.tex is tracked, the PDF
+# is compiled by CI into public/Karthik_Mannem_Resume.pdf
+resume/*.pdf
+resume/*.aux
+resume/*.log
+resume/*.out
+resume/*.fls
+resume/*.fdb_latexmk
+resume/*.synctex.gz
