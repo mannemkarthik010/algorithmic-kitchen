@@ -205,7 +205,7 @@ function BookDetailPanel({ book, onOpen }: { book: EngBook | null; onOpen: (b: B
 ══════════════════════════════════════════════════════════ */
 function CurrentlyReadingHero() {
   const rm = useReducedMotion();
-  const book = bookArchive.engineering[0];
+  const book = bookArchive.thinking[0];
   return (
     <motion.div
       className="current-read-hero"

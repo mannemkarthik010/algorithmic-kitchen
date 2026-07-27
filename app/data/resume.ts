@@ -294,9 +294,9 @@ export const resume = {
   photo: "/images/karthik.jpg",          // drop your headshot at public/images/karthik.jpg
   resumePdf: "/Karthik_Mannem_Resume.pdf",
 
-  currentlyReading: "Build a Large Language Model From Scratch",
-  currentlyReadingAuthor: "Sebastian Raschka",
-  currentlyReadingNote: "Currently studying transformer internals, attention mechanisms, tokenization, and LLM architecture design from first principles.",
+  currentlyReading: "Quiet: The Power of Introverts in a World That Can't Stop Talking",
+  currentlyReadingAuthor: "Susan Cain",
+  currentlyReadingNote: "Reading about the quiet, deliberate kind of focus that deep engineering work actually requires — a useful counterweight to a field that often rewards the loudest voice in the room.",
   currentProject: "Preventive Care Recommendation Agent v2",
   currentPaper: "Attention Is All You Need (Re-reading for depth)",
 };
@@ -350,6 +350,17 @@ export const bookArchive = {
     },
   ],
   thinking: [
+    {
+      title: "Quiet: The Power of Introverts in a World That Can't Stop Talking",
+      author: "Susan Cain",
+      spineColor: "#2A3444",
+      status: "Reading",
+      genre: "Psychology",
+      lesson: "Deep, sustained focus is an introvert's native advantage — not something to apologize for in a field that often equates loudness with confidence.",
+      reflection: "This book reframed quiet, heads-down engineering work as a strength rather than something to compensate for. The best debugging and architecture thinking I do happens alone, not in a room full of people talking.",
+      connection: "Shapes how I structure my own work: long uninterrupted blocks for hard ML problems, and deliberate, prepared communication over improvised meetings.",
+      concept: "Temperament, deep work, the difference between confidence and extroversion.",
+    },
     {
       title: "Focus on What Matters",
       author: "Darius Foroux",
