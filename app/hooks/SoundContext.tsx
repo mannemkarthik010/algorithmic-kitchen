@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useRef, useCallback, ReactNode, MutableRefObject } from "react";
+import { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode, MutableRefObject } from "react";
 
 interface SoundContextType {
   muted: boolean;
@@ -18,19 +18,25 @@ const SoundContext = createContext<SoundContextType>({
 });
 
 export function SoundProvider({ children }: { children: ReactNode }) {
-  // Lazy initialiser — reads localStorage once on mount, avoids setState-in-effect
-  const [muted, setMuted] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("ak_muted") === "true";
-  });
+  // Always starts false so the server-rendered HTML and the client's first
+  // render match exactly; the real saved preference is applied right after
+  // mount, once localStorage is actually available (avoids a hydration
+  // mismatch for anyone who previously muted the site).
+  const [muted, setMuted] = useState(false);
   const registry = useRef<Map<string, HTMLAudioElement>>(new Map());
+
+  useEffect(() => {
+    // Intentional: localStorage only exists client-side, so this can't be read
+    // during the initial render without causing a hydration mismatch. Syncing
+    // here, once, after mount is the correct pattern for this case.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (localStorage.getItem("ak_muted") === "true") setMuted(true);
+  }, []);
 
   const toggle = useCallback(() => {
     setMuted((prev) => {
       const next = !prev;
-      if (typeof window !== "undefined") {
-        localStorage.setItem("ak_muted", String(next));
-      }
+      localStorage.setItem("ak_muted", String(next));
       if (next) {
         // Muting: stop every currently playing sound immediately, including any ambient loop.
         registry.current.forEach((audio) => {
