@@ -4,15 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AKMark } from "./ui";
 
 const NAV = [
-  { label: "story",      href: "#about"     },
-  { label: "recipes",    href: "#projects"  },
-  { label: "expertise",  href: "#expertise" },
-  { label: "journey",    href: "#timeline"  },
-  { label: "library",    href: "#reading"   },
-  { label: "reserve",    href: "#contact"   },
+  { label: "story",         href: "#about"          },
+  { label: "recipes",       href: "#projects"       },
+  { label: "expertise",     href: "#expertise"      },
+  { label: "journey",       href: "#timeline"       },
+  { label: "contributions", href: "#contributions"  },
+  { label: "library",       href: "#reading"        },
+  { label: "reserve",       href: "#contact"        },
 ];
 
-const SECTIONS = ["about","projects","skills","experience","reading","contact"];
+const SECTIONS = ["about","projects","skills","experience","contributions","reading","contact"];
 
 export default function Nav() {
   const [scrolled, setScrolled]   = useState(false);

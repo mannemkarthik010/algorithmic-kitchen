@@ -7,6 +7,7 @@ import ExpertiseLab from "./components/ExpertiseLab";
 import Skills from "./components/Skills";
 import CareerTimeline from "./components/CareerTimeline";
 import Experience from "./components/Experience";
+import Contributions from "./components/Contributions";
 import LiveKitchen from "./components/LiveKitchen";
 import ReadingRoom from "./components/ReadingRoom";
 import Contact from "./components/Contact";
@@ -38,6 +39,8 @@ export default function Home() {
       <SteamDivider />
       <Experience />
       <SectionDivider />
+      <Contributions />
+      <SteamDivider />
       <LiveKitchen />
       <SteamDivider />
       <ReadingRoom />
