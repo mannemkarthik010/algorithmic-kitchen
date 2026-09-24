@@ -198,7 +198,71 @@ def _format_target(base: str, target: str) -> str:
     ],
   },
 
-  /* ── 3. PyTorch Flight Recorder — closed, superseded ─────── */
+  /* ── 3. PyTorch DCP grad_dtype — open, changes requested ─── */
+  {
+    slug: "pytorch-dcp-grad-dtype",
+    repo: "pytorch/pytorch",
+    repoUrl: "https://github.com/pytorch/pytorch",
+    stars: "102k",
+    language: "Python",
+    title: "Respecting Tensor.grad_dtype when priming optimizer state for checkpointing",
+    excerpt:
+      "Optimizers holding parameters with a custom gradient dtype couldn't be checkpointed at all. The fix suggested on the issue doesn't work for Adam — here is why. Open, with changes requested and an earlier competing PR.",
+    prNumber: 191998,
+    prUrl: "https://github.com/pytorch/pytorch/pull/191998",
+    prStatus: "open",
+    statusLabel: "Open · Changes requested",
+    issueNumber: 191918,
+    issueUrl: "https://github.com/pytorch/pytorch/issues/191918",
+    diffStat: "2 files · +42 / −7",
+    tags: ["Python", "PyTorch", "Distributed Checkpoint", "Open Source"],
+    body: [
+      {
+        type: "p",
+        text: "This one is unresolved, and I'm presenting it that way. PR #191998 is open with changes requested, and another contributor's earlier PR (#191925) targets the same issue. I'm including it because the analysis is the part worth reading: the fix suggested on the issue looks right and isn't.",
+      },
+      { type: "h", text: "The bug" },
+      {
+        type: "p",
+        text: "_init_optim_state() in torch.distributed.checkpoint primes an optimizer by assigning a zero gradient at the parameter's dtype and calling step(). A parameter can declare a different gradient dtype through Tensor.grad_dtype — the mixed-precision setup of an fp32 master weight accumulating bf16 gradients — and autograd rejects a gradient that doesn't match it. Any optimizer holding such parameters therefore could not go through get_optimizer_state_dict() or get_state_dict() at all.",
+      },
+      { type: "h", text: "Why the obvious fix isn't enough" },
+      {
+        type: "p",
+        text: "The suggestion on the issue was to prime at grad_dtype instead. That clears the autograd check, but then fails inside the step() two lines later, because the optimizers require the gradient to match the parameter dtype:",
+      },
+      {
+        type: "code",
+        lang: "text",
+        code: `Adam   -> RuntimeError: expected dtype float for \`end\` but got dtype c10::BFloat16
+AdamW  -> RuntimeError: expected dtype float for \`end\` but got dtype c10::BFloat16`,
+      },
+      {
+        type: "p",
+        text: "That variant only appears to work on stateless optimizers like SGD, and on optimizers such as Adagrad that populate state in __init__ and so return at the `if optim.state` guard before ever reaching the priming code. In other words, it passes on the optimizers that don't exercise the bug and fails on the ones people actually checkpoint.",
+      },
+      { type: "h", text: "My approach" },
+      {
+        type: "p",
+        text: "Relax grad_dtype for the duration of the priming step. The priming gradient is all zeros and lr is forced to zero, so the dtype used cannot affect the resulting optimizer state. Two details mattered: the restore runs from a finally block so a failing step() can't leave grad_dtype clobbered on the caller's parameters; and gradients are cleared before grad_dtype is restored, because assigning grad_dtype while a gradient is attached raises an error. grad_dtype also has three states — unset, an explicit dtype, and explicitly None — and save-and-restore handles all three, where a fix keyed on `if param.grad_dtype is not None` would not.",
+      },
+      {
+        type: "p",
+        text: "My test, test_optim_state_dict_with_grad_dtype, sets grad_dtype=torch.bfloat16 on fp32 parameters, calls get_optimizer_state_dict() over Adam and SGD, and asserts the parameters are left exactly as found. It needs no GPU and no communication, and it fails on main with the RuntimeError above.",
+      },
+      { type: "h", text: "Where it stands" },
+      {
+        type: "list",
+        items: [
+          "A reviewer asked why not make the priming logic itself respect grad_dtype rather than temporarily overriding and restoring it. It's a fair design question — my answer on the thread is that the logic that runs here is torch.optim, so respecting grad_dtype would mean changing how the optimizers themselves handle mismatched dtypes.",
+          "A maintainer also pointed out another PR (#191925) that predates mine by about nine hours and addresses the same issue. I missed it before opening. I said on the thread that I'm happy for that one to land, and asked that the Adam/AdamW failure above be carried into it.",
+          "Two files, +42/−7. Status: open, changes requested. I'll update this when it resolves.",
+        ],
+      },
+    ],
+  },
+
+  /* ── 4. PyTorch Flight Recorder — closed, superseded ─────── */
   {
     slug: "pytorch-flight-recorder-gc",
     repo: "pytorch/pytorch",

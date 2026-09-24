@@ -12,7 +12,6 @@
 \usepackage{ragged2e}
 \usepackage[empty]{fullpage}
 \usepackage{wrapfig}
-\usepackage{lipsum}
 \usepackage{tabularx}
 \usepackage{titlesec}
 \usepackage{geometry}
@@ -103,7 +102,7 @@
 \newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*,labelsep=0mm]}
 \newcommand{\resumeHeadingSkillStart}{\begin{itemize}[leftmargin=*,itemsep=1.7mm, rightmargin=2ex]}
 \newcommand{\resumeItemListStart}{\begin{justify}\begin{itemize}[leftmargin=3ex, rightmargin=2ex, noitemsep,labelsep=1.2mm,itemsep=0mm]\small}
-\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{2mm}}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{0mm}}
 \newcommand{\resumeHeadingSkillEnd}{\end{itemize}\vspace{-2mm}}
 \newcommand{\resumeItemListEnd}{\end{itemize}\end{justify}\vspace{-2mm}}
 \newcommand{\cvsection}[1]{%
@@ -118,6 +117,15 @@
 \newcolumntype{C}{>{\centering\arraybackslash}X}%
 %---- End of Packages and Functions ------
 
+% ===== PAGE-FILL KNOB ==================================================
+% This is the ONLY number to touch to control how the page fills.
+% Content is sized to fill one full A4 page. If a gap remains at the
+% bottom, RAISE this value; if content spills onto page 2, LOWER it
+% (negative is fine). Useful range is about -4pt to 12pt. Recompile
+% after each change.
+\newcommand{\sectionsep}{-10pt}
+% =======================================================================
+
 %-------------------------------------------
 %%%%%%  CV STARTS HERE  %%%%%%%%%%%
 
@@ -127,184 +135,118 @@
 {
 %----------HEADER----------
 \begin{center}
-    {\Huge \textbf{KARTHIK MANNEM}}\\
-    \vspace{4pt}
-    Los Angeles, CA \\
-    747-347-6409 \;|\; mannemkarthik01@gmail.com \\
-    linkedin.com/in/karthik-mannem-2008b4225 \;|\; github.com/mannemkarthik010| \href{https://algorithmic-kitchen.vercel.app}{Portfolio}
+    {\Huge \textbf{KARTHIK \, MANNEM}}\\
+    \vspace{3pt}
+    {\small Los Angeles, CA \;$|$\; 747-347-6409 \;$|$\; \href{mailto:mannemkarthik01@gmail.com}{mannemkarthik01@gmail.com}}\\
+    \vspace{1pt}
+    {\small \href{https://www.linkedin.com/in/karthik-mannem-2008b4225}{linkedin.com/in/karthik-mannem-2008b4225} \;$|$\;
+    \href{https://github.com/mannemkarthik010}{github.com/mannemkarthik010} \;$|$\;
+    \href{https://karthikmannem.com}{karthikmannem.com}}
 \end{center}
 
 \vspace{-8pt}
 
 }
-%-----------SUMMARY-----------
-\section{\textbf{Summary}}
-\justify
-Machine Learning Engineer who approaches problem-solving as an end-to-end AI pipeline, ingesting complex real-world inputs, performing structured feature engineering, training and fine-tuning deep learning and transformer-based architectures, and deploying scalable inference systems. With 3+ years of experience across predictive modeling, computer vision, and LLM-powered Retrieval-Augmented Generation (RAG) workflows, I focus on evaluation rigor, performance optimization, and production-grade deployment.
-
-
-
-%-----------PROJECTS-----------
-\section{\textbf{Personal Projects}}
-\resumeSubHeadingListStart
-
-\resumeProject
-  {Retail Demand Intelligence Platform -- Forecasting, Anomaly Detection \& Agentic Q\&A}
-  {End-to-end forecasting system with a tool-calling LLM agent and a full AWS deployment.}
-  {}
-  {}
-  \resumeItemListStart
-    \item {Built a 3-model demand forecasting pipeline (seasonal-naive, Holt-Winters, gradient-boosted) across 240 store/department series with rolling-origin backtesting, selecting the winning model per series (gradient-boosted: 7.9\% WAPE, won 154/240 series); shipped 80\% prediction intervals and occlusion-based feature attribution, validating both against held-out data (74.2\% measured interval coverage vs. 80\% nominal) rather than asserting calibration.}
-    \item {Designed a 6-tool agentic Q\&A layer with a pluggable LLM backend (Anthropic/OpenAI/Bedrock), full audit-trail logging, retry/backoff with token-cost tracking, and a 37-case labeled eval harness scoring tool-routing accuracy in CI.}
-    \item {Closed the MLOps loop end-to-end: automated drift detection triggers per-series model re-selection with a logged audit trail, deployed to AWS (SageMaker, Lambda, Bedrock) via Terraform with CI and Docker verified passing.}
-    \item {\textbf{Tech:} Python, scikit-learn, Flask, Anthropic/OpenAI/Bedrock APIs, Terraform, AWS (SageMaker, Lambda, API Gateway), Docker, GitHub Actions}
-  \resumeItemListEnd
-
-\resumeProject
-  {Preventive Care Recommendation Agent | LLM + RAG (LangChain)}
-  {LLM-powered healthcare decision support system deployed publicly.}
-  {}
-  {}
-  \resumeItemListStart
-    \item {Designed and deployed an LLM-powered preventive care recommendation system that analyzes patient age, medical history, and risk factors to generate personalized screening and vaccination guidance aligned with CDC guidelines.}
-    \item {Architected a Retrieval-Augmented Generation (RAG) pipeline using LangChain, implementing document chunking, embeddings, and vector-based semantic retrieval.}
-    \item {Applied prompt engineering techniques to improve reasoning accuracy and reduce hallucinated medical outputs.}
-    \item {\textbf{Tech:} Python, LangChain, OpenAI API, Vector Search, Flask, Docker}
-  \resumeItemListEnd
-
-\resumeProject
-  {SplitWise Pro -- AI-Powered Expense Sharing Platform}
-  {Full-stack expense management system with OCR-based receipt parsing and cloud deployment.}
-  {}
-  {}
-  \resumeItemListStart
-    \item {Built a full-stack expense sharing platform for group expense tracking, receipt uploads, balance calculation, and optimized settlement generation.}
-    \item {Integrated Firebase Authentication with a Node.js/Express backend to secure protected routes and synchronize authenticated users with MongoDB Atlas.}
-    \item {Implemented AWS S3-based receipt storage with Google Vision API and OpenAI-assisted OCR parsing to extract structured expense details.}
-    \item {\textbf{Tech:} Next.js, TypeScript, Node.js, Express, MongoDB Atlas, Firebase Auth, AWS S3, Google Vision API, OpenAI API}
-  \resumeItemListEnd
-
-
-\resumeProject
-  {Estimating Product Length using BERT on Amazon Dataset}
-  {NLP-based regression model for structured e-commerce prediction.}
-  {}
-  {}
-  \resumeItemListStart
-    \item {Fine-tuned a pre-trained BERT model using product titles, descriptions, and category metadata to predict product length in a large-scale e-commerce dataset.}
-    \item {Implemented text preprocessing, tokenization, and feature engineering pipelines to improve model convergence and prediction stability.}
-    \item {Applied log transformation and model ensembling techniques to enhance regression performance and reduce prediction variance.}
-    \item {\textbf{Tech:} Python, BERT, HuggingFace Transformers, Scikit-learn, Pandas}
-  \resumeItemListEnd
-
-
-
-
-\resumeSubHeadingListEnd
-
-
-
-
-\vspace{-8.5mm}
-%-----------TECHNICAL SKILLS AND INTERESTS-----------
+%-----------TECHNICAL SKILLS-----------
 \section{\textbf{Technical Skills}}
-\begin{itemize}[leftmargin=0.05in, label={}]
+\begin{itemize}[leftmargin=0.05in, label={}, topsep=0pt, parsep=0pt, partopsep=0pt]
     \small{\item{
-     \textbf{Programming}{: Python, Java} \\ 
-     \textbf{Machine Learning \& Deep Learning}{: PyTorch, TensorFlow, Scikit-learn, OpenCV} \\ 
-     \textbf{NLP \& LLM Systems}{: Transformers, HuggingFace, LangChain, Prompt Engineering, Retrieval-Augmented Generation (RAG)} \\ 
-     \textbf{Data Processing}{: Pandas, NumPy, Feature Engineering, Data Preprocessing} \\ 
-     \textbf{Deployment \& Tools}{: Docker, Flask, REST APIs, Git, GitHub} \\ 
-     \textbf{Databases}{: MongoDB, PostgreSQL, MySQL} \\ 
-     \textbf{Cloud}{: AWS (EC2, S3)}
+     \textbf{Languages}{: Python, SQL, Java, TypeScript} \\
+     \textbf{ML \& Deep Learning}{: PyTorch, TensorFlow, scikit-learn, Gradient Boosting, Time-Series Forecasting, Backtesting} \\
+     \textbf{NLP \& LLM}{: Transformers, HuggingFace, LangChain, RAG, Tool-Calling Agents, Prompt Engineering, Eval Harnesses} \\
+     \textbf{Data}{: Pandas, NumPy, Feature Engineering, PostgreSQL, MySQL, MongoDB, ChromaDB / Vector Search} \\
+     \textbf{MLOps \& Cloud}{: AWS (SageMaker, Bedrock, Lambda, API Gateway, S3), Terraform, Docker, GitHub Actions, Flask}
     }}
 \end{itemize}
 
-\vspace{-16pt}
-
-%-----------EDUCATION-----------
-
-\section{\textbf{Education}}
-\resumeSubHeadingListStart
-
-\resumeSubheading
-  {California State University, Northridge}{Aug 2024 -- May 2026 }
-  {Master of Science in Computer Science | \textbf{CGPA: 3.92 / 4.0}}{Los Angeles, CA}
-
-\resumeSubheading
-  {Vel Tech Rangarajan Dr. Sagunthala R\&D Institute of Science and Technology}{Aug 2020 -- May 2024}
-  {Bachelor of Technology in Computer Science and Engineering | \textbf{CGPA: 9.21 / 10.00}}{Chennai, India}
-
-\resumeSubHeadingListEnd
-
-
-
+\vspace{\sectionsep}
 %------------EXPERIENCE-----------
 \section{\textbf{Experience}}
 \resumeSubHeadingListStart
 
 \resumeSubheading
-  {AI Model Evaluation Analyst}{Sep 2025 – April 2026}
-  {Handshake AI}{}
+  {AI Model Evaluation Analyst}{Sep 2025 -- Apr 2026}
+  {Handshake AI}{Remote}
   \resumeItemListStart
-    \item {Evaluated 1,000+ large language model (LLM) outputs using structured quality benchmarks to assess response accuracy, coherence, and factual consistency.}
-    \item {Identified recurring model failure cases and categorized hallucination patterns, contributing to improved prompt refinement workflows and reducing evaluation inconsistencies by ~20\%.}
-    \item {Collaborated with cross-functional teams to provide systematic feedback for improving model behavior across multiple domain-specific evaluation tasks.}
-    \item {Maintained high annotation agreement standards across large datasets, increasing benchmarking reliability and validation consistency.}
+    \item {Scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following.}
+    \item {Catalogued recurring failure modes and hallucination patterns into reusable categories that fed prompt-refinement workflows and tightened rubrics where graders disagreed.}
+    \item {Sustained high inter-annotator agreement and escalated ambiguous rubric cases, improving benchmark reliability.}
   \resumeItemListEnd
 
 \resumeSubheading
-  {Machine Learning Engineer (Freelance)}{Aug 2023 – June 2024}
-  {Self-Employed}{}
+  {Machine Learning Engineer (Freelance)}{Aug 2023 -- Jun 2024}
+  {Self-Employed}{Remote}
   \resumeItemListStart
-    \item {Designed and deployed deep learning models (LSTM, CNN) for 3+ client applications, delivering production-ready inference pipelines.}
-    \item {Built end-to-end ML workflows including data preprocessing, feature engineering, model training, and cross-validation, improving model training efficiency by ~30\%.}
-    \item {Containerized ML services using Docker and exposed REST APIs via Flask, enabling scalable real-time prediction systems with reduced deployment overhead.}
-    \item {Optimized data pipelines and training configurations, reducing overall training time by ~25\% and improving inference latency in deployed systems.}
+    \item {Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, feature engineering, cross-validated training, and the deployed inference endpoint.}
+    \item {Containerized ML services with Docker behind Flask REST APIs for reproducible deployment and real-time prediction.}
+    \item {Cut training time by roughly 25\% through pipeline profiling, batched preprocessing, and training-config tuning.}
   \resumeItemListEnd
 
 \resumeSubHeadingListEnd
 
-
-
-%-----------Positions of Responsibility-----------------
-\section{\textbf{Positions of Responsibility}}
-\vspace{-0.4mm}
+\vspace{\sectionsep}
+%-----------PROJECTS-----------
+\section{\textbf{Projects}}
 \resumeSubHeadingListStart
 
-
-
-\resumeSubheading
-  {Board of Directors – Facilities and Operations Specialist}{Aug 2024 – May 2026}
-  {University Student Union, CSUN}{}
+\resumeProject
+  {Retail Demand Intelligence Platform -- Forecasting, Anomaly Detection \& Agentic Q\&A}
+  {Python, scikit-learn, Flask, Anthropic/OpenAI/Bedrock, Terraform, AWS, Docker, GitHub Actions}
+  {\href{https://github.com/mannemkarthik010/retail-intel-platform}{GitHub}}
+  {\href{https://retail-intel-platform.vercel.app}{Live Demo}}
   \resumeItemListStart
-    \item {Oversaw campus infrastructure initiatives impacting 38,000+ students and managed a \$5M operational budget.}
-    \item {Collaborated with executive leadership to improve sustainability, accessibility, and space utilization across university facilities.}
-  \resumeItemListEnd
-  \resumeSubheading
-  {Content Lead}{Aug 2022 – Apr 2024}
-  {Google Developer Student Clubs}{}
-  \resumeItemListStart
-    \item {Led a team of 8+ members, organizing workshops and publishing technical content for 200+ participants.}
-    \item {Mentored contributors in Git/GitHub workflows and coordinated cross-campus technical collaborations.}
+    \item {Built a 3-model pipeline (seasonal-naive, Holt-Winters, GBM) over 240 series, rolling-origin backtested, selecting a winner per series (GBM: 7.9\% WAPE, best on 154/240).}
+    \item {Shipped 80\% prediction intervals and occlusion-based feature attribution, reporting measured coverage on held-out data (74.2\% vs. 80\% nominal) instead of asserting calibration.}
+    \item {Designed a 6-tool agentic Q\&A layer over a pluggable LLM backend with audit logging, retry/backoff, token-cost tracking, and a 37-case eval harness scoring tool routing in CI.}
+    \item {Closed the MLOps loop: drift detection triggers per-series re-selection with a logged audit trail; deployed to AWS (SageMaker, Lambda, Bedrock) via Terraform, Docker, and CI.}
   \resumeItemListEnd
 
-
+\resumeProject
+  {Preventive Care Recommendation Agent -- Agentic RAG for Clinical Decision Support}
+  {Python, LangChain, ChromaDB, Llama-3.1, Streamlit}
+  {\href{https://github.com/mannemkarthik010/Preventive-Care-Recommendation}{GitHub}}
+  {}
+  \resumeItemListStart
+    \item {Built a LangChain RAG pipeline over a ChromaDB index of cardiovascular and metabolic guideline PDFs, so recommendations cite retrieved text rather than model recall.}
+    \item {Combined a computed Framingham risk score with retrieved guidelines into a structured, risk-specific screening and vaccination plan.}
+  \resumeItemListEnd
 
 \resumeSubHeadingListEnd
-\vspace{-0.8mm}
-%-----------LICENSES AND CERTIFICATIONS-----------
-\section{\textbf{Licenses and Certifications}}
-\begin{itemize}[leftmargin=0.05in, label={}]
-    \small{\item{ 
-     \textbf{Artificial Intelligence and Machine Learning (Foundation and Associate)}{ -- AWS} \\ 
-     \textbf{Fundamentals of Deep Learning}{ -- NVIDIA} \\  
-     \textbf{Program Essentials in Python Programming (Intermediate Level)}{ -- CISCO} \\ 
-     \textbf{Model Validation 2 Expert}{ -- Handshake AI}
+
+\vspace{\sectionsep}
+%-----------OPEN-SOURCE CONTRIBUTIONS-----------
+\section{\textbf{Open-Source Contributions}}
+\begin{itemize}[leftmargin=0.05in, label={}, topsep=0pt, parsep=0pt, partopsep=0pt]
+    \small{\item{
+     \textbf{unionai-oss/pandera}{ -- 1 PR merged: \href{https://github.com/unionai-oss/pandera/pull/2437}{\#2437} supports itemsize-parameterized NumPy dtypes (\texttt{S16}, \texttt{U16}) in the pandas engine, with tests.} \\
+     \textbf{pytorch/pytorch}{ -- 1 PR approved, open for merge: \href{https://github.com/pytorch/pytorch/pull/191687}{\#191687} fixes \texttt{torch.fx} codegen for keyword/escaped module names, with tests.}
     }}
 \end{itemize}
-\filleft \textit{Updated: \today}
-\vspace{-16pt}
+
+\vspace{\sectionsep}
+%-----------EDUCATION-----------
+\section{\textbf{Education}}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+  {California State University, Northridge}{Aug 2024 -- May 2026}
+  {Master of Science in Computer Science \;$|$\; \textbf{CGPA: 3.92 / 4.0}}{Los Angeles, CA}
+
+\resumeSubheading
+  {Vel Tech Rangarajan Dr. Sagunthala R\&D Institute of Science and Technology}{Aug 2020 -- May 2024}
+  {Bachelor of Technology in Computer Science and Engineering \;$|$\; \textbf{CGPA: 9.21 / 10.00}}{Chennai, India}
+
+\resumeSubHeadingListEnd
+
+\vspace{\sectionsep}
+%-----------LEADERSHIP & CERTIFICATIONS-----------------
+\section{\textbf{Leadership \& Certifications}}
+\begin{itemize}[leftmargin=0.05in, label={}, topsep=0pt, parsep=0pt, partopsep=0pt]
+    \small{\item{
+     \textbf{Board of Directors, Facilities \& Ops}{ -- USU, CSUN (2024--26): 38,000+ students, \$5M budget.} \\
+     \textbf{Certifications}{: AWS AI \& ML (Foundation, Associate) \;$\cdot$\; NVIDIA Deep Learning Fundamentals}
+    }}
+\end{itemize}
 
 %-------------------------------------------
 \end{document}
