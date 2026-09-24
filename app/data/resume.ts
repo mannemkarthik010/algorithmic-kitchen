@@ -297,7 +297,7 @@ export const resume = {
   currentlyReading: "Quiet: The Power of Introverts in a World That Can't Stop Talking",
   currentlyReadingAuthor: "Susan Cain",
   currentlyReadingNote: "Reading about the quiet, deliberate kind of focus that deep engineering work actually requires — a useful counterweight to a field that often rewards the loudest voice in the room.",
-  currentProject: "Preventive Care Recommendation Agent v2",
+  currentProject: "Building an AI project with The Woodlands",
   currentPaper: "Attention Is All You Need (Re-reading for depth)",
 };
 

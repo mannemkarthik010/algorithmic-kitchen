@@ -134,7 +134,7 @@ export default function ContributionModal({ contribution, onClose }: {
                 </div>
                 <div>
                   <p className="label">Status</p>
-                  <p className="body-sm c-cream">{contribution.prStatus === "merged" ? "Merged" : "Approved, open"}</p>
+                  <p className="body-sm c-cream">{contribution.statusLabel}</p>
                 </div>
                 <div>
                   <p className="label">Issue</p>

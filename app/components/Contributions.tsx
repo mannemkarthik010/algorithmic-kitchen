@@ -19,7 +19,7 @@ export default function Contributions() {
           index="§ 05.7"
           label="Open Source"
           title={<>Beyond the <span className="t-grad">Day Job</span></>}
-          subtitle="Real contributions to real projects — including the writeups, the mistakes, and the proof that the fix actually works."
+          subtitle="Pull requests to open-source projects, with their real status — merged, open, or closed — and what each one taught me."
         />
 
         <Stagger style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
@@ -36,7 +36,7 @@ export default function Contributions() {
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: "var(--space-1)" }}>
                       <Badge>{c.repo}</Badge>
                       <Badge style={{ opacity: 0.6 }}>★ {c.stars}</Badge>
-                      <Badge style={{ opacity: 0.6 }}>{c.prStatus === "merged" ? "Merged" : "Approved · Open"}</Badge>
+                      <Badge style={{ opacity: 0.6 }}>{c.statusLabel}</Badge>
                     </div>
                     <p className="heading-md c-cream" style={{ marginBottom: 6, lineHeight: 1.25 }}>{c.title}</p>
                     <p className="body-sm c-muted" style={{ lineHeight: 1.65, marginBottom: "var(--space-1)" }}>{c.excerpt}</p>
