@@ -5,6 +5,8 @@ import { resume } from "../data/resume";
 import { AKMark, Btn } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";
 import { EASE, DUR } from "../lib/motion";
+import { STATUS } from "../lib/status";
+import { openProject, scrollToId } from "../lib/events";
 
 /* ─── Typewriter ─────────────────────────── */
 function Typewriter({ text, speed = 30, startDelay = 0 }: { text: string; speed?: number; startDelay?: number }) {
@@ -127,6 +129,7 @@ function CookbookArtifact({ visible }: { visible: boolean }) {
   const rm = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [flipped, setFlipped] = useState(false);
   const chips = ["LangChain","PyTorch","RAG","OpenAI","FAISS"];
   const chipPositions = [
     { top: "6%",  left: "-16%", delay: 0.6 },
@@ -194,6 +197,7 @@ function CookbookArtifact({ visible }: { visible: boolean }) {
           transformOrigin: "right center",
           borderRadius: "4px 0 0 4px",
           boxShadow: "inset -3px 0 8px rgba(0,0,0,0.6)",
+          opacity: flipped ? 0 : 1, transition: "opacity .3s",
         }}>
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <p style={{ fontFamily: "var(--f-mono)", fontSize: 8, color: "rgba(200,145,58,0.55)", letterSpacing: "0.2em", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>AK · 2026</p>
@@ -207,17 +211,29 @@ function CookbookArtifact({ visible }: { visible: boolean }) {
           transform: "rotateY(90deg)",
           transformOrigin: "left center",
           borderRadius: "0 2px 2px 0",
+          opacity: flipped ? 0 : 1, transition: "opacity .3s",
         }} />
 
+        {/* FLIPPER — click / Enter turns the book to "Tonight's Menu" */}
+        <motion.div
+          role="button"
+          tabIndex={0}
+          aria-pressed={flipped}
+          aria-label={flipped ? "Close the menu — show the cover" : "Open the cookbook to tonight's menu"}
+          onClick={() => setFlipped((f) => !f)}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlipped((f) => !f); } }}
+          animate={{ rotateY: flipped ? 180 : 0 }}
+          transition={rm ? { duration: 0 } : { duration: 0.9, ease: EASE }}
+          style={{ position: "relative", width: "100%", aspectRatio: "3/4", transformStyle: "preserve-3d", cursor: "pointer", outline: "none" }}
+        >
         {/* FRONT COVER */}
         <div style={{
-          width: "100%", aspectRatio: "3/4",
+          position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
           background: "linear-gradient(148deg, #1E1509 0%, #0E0906 55%, #080503 100%)",
           borderRadius: "4px 14px 14px 4px",
           boxShadow: "18px 22px 60px rgba(0,0,0,0.82), -2px 0 6px rgba(0,0,0,0.5), inset 20px 0 0 rgba(0,0,0,0.4), inset 0 0 40px rgba(200,145,58,0.04)",
           border: "1px solid rgba(200,145,58,0.5)",
-          position: "relative", overflow: "hidden",
-          transformStyle: "preserve-3d",
+          overflow: "hidden",
         }}>
           {/* Light catch — specular highlight */}
           <div style={{ position: "absolute", top: 0, left: 0, width: "55%", height: "45%", background: "radial-gradient(ellipse at 25% 20%, rgba(255,240,200,0.05), transparent 65%)", pointerEvents: "none" }} />
@@ -250,7 +266,46 @@ function CookbookArtifact({ visible }: { visible: boolean }) {
           {/* Spine-edge inner shadow */}
           <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "14%", background: "linear-gradient(90deg, rgba(0,0,0,0.6), transparent)", pointerEvents: "none" }} />
         </div>
+
+        {/* BACK — "Tonight's Menu" */}
+        <div style={{
+          position: "absolute", inset: 0, transform: "rotateY(180deg)",
+          backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
+          background: "linear-gradient(160deg, #F1E4C6 0%, #E4D2A8 100%)",
+          borderRadius: "14px 4px 4px 14px",
+          boxShadow: "-18px 22px 60px rgba(0,0,0,0.75), inset 0 0 40px rgba(120,80,20,0.18)",
+          border: "1px solid rgba(120,80,20,0.5)",
+          color: "#2A1B0A", overflow: "hidden",
+          padding: "9% 9% 7%", display: "flex", flexDirection: "column",
+        }}>
+          <p style={{ textAlign: "center", fontFamily: "var(--f-mono)", fontSize: 8, letterSpacing: "0.28em", color: "#7A5418" }}>✦ TONIGHT&apos;S MENU ✦</p>
+          <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #7A5418, transparent)", margin: "7px 0 8px" }} />
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: 0 }}>
+            {resume.projects.slice(0, 5).map((p) => (
+              <button
+                key={p.slug}
+                type="button"
+                onClick={(e) => { e.stopPropagation(); scrollToId("projects"); setTimeout(() => openProject(p.slug), 450); }}
+                onKeyDown={(e) => e.stopPropagation()}
+                tabIndex={flipped ? 0 : -1}
+                style={{ background: "none", border: "none", padding: "3px 0", textAlign: "left", cursor: "pointer", color: "inherit" }}
+              >
+                <span style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+                  <span style={{ fontFamily: "var(--f-display)", fontWeight: 600, fontSize: "clamp(11px,1.6vw,13.5px)", lineHeight: 1.15 }}>{p.title.split(" — ")[0]}</span>
+                  <span style={{ flex: 1, borderBottom: "1.5px dotted rgba(122,84,24,0.55)", transform: "translateY(-3px)" }} />
+                  <span style={{ fontFamily: "var(--f-mono)", fontSize: 7.5, letterSpacing: "0.08em", color: "#5a3d10" }}>{STATUS[p.status].label.toUpperCase()}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          <p style={{ textAlign: "center", fontFamily: "var(--f-display)", fontStyle: "italic", fontSize: 10, color: "#6b4a14", marginTop: 6 }}>tap a dish to read its recipe · tap the page to close</p>
+        </div>
+        </motion.div>
       </motion.div>
+
+      <p aria-hidden="true" style={{ textAlign: "center", marginTop: 34, fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.16em", color: "rgba(200,145,58,0.55)" }}>
+        {flipped ? "↺ CLOSE THE BOOK" : "↻ OPEN THE COOKBOOK"}
+      </p>
 
       {/* Floating tech chips */}
       {chips.map((chip, i) => (

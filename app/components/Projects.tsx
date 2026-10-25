@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { resume, Project } from "../data/resume";
 import { SectionHeader, Badge, Btn } from "./ui";
 import ProjectModal from "./ProjectModal";
 import { useSoundFx } from "../hooks/useSoundFx";
 import { StatusChip } from "./StatusChip";
+import MenuBoard from "./MenuBoard";
+import { OPEN_PROJECT } from "../lib/events";
 import { EASE, DUR } from "../lib/motion";
 
 function ComplexityBar({ value }: { value: number }) {
@@ -204,6 +206,18 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
 
 export default function Projects() {
   const [active, setActive] = useState<Project | null>(null);
+  const [view, setView] = useState<"cards" | "menu">("cards");
+
+  // Other parts of the site (hero menu, command palette) can open a recipe by slug.
+  useEffect(() => {
+    const h = (e: Event) => {
+      const slug = (e as CustomEvent<{ slug: string }>).detail?.slug;
+      const p = resume.projects.find((x) => x.slug === slug);
+      if (p) setActive(p);
+    };
+    window.addEventListener(OPEN_PROJECT, h);
+    return () => window.removeEventListener(OPEN_PROJECT, h);
+  }, []);
 
   return (
     <>
@@ -218,11 +232,20 @@ export default function Projects() {
             subtitle="Eight dishes on tonight's menu — two still on the stove. Crafted from raw data, seasoned with algorithms, served ready to ship."
           />
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: "var(--space-3)" }}>
-            {resume.projects.map((p, i) => (
-              <RecipeCard key={i} project={p} onClick={() => setActive(p)} />
-            ))}
+          <div className="view-toggle" role="tablist" aria-label="Project view">
+            <button role="tab" aria-selected={view === "cards"} className={view === "cards" ? "is-active" : ""} onClick={() => setView("cards")}>▦ Recipe cards</button>
+            <button role="tab" aria-selected={view === "menu"} className={view === "menu" ? "is-active" : ""} onClick={() => setView("menu")}>☰ The menu</button>
           </div>
+
+          {view === "cards" ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: "var(--space-3)" }}>
+              {resume.projects.map((p) => (
+                <RecipeCard key={p.slug} project={p} onClick={() => setActive(p)} />
+              ))}
+            </div>
+          ) : (
+            <MenuBoard onOpen={setActive} />
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}

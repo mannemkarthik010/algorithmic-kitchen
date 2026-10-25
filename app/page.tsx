@@ -1,6 +1,7 @@
 "use client";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
+import KitchenStats from "./components/KitchenStats";
 import About from "./components/About";
 import Projects from "./components/Projects";
 import ExpertiseLab from "./components/ExpertiseLab";
@@ -13,6 +14,9 @@ import ReadingRoom from "./components/ReadingRoom";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Terminal from "./components/Terminal";
+import CourseRail from "./components/CourseRail";
+import EmberCursor from "./components/EmberCursor";
+import CommandPalette from "./components/CommandPalette";
 import ScrollToTop from "./components/ScrollToTop";
 import SoundToggle from "./components/SoundToggle";
 import SteamDivider from "./components/SteamDivider";
@@ -27,6 +31,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <SteamDivider compact />
+      <KitchenStats />
       <About />
       <SectionDivider />
       <Projects />
@@ -49,6 +54,9 @@ export default function Home() {
       <Footer />
       <Terminal />
       <SoundToggle />
+      <CommandPalette />
+      <CourseRail />
+      <EmberCursor />
     </main>
   );
 }

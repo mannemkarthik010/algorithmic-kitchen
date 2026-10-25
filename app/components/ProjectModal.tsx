@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Project } from "../data/resume";
 import Image from "next/image";
@@ -37,6 +37,14 @@ function Rule() {
 /* ── Pipeline visualisation ─────────────────────── */
 function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
   const rm = useReducedMotion();
+  // A "data packet" walks the pipeline: the hot stage advances every 900ms, looping.
+  const [hot, setHot] = useState(-1);
+  useEffect(() => {
+    if (rm) return;
+    const start = setTimeout(() => setHot(0), steps.length * 80 + 400);
+    const iv = setInterval(() => setHot((h) => (h < 0 ? h : (h + 1) % (steps.length + 1))), 900);
+    return () => { clearTimeout(start); clearInterval(iv); };
+  }, [rm, steps.length]);
   return (
     <div style={{
       padding: "var(--space-2) var(--space-3)",
@@ -59,6 +67,9 @@ function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
                 borderRadius: "var(--radius-md)",
                 minWidth: 88,
                 position: "relative",
+                borderColor: hot === i ? "var(--gold-hi)" : undefined,
+                boxShadow: hot === i ? "0 0 22px rgba(228,173,82,0.4), inset 0 0 12px rgba(228,173,82,0.1)" : "none",
+                transition: "border-color .35s, box-shadow .35s",
               }}
             >
               <p className="label c-gold" style={{ marginBottom: 4 }}>{node.step}</p>
@@ -74,7 +85,7 @@ function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
                 animate={{ opacity: 1 }}
                 transition={{ delay: i * 0.08 + 0.12, duration: DUR.fast }}
                 className="mono c-gold"
-                style={{ padding: "0 8px", opacity: 0.45, fontSize: 13, flexShrink: 0 }}
+                style={{ padding: "0 8px", opacity: hot === i ? 1 : 0.45, fontSize: 13, flexShrink: 0, transition: "opacity .35s" }}
               >→</motion.span>
             )}
           </div>

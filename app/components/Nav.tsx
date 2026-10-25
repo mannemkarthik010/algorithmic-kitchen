@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AKMark } from "./ui";
+import { openPalette } from "../lib/events";
 
 const NAV = [
   { label: "story",         href: "#about"          },
@@ -101,6 +102,13 @@ export default function Nav() {
               </div>
             );
           })}
+          <button
+            type="button" onClick={openPalette} aria-label="Open command palette"
+            className="label"
+            style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", background: "rgba(0,0,0,0.25)", color: "var(--muted-hi)", cursor: "pointer" }}
+          >
+            <span aria-hidden="true">⌕</span> search <kbd style={{ fontFamily: "var(--f-mono)", fontSize: 9, padding: "1px 5px", border: "1px solid var(--border-hover)", borderRadius: 3 }}>⌘K</kbd>
+          </button>
           <motion.a
             href="/Karthik_Mannem_Resume.pdf"
             target="_blank" rel="noopener noreferrer"
@@ -130,6 +138,10 @@ export default function Nav() {
             exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }}
             style={{ overflow: "hidden", background: "rgba(8,5,2,0.97)", borderTop: "1px solid var(--border)", padding: "var(--space-1) var(--space-4) var(--space-2)" }}
           >
+            <button type="button" onClick={() => { setOpen(false); openPalette(); }} className="label c-gold"
+              style={{ display: "block", padding: "0.7rem 0", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
+              ⌕ search the menu
+            </button>
             {NAV.map((n) => (
               <a key={n.label} href={n.href} onClick={() => setOpen(false)}
                 className="label c-muted"
