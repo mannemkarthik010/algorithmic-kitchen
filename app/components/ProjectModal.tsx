@@ -2,7 +2,9 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Project } from "../data/resume";
+import Image from "next/image";
 import { Badge, Btn } from "./ui";
+import { StatusChip } from "./StatusChip";
 import { useSoundFx } from "../hooks/useSoundFx";
 import { EASE, DUR } from "../lib/motion";
 
@@ -154,6 +156,7 @@ export default function ProjectModal({ project, onClose }: {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
                     <Badge>{project.category}</Badge>
+                    <StatusChip status={project.status} />
                     <span className="mono c-muted" style={{ fontSize: 11, alignSelf: "center" }}>{project.dishName}</span>
                   </div>
                   <h2 className="heading-lg c-cream" style={{ marginBottom: 8, lineHeight: 1.2 }}>{project.title}</h2>
@@ -267,6 +270,16 @@ export default function ProjectModal({ project, onClose }: {
                 <div className="decision-block"><p>{project.deployment}</p></div>
               </div>
 
+              {/* Optional keepsake image (e.g. the beta-test receipt) */}
+              {project.image && (
+                <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center", flexWrap: "wrap", marginBottom: "var(--space-3)" }}>
+                  <div style={{ width: 200, flexShrink: 0, borderRadius: "var(--radius-md)", overflow: "hidden", border: "1px solid var(--border)", transform: "rotate(-1.5deg)", boxShadow: "0 12px 32px rgba(0,0,0,0.5)" }}>
+                    <Image src={project.image.src} width={project.image.width} height={project.image.height} alt={project.image.alt} sizes="200px" style={{ width: "100%", height: "auto", display: "block" }} />
+                  </div>
+                  <p className="body-sm c-2" style={{ flex: 1, minWidth: 200, fontStyle: "italic", lineHeight: 1.7 }}>{project.image.caption}</p>
+                </div>
+              )}
+
               {/* Lessons learned */}
               <div style={{
                 padding: "var(--space-2) var(--space-3)",
@@ -281,9 +294,11 @@ export default function ProjectModal({ project, onClose }: {
 
               {/* Actions */}
               <div style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-                <Btn href={project.github} variant="primary" target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
                 {project.demo && (
-                  <Btn href={project.demo} variant="primary" target="_blank" rel="noopener noreferrer">Live Demo ↗</Btn>
+                  <Btn href={project.demo} variant="primary" target="_blank" rel="noopener noreferrer">{project.status === "beta" ? "Try the Beta ↗" : "Live Demo ↗"}</Btn>
+                )}
+                {project.github && (
+                  <Btn href={project.github} variant={project.demo ? "secondary" : "primary"} target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
                 )}
                 <Btn onClick={handleClose} variant="secondary">Back to Menu</Btn>
               </div>

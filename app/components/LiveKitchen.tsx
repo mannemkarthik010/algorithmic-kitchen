@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { resume } from "../data/resume";
 import { SectionHeader, GlowBlob, Stagger, Item } from "./ui";
 import CookAnAI from "./CookAnAI";
+import KitchenPass from "./KitchenPass";
 
 /* ── Live status ─────────────────────────────── */
 const LIVE = [
@@ -24,6 +25,8 @@ export default function LiveKitchen() {
           <SectionHeader index="§ 05" label="Live Kitchen"
             title={<>What&apos;s <span className="t-grad">Cooking</span></>}
           />
+          <KitchenPass />
+
           <Stagger style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: "var(--space-2)" }}>
             {LIVE.map(({ label, value, sym }) => (
               <Item key={label}>

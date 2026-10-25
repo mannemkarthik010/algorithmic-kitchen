@@ -5,12 +5,16 @@ import { resume, bookArchive } from "../data/resume";
 
 type Line = { text: string; type: "output" | "input" | "system" | "gold" };
 
+// Projects are looked up by slug, so reordering the menu never breaks a command.
+const proj = (slug: string) => resume.projects.find((p) => p.slug === slug)!;
+
 const CMD: Record<string, () => Line[]> = {
   help: () => [
     { text: "Available commands:", type: "system" },
+    { text: "  cooking                — what is on the line right now", type: "output" },
     { text: "  load projects          — list all signature recipes", type: "output" },
     { text: "  inspect <slug>         — deep dive a project", type: "output" },
-    { text: "    slugs: rag-agent  splitwise  cnn  recommender  bert  retail", type: "gold" },
+    { text: "    slugs: woodlands  taxproof  retail  rag-agent  splitwise  cnn  recommender  bert", type: "gold" },
     { text: "  inspect skills         — ingredient shelf", type: "output" },
     { text: "  show bookshelf         — the reading archive", type: "output" },
     { text: "  open currently-reading — current book spotlight", type: "output" },
@@ -23,6 +27,39 @@ const CMD: Record<string, () => Line[]> = {
     { text: "  clear / exit           — housekeeping", type: "output" },
   ],
 
+  cooking: () => [
+    { text: "The Pass — tickets up right now:", type: "system" },
+    { text: "", type: "output" },
+    ...resume.kitchenPass.flatMap((t) => [
+      { text: `  No. ${t.no}  ${t.dish}  [${t.status.toUpperCase()}]`, type: "gold" as const },
+      ...t.items.map((it) => ({ text: `      1×  ${it}`, type: "output" as const })),
+      { text: "", type: "output" as const },
+    ]),
+  ],
+
+  "inspect woodlands": () => {
+    const p = proj("woodlands-ims");
+    return [
+      { text: `◈  ${p.title}  [ON THE LINE]`, type: "gold" },
+      { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
+      { text: `   Core idea  : stock is an append-only ledger — balances are derived, never edited`, type: "output" },
+      { text: `   AI         : the assistant proposes records; a person taps Confirm`, type: "output" },
+      { text: `   Key lesson : ${p.learned}`, type: "output" },
+      { text: `   GitHub     : ${p.github}`, type: "gold" },
+    ];
+  },
+  "inspect taxproof": () => {
+    const p = proj("taxproof");
+    return [
+      { text: `◈  ${p.title}  [LIVE]`, type: "gold" },
+      { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
+      { text: `   Tests      : 225 backend · 36 frontend · 10 iterations`, type: "output" },
+      { text: `   Key lesson : ${p.learned}`, type: "output" },
+      { text: `   Live       : ${p.demo}`, type: "gold" },
+      { text: `   GitHub     : ${p.github}`, type: "gold" },
+    ];
+  },
+
   "load projects": () => [
     { text: "Loading signature recipes…", type: "system" },
     { text: "", type: "output" },
@@ -32,28 +69,28 @@ const CMD: Record<string, () => Line[]> = {
   ],
 
   "inspect rag-agent": () => {
-    const p = resume.projects[0];
+    const p = proj("preventive-care");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   Category   : ${p.category}`, type: "output" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Result     : ${p.finalTaste}`, type: "output" },
       { text: `   Key lesson : ${p.learned}`, type: "output" },
-      { text: `   GitHub     : ${p.github}`, type: "gold" },
+      { text: `   GitHub     : ${p.github ?? "private / archived"}`, type: "gold" },
     ];
   },
   "inspect splitwise": () => {
-    const p = resume.projects[1];
+    const p = proj("splitwise-pro");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   Category   : ${p.category}`, type: "output" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Result     : ${p.finalTaste}`, type: "output" },
-      { text: `   GitHub     : ${p.github}`, type: "gold" },
+      { text: `   GitHub     : ${p.github ?? "private / archived"}`, type: "gold" },
     ];
   },
   "inspect cnn": () => {
-    const p = resume.projects[2];
+    const p = proj("fake-currency");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   Accuracy   : 97.3% validation`, type: "output" },
@@ -62,7 +99,7 @@ const CMD: Record<string, () => Line[]> = {
     ];
   },
   "inspect recommender": () => {
-    const p = resume.projects[3];
+    const p = proj("netflix-recommender");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   RMSE       : 0.89 on test set`, type: "output" },
@@ -71,7 +108,7 @@ const CMD: Record<string, () => Line[]> = {
     ];
   },
   "inspect bert": () => {
-    const p = resume.projects[4];
+    const p = proj("bert-length");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   R²         : 0.81 on test set`, type: "output" },
@@ -80,14 +117,14 @@ const CMD: Record<string, () => Line[]> = {
     ];
   },
   "inspect retail": () => {
-    const p = resume.projects[5];
+    const p = proj("retail-intel");
     return [
       { text: `◈  ${p.title}`, type: "gold" },
       { text: `   WAPE       : 7.9% (won 154/240 series)`, type: "output" },
       { text: `   Coverage   : 74.2% measured vs. 80% nominal`, type: "output" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Key lesson : ${p.learned}`, type: "output" },
-      { text: `   GitHub     : ${p.github}`, type: "gold" },
+      { text: `   GitHub     : ${p.github ?? "private / archived"}`, type: "gold" },
     ];
   },
 

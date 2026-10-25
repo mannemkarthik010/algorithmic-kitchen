@@ -5,6 +5,7 @@ import { resume, Project } from "../data/resume";
 import { SectionHeader, Badge, Btn } from "./ui";
 import ProjectModal from "./ProjectModal";
 import { useSoundFx } from "../hooks/useSoundFx";
+import { StatusChip } from "./StatusChip";
 import { EASE, DUR } from "../lib/motion";
 
 function ComplexityBar({ value }: { value: number }) {
@@ -109,6 +110,11 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
             style={{ position: "absolute", top: 12, right: 12, padding: "3px 9px", background: "rgba(200,145,58,0.08)", border: "1px solid rgba(200,145,58,0.2)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(200,145,58,0.55)", cursor: "pointer", zIndex: 2 }}
           >flip ↺</div>
 
+          {/* Kitchen status — top-left, mirroring the flip badge */}
+          <div style={{ position: "absolute", top: 11, left: "var(--space-3)", zIndex: 2 }}>
+            <StatusChip status={project.status} size="sm" />
+          </div>
+
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 22, marginBottom: "var(--space-1)", zIndex: 1 }}>
             <Badge>{project.category}</Badge>
             <span className="label c-muted" style={{ fontSize: 8, opacity: 0.45, paddingRight: 2 }}>{project.dishName}</span>
@@ -174,12 +180,21 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
             </div>
           )}
 
-          <div style={{ marginTop: "auto" }}>
-            <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(200,145,58,0.1)", border: "1px solid rgba(200,145,58,0.3)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", textDecoration: "none" }}
-            >
-              GitHub ↗
-            </a>
+          <div style={{ marginTop: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {project.github && (
+              <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(200,145,58,0.1)", border: "1px solid rgba(200,145,58,0.3)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", textDecoration: "none" }}
+              >
+                GitHub ↗
+              </a>
+            )}
+            {project.demo && (
+              <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(200,145,58,0.16)", border: "1px solid rgba(200,145,58,0.5)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold-hi)", textDecoration: "none" }}
+              >
+                Live ↗
+              </a>
+            )}
           </div>
         </div>
       </motion.div>
@@ -200,7 +215,7 @@ export default function Projects() {
             index="§ 03"
             label="Signature Recipes"
             title={<>Tonight&apos;s <span className="t-grad">Menu</span></>}
-            subtitle="Six production-grade AI systems — crafted from raw data, seasoned with algorithms, served ready to ship."
+            subtitle="Eight dishes on tonight's menu — two still on the stove. Crafted from raw data, seasoned with algorithms, served ready to ship."
           />
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: "var(--space-3)" }}>

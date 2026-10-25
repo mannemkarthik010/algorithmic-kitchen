@@ -310,7 +310,6 @@ export default function Hero() {
   }, []);
 
   const handleOpen = useCallback(() => {
-    play("/sounds/success.mp3", 0.45);
     play("/sounds/click.mp3", 0.25);
     loop("/sounds/ambient-kitchen.mp3", 0.06);
     setStage(3.5);
