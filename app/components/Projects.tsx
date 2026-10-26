@@ -90,7 +90,7 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
           ? { type: "spring", stiffness: 200, damping: 25 }
           : { duration: 0.55, ease: EASE }
         }
-        style={{ transformStyle: "preserve-3d", position: "relative", minHeight: 320 }}
+        style={{ transformStyle: "preserve-3d", position: "relative", minHeight: 372 }}
       >
         {/* ── FRONT FACE ── */}
         <div style={{

@@ -62,9 +62,7 @@ export function SectionHeader({
         viewport={{ once: true }} transition={{ duration: 0.42 }}
         style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: "var(--space-2)" }}
       >
-        <span style={{ width: 28, height: 1, background: "linear-gradient(90deg,transparent,var(--gold))", display: "block" }} />
-        <span className="label c-gold">{index} — {label}</span>
-        <span style={{ width: 28, height: 1, background: "linear-gradient(90deg,var(--gold),transparent)", display: "block" }} />
+        <span className="sticker sticker--gold section-sticker">{index} · {label}</span>
       </motion.div>
 
       <motion.h2

@@ -25,3 +25,22 @@ export default function Ticker() {
     </div>
   );
 }
+
+/** A single chunky band, used as a section divider. */
+export function Band({ words, reverse = false, outline = false, tilt = -1 }: { words: string[]; reverse?: boolean; outline?: boolean; tilt?: number }) {
+  return (
+    <div className="ticker ticker--band" aria-hidden="true" style={{ transform: `rotate(${tilt}deg)` }}>
+      <div className={`ticker__row${reverse ? " is-reverse" : ""}${outline ? " is-outline" : ""}`}>
+        {[0, 1].map((copy) => (
+          <div key={copy} className="ticker__track">
+            {Array.from({ length: 6 }).flatMap((_, k) =>
+              words.map((w, i) => (
+                <span key={`${k}-${i}`} className={`ticker__word ticker__word--${i % 3}`}>{w}</span>
+              ))
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

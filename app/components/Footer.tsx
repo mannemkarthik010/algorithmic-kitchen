@@ -22,6 +22,19 @@ const SOCIAL = [
 export default function Footer() {
   return (
     <footer style={{ borderTop: "1px solid var(--border)", background: "linear-gradient(180deg, transparent, rgba(6,4,2,0.6))" }}>
+      {/* Chunky sign-off */}
+      <div className="container" style={{ paddingTop: "var(--space-5)" }}>
+        <motion.a
+          href="#contact"
+          className="footer-mega"
+          aria-label="Karthik Mannem — get in touch"
+          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
+        >
+          <span>KARTHIK</span>
+          <span className="footer-mega__fill">MANNEM</span>
+        </motion.a>
+      </div>
+
       {/* Main footer body */}
       <div className="container" style={{ padding: "var(--space-6) 0 var(--space-4)", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--space-5)" }}>
 

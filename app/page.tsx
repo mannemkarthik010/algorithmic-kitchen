@@ -2,7 +2,7 @@
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import KitchenStats from "./components/KitchenStats";
-import Ticker from "./components/Ticker";
+import Ticker, { Band } from "./components/Ticker";
 import PlayZone from "./components/PlayZone";
 import About from "./components/About";
 import Projects from "./components/Projects";
@@ -39,21 +39,21 @@ export default function Home() {
       <SectionDivider />
       <Projects />
       <PlayZone />
-      <SteamDivider />
+      <Band words={["THINK.","TRAIN.","TEST."]} tilt={-1} />
       <ExpertiseLab />
       <SectionDivider />
       <Skills />
       <SectionDivider />
       <CareerTimeline />
-      <SteamDivider />
+      <Band words={["LEARN.","WORK.","GROW."]} reverse outline tilt={1} />
       <Experience />
       <SectionDivider />
       <Contributions />
-      <SteamDivider />
+      <Band words={["FORK.","FIX.","PR."]} tilt={-1} />
       <LiveKitchen />
-      <SteamDivider />
+      <Band words={["READ.","REFLECT.","REPEAT."]} reverse outline tilt={1} />
       <ReadingRoom />
-      <SteamDivider />
+      <Band words={["LET'S.","TALK.","COOK."]} tilt={-1} />
       <Contact />
       <Footer />
       <Terminal />
