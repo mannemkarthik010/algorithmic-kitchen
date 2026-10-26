@@ -10,6 +10,7 @@ type Cmd = { id: string; group: string; label: string; hint?: string; keywords?:
 const SECTIONS: [string, string, string][] = [
   ["about", "The story", "about me bio chef"],
   ["projects", "Recipes — projects", "work portfolio"],
+  ["play", "Play — Real or Fake? & build a plate", "game fun quiz"],
   ["expertise", "Expertise lab", "skills stack"],
   ["timeline", "The journey", "career education"],
   ["experience", "Experience", "work jobs handshake"],

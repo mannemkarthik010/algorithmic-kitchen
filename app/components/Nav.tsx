@@ -112,9 +112,8 @@ export default function Nav() {
           <motion.a
             href="/Karthik_Mannem_Resume.pdf"
             target="_blank" rel="noopener noreferrer"
-            className="label c-gold"
-            style={{ textDecoration: "none", padding: "7px 16px", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", transition: "border-color 0.2s, background 0.2s" }}
-            whileHover={{ borderColor: "var(--border-active)", background: "rgba(200,145,58,0.06)" } as Parameters<typeof motion.a>[0]["whileHover"]}
+            className="pill-cta"
+            style={{ padding: "8px 20px", fontSize: 13 }}
           >
             résumé ↗
           </motion.a>

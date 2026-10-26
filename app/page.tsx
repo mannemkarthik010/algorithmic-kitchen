@@ -2,6 +2,8 @@
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import KitchenStats from "./components/KitchenStats";
+import Ticker from "./components/Ticker";
+import PlayZone from "./components/PlayZone";
 import About from "./components/About";
 import Projects from "./components/Projects";
 import ExpertiseLab from "./components/ExpertiseLab";
@@ -32,9 +34,11 @@ export default function Home() {
       <Hero />
       <SteamDivider compact />
       <KitchenStats />
+      <Ticker />
       <About />
       <SectionDivider />
       <Projects />
+      <PlayZone />
       <SteamDivider />
       <ExpertiseLab />
       <SectionDivider />

@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond, DM_Sans, DM_Mono, Bagel_Fat_One } from "next/font/google";
 import "./globals.css";
 import { SoundProvider } from "./hooks/SoundContext";
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"], weight: ["300", "400", "600"], style: ["normal", "italic"],
+  variable: "--font-cormorant", display: "swap",
+});
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-dm-sans", display: "swap" });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono", display: "swap" });
+const bagel = Bagel_Fat_One({ subsets: ["latin"], weight: "400", variable: "--font-bagel", display: "swap" });
 
 const SITE_URL = "https://thealgorithmickitchen.vercel.app";
 
@@ -89,7 +98,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${bagel.variable}`}>
       <head>
         <script
           type="application/ld+json"
