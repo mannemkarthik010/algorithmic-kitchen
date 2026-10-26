@@ -1546,3 +1546,75 @@ nav a[href="#hero"] .mono { font-family: var(--f-chunk); font-size: 15px; letter
 .footer-mega { display: flex; flex-direction: column; align-items: center; text-decoration: none; font-family: var(--f-chunk); font-size: clamp(2.8rem, 12.5vw, 9.5rem); line-height: 0.95; text-transform: uppercase; color: transparent; -webkit-text-stroke: 2px var(--gold); transition: transform .3s ease; }
 .footer-mega:hover { transform: scale(1.015) rotate(-0.6deg); }
 .footer-mega__fill { background: var(--ember-grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-text-stroke: 0; filter: drop-shadow(0 6px 0 rgba(0,0,0,0.4)); }
+
+/* ═══════════════════════════════════════════
+   FOOTER PLAY — dunk game, emoji belt, dosa illusion
+═══════════════════════════════════════════ */
+.fplay { padding: var(--space-6) 0 var(--space-4); text-align: center; }
+.fplay__kicker { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.26em; color: var(--gold); margin-bottom: var(--space-1); }
+.fplay__title { font-family: var(--f-chunk); font-weight: 400; font-size: clamp(1.7rem, 5vw, 3.4rem); line-height: 1.05; color: var(--cream); text-shadow: 0 4px 0 rgba(0,0,0,0.38); margin-bottom: var(--space-3); }
+.fplay__title span { background: var(--ember-grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; filter: drop-shadow(0 4px 0 rgba(0,0,0,0.38)); }
+
+/* emoji belt */
+.fplay__band { overflow: hidden; margin: var(--space-5) 0; padding: 14px 0; border-block: 1px dashed var(--border-hover); background: rgba(0,0,0,0.25); }
+.fplay__belt { display: flex; width: max-content; animation: tickL 40s linear infinite; }
+.fplay__lane { display: flex; gap: 38px; padding-right: 38px; font-size: 42px; line-height: 1; }
+.fplay__lane span { display: inline-block; animation: bob 2.4s ease-in-out infinite; }
+.fplay__lane span:nth-child(2n) { animation-delay: -1.2s; }
+.fplay__lane span:nth-child(3n) { animation-delay: -0.6s; }
+@keyframes bob { 50% { transform: translateY(-8px) rotate(6deg); } }
+@media (prefers-reduced-motion: reduce) { .fplay__belt, .fplay__lane span { animation: none !important; } }
+
+/* dunk game */
+.dunk { width: min(100%, 440px); margin: 0 auto; }
+.dunk__bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.dunk__chip { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border-hover); background: rgba(0,0,0,0.3); color: var(--cream-2); }
+.dunk__chip--score { background: var(--ember-grad); color: #1a0e04; border-color: transparent; font-weight: 500; }
+.dunk__stage { position: relative; overflow: hidden; border-radius: var(--radius-xl); border: 1px solid var(--border-hover); background: radial-gradient(ellipse 80% 55% at 50% 0%, rgba(228,173,82,0.16), transparent 70%), linear-gradient(180deg, #1c130a, #0c0805); user-select: none; }
+.dunk__plate { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); width: 190px; height: 94px; border-radius: 0 0 95px 95px / 0 0 50px 50px; background: radial-gradient(ellipse at 50% 0%, #4a3a26, #231910); opacity: 0.55; display: flex; align-items: flex-end; justify-content: center; font-size: 22px; padding-bottom: 6px; }
+.dunk__plate span { opacity: 0.5; }
+.dunk__item { position: absolute; left: 50%; z-index: 2; cursor: grab; touch-action: none; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.5)); }
+.dunk__item:active { cursor: grabbing; }
+.dunk__bowl { position: absolute; left: 50%; transform: translateX(-50%); height: 150px; border-radius: 6px 6px 120px 120px / 6px 6px 100px 100px; background: linear-gradient(180deg, #d9dde2, #8b929b 55%, #5c6169); box-shadow: inset 0 0 0 4px rgba(255,255,255,0.15), 0 14px 30px rgba(0,0,0,0.5); z-index: 1; }
+.dunk__bowl-label { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--f-chunk); font-size: 14px; letter-spacing: 0.12em; color: rgba(255,240,200,0.95); z-index: 5; pointer-events: none; text-shadow: 0 2px 0 rgba(0,0,0,0.5); }
+.dunk__sambar { position: absolute; left: 50%; transform: translateX(-50%); height: 128px; z-index: 3; pointer-events: none; background: linear-gradient(180deg, rgba(200,86,26,0.86), rgba(150,52,14,0.94)); border-radius: 0 0 120px 120px / 0 0 100px 100px; overflow: hidden; }
+.dunk__wave { position: absolute; top: -6px; left: 0; width: 200%; height: 12px; animation: waveX 3s linear infinite; }
+@keyframes waveX { to { transform: translateX(-50%); } }
+.dunk__veg { position: absolute; border-radius: 50%; background: rgba(255,214,120,0.55); }
+.dunk__veg--1 { width: 14px; height: 14px; left: 22%; top: 46%; } .dunk__veg--2 { width: 10px; height: 10px; left: 64%; top: 60%; background: rgba(120,170,70,0.6); } .dunk__veg--3 { width: 12px; height: 12px; left: 46%; top: 78%; background: rgba(240,120,60,0.6); }
+.dunk__crumbs { position: absolute; left: 50%; z-index: 4; pointer-events: none; }
+.dunk__crumbs span { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #F3E3C0; }
+.dunk__msg { position: absolute; left: 0; right: 0; top: 120px; z-index: 6; font-family: var(--f-chunk); font-size: clamp(1.4rem, 5vw, 2rem); text-shadow: 0 4px 0 rgba(0,0,0,0.5); animation: pop .35s cubic-bezier(.2,1.6,.4,1); pointer-events: none; }
+.dunk__msg--good { color: #7FE08F; } .dunk__msg--ok { color: var(--gold-hi); } .dunk__msg--bad { color: #F08A7A; }
+@keyframes pop { from { transform: scale(0.5); opacity: 0; } }
+.dunk__nudge { position: absolute; left: 0; right: 0; top: 130px; z-index: 6; font-family: var(--f-mono); font-size: 12px; color: var(--gold-hi); pointer-events: none; }
+.dunk__end { position: absolute; inset: 0; z-index: 7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(8,5,2,0.86); }
+.dunk__end-score { font-family: var(--f-chunk); font-size: 64px; line-height: 1; color: var(--gold-hi); }
+.dunk__end-verdict { font-family: var(--f-chunk); font-size: 22px; color: var(--cream); }
+.dunk__gauge { position: relative; margin: 18px 4px 4px; }
+.dunk__zones { display: flex; height: 12px; border-radius: 999px; overflow: hidden; border: 1px solid var(--border-hover); }
+.dunk__zones i { display: block; background: rgba(255,255,255,0.07); }
+.dunk__zones .z-ok { background: rgba(228,173,82,0.5); } .dunk__zones .z-perfect { background: #3fae57; } .dunk__zones .z-bad { background: rgba(184,50,28,0.6); }
+.dunk__marker { position: absolute; top: -5px; width: 6px; height: 22px; margin-left: -3px; border-radius: 3px; background: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.8); transition: left .05s linear; }
+.dunk__zone-labels { display: flex; margin-top: 8px; font-family: var(--f-mono); font-size: 9px; letter-spacing: 0.1em; color: var(--muted-hi); text-transform: uppercase; }
+.dunk__zone-labels span:nth-child(1) { width: 50%; text-align: left; } .dunk__zone-labels span:nth-child(2) { width: 20%; text-align: center; } .dunk__zone-labels span:nth-child(3) { width: 20%; text-align: center; color: #7FE08F; } .dunk__zone-labels span:nth-child(4) { width: 10%; text-align: right; }
+.dunk__tip { margin-top: 10px; font-family: var(--f-display); font-style: italic; font-size: 14px; color: var(--muted-hi); }
+
+/* dosa illusion */
+.dosa-ill { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-4); max-width: 900px; margin: 0 auto; }
+.dosa-ill__disc { width: min(78vw, 400px); aspect-ratio: 1; filter: drop-shadow(0 24px 40px rgba(0,0,0,0.6)); }
+.dosa-ill__disc svg { width: 100%; height: 100%; display: block; }
+.dosa-ill__spin { transform-origin: 210px 210px; animation: spinCW var(--spin, 28s) linear infinite; animation-direction: var(--dir, normal); animation-play-state: var(--state, running); }
+.dosa-ill__spin--rev { animation-name: spinCCW; }
+@keyframes spinCW { to { transform: rotate(360deg); } }
+@keyframes spinCCW { to { transform: rotate(-360deg); } }
+.dosa-ill__copy { flex: 1 1 280px; max-width: 380px; text-align: left; color: var(--cream-2); font-size: 15px; line-height: 1.6; }
+.dosa-ill__q { font-family: var(--f-chunk); font-size: clamp(1.3rem, 3.4vw, 1.9rem); line-height: 1.15; color: var(--cream); margin-bottom: 10px; }
+.dosa-ill__copy b { color: var(--gold-hi); font-weight: 500; }
+.dosa-ill__btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--space-2); }
+.dosa-ill__ghost { padding: 12px 22px; border-radius: 999px; border: 1px solid var(--border-hover); background: rgba(0,0,0,0.3); color: var(--cream-2); font-family: var(--f-chunk); font-size: 14px; cursor: pointer; }
+.dosa-ill__ghost:hover { border-color: var(--gold); color: var(--cream); }
+.dosa-ill__timer { height: 12px; border-radius: 999px; border: 1px solid var(--border-hover); overflow: hidden; margin-top: 12px; }
+.dosa-ill__timer i { display: block; height: 100%; background: var(--ember-grad); transition: width .1s linear; }
+.dosa-ill__count { font-family: var(--f-chunk); font-size: 56px; line-height: 1.1; color: var(--gold-hi); margin-top: 6px; }
+@media (max-width: 640px) { .dosa-ill__copy { text-align: center; } .dosa-ill__btns { justify-content: center; } }
