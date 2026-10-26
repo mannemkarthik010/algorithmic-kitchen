@@ -507,8 +507,8 @@ export default function ReadingRoom() {
 
           {/* Standard branded section header — matches every other section */}
           <SectionHeader
-            index="§ 06"
-            label="The Archive"
+            index="06"
+            label="Reading room"
             title={<>The <span className="t-grad">Reading Room</span></>}
             subtitle="Books that shaped the way I build systems, think deeply, and create intelligently."
           />

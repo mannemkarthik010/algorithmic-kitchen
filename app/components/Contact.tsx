@@ -54,7 +54,7 @@ export default function Contact() {
       const res = await fetch("/api/chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system: `You are ChefGPT, the AI assistant on Karthik Mannem's portfolio "The Algorithmic Kitchen". Be warm, professional, subtly witty. Max 3 short paragraphs.\n\nKarthik Mannem — ML Engineer, CSUN M.S. CS (GPA 3.92, May 2026 — graduated), Los Angeles.\nSkills: Python, LangChain, RAG, PyTorch, TensorFlow, HuggingFace, Docker, Flask, AWS, Next.js.\nProjects: Woodlands IMS (in development: inventory + AI kitchen assistant for Woodlands Indian Cuisine, Django, append-only stock ledger, AI only proposes and a person confirms), TaxProof (live prototype: tax workpaper with evidence-backed numbers, FastAPI + Next.js, 225 backend tests), Retail Demand Intelligence Platform (multi-model forecasting + agentic LLM Q&A on AWS), Preventive Care Recommendation Agent (LangGraph + Chroma RAG with a critic loop), SplitWise Pro (open beta), Netflix Recommender, Fake Currency CNN, BERT Product Predictor.\nOpen source: pandera #2437 merged; PyTorch #191687 approved and open; PyTorch #191998 open, changes requested; PyTorch #191439 closed as a duplicate. Currently building an AI project for The Woodlands restaurants.\nExperience: Generative AI Analyst @ Handshake AI (Sep 2025 – Apr 2026), 3+ yrs Freelance ML Engineer (Aug 2023 – Jun 2024).\nEmail: ${resume.email} | GitHub: github.com/mannemkarthik010\nOpen to: full-time ML/AI roles — immediately available.`,
+          system: `You are ChefGPT, the AI assistant on Karthik Mannem's portfolio "The Algorithmic Kitchen". Be warm, professional, subtly witty. Max 3 short paragraphs.\n\nKarthik Mannem — ML Engineer, CSUN M.S. CS (GPA 3.92, May 2026 — graduated), Los Angeles.\nSkills: Python, LangChain, RAG, PyTorch, TensorFlow, HuggingFace, Docker, Flask, AWS, Next.js.\nProjects: Woodlands IMS (in development: inventory + AI kitchen assistant for Woodlands Indian Cuisine, Django, append-only stock ledger, AI only proposes and a person confirms), TaxProof (live prototype: tax workpaper with evidence-backed numbers, FastAPI + Next.js, 225 backend tests), Retail Demand Intelligence Platform (multi-model forecasting + agentic LLM Q&A on AWS), Preventive Care Recommendation Agent (LangGraph + Chroma RAG with a critic loop), SplitWise Pro (open beta), Netflix Recommender, Fake Currency CNN, BERT Product Predictor.\nOpen source: pandera #2437 merged; PyTorch #191687 approved and open; PyTorch #191998 open, changes requested; PyTorch #191439 closed as a duplicate. Currently building an AI project for The Woodlands restaurants.\nExperience: Generative AI Analyst @ Handshake AI (Sep 2025 – Apr 2026), Freelance ML Engineer (Aug 2023 – Jun 2024).\nEmail: ${resume.email} | GitHub: github.com/mannemkarthik010\nOpen to: full-time ML/AI roles — immediately available.`,
           messages: [...msgs.filter((_,i)=>i>0).map((m)=>({ role: m.role, content: m.text })), { role: "user", content: txt }],
         }),
       });
@@ -85,22 +85,29 @@ export default function Contact() {
       <GlowBlob size={500} color="rgba(200,145,58,0.055)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="§ 07" label="Reserve a Table"
-          title={<>Let&apos;s <span className="t-grad">Cook Together</span></>}
-          subtitle="Open to full-time ML/AI roles, collaborations, and great conversations."
+        <SectionHeader index="07" label="Contact"
+          title={<>Let&apos;s <span className="t-grad">Work Together</span></>}
+          subtitle="Open to full-time ML/AI engineering roles. Email is the fastest way to reach me."
         />
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(340px,1fr))", gap: "var(--space-6)" }}>
+        <div className="contact-primary">
+          <a className="pill-cta" href={`mailto:${resume.email}`}>Email Karthik ✉</a>
+          <a className="fw-ghost" href={resume.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a className="fw-ghost" href="/Karthik_Mannem_Resume.pdf" target="_blank" rel="noopener noreferrer">Download résumé ↓</a>
+          <a className="fw-ghost" href={resume.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,340px),1fr))", gap: "var(--space-6)" }}>
           {/* Form */}
           <FadeUp delay={0.05}>
-            <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "var(--space-3)" }}>Make a Reservation</h3>
+            <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "var(--space-3)" }}>Or send a message</h3>
 
             {!sent ? (
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
                 {[
-                  { id: "name",    label: "Your Name",  placeholder: "Gordon Ramsay",                   type: "text"  },
-                  { id: "email",   label: "Email",      placeholder: "gordon@kitchennightmares.com",    type: "email" },
-                  { id: "subject", label: "Subject",    placeholder: "Let's talk AI...",                type: "text"  },
+                  { id: "name",    label: "Your Name",  placeholder: "Your name",                   type: "text"  },
+                  { id: "email",   label: "Email",      placeholder: "you@company.com",    type: "email" },
+                  { id: "subject", label: "Subject",    placeholder: "Role or topic",                type: "text"  },
                 ].map(({ id, label, placeholder, type }) => (
                   <div key={id}>
                     <label className="label" style={{ display: "block", marginBottom: 6 }}>{label}</label>
@@ -132,35 +139,23 @@ export default function Contact() {
                 )}
 
                 <Btn type="submit" variant="primary" disabled={sending} style={{ alignSelf: "flex-start" }}>
-                  {sending ? "Sending…" : "Send Reservation"}
+                  {sending ? "Sending…" : "Send message"}
                 </Btn>
               </form>
             ) : (
               <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
                 style={{ padding: "var(--space-5) var(--space-4)", background: "rgba(200,145,58,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", textAlign: "center" }}>
-                <p className="heading-xl t-grad" style={{ marginBottom: "var(--space-1)" }}>Reservation Received ✓</p>
-                <p className="body-md c-muted">Your table is being prepared. Karthik will be in touch shortly.</p>
+                <p className="heading-xl t-grad" style={{ marginBottom: "var(--space-1)" }}>Message received ✓</p>
+                <p className="body-md c-muted">Thanks for reaching out. Karthik will reply shortly.</p>
               </motion.div>
             )}
 
-            <div style={{ marginTop: "var(--space-3)", display: "flex", gap: "var(--space-1)", flexWrap: "wrap" }}>
-              {[
-                { label: "LinkedIn", href: resume.linkedin },
-                { label: "GitHub",   href: resume.github   },
-                { label: "Email",    href: `mailto:${resume.email}` },
-              ].map(({ label, href }) => (
-                <Btn key={label} href={href} variant="secondary" target="_blank" rel="noopener noreferrer"
-                  style={{ padding: "8px 18px", fontSize: 11 }}>
-                  {label}
-                </Btn>
-              ))}
-            </div>
           </FadeUp>
 
           {/* ChefGPT */}
           <FadeUp delay={0.12}>
             <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "0.4rem" }}>Ask ChefGPT</h3>
-            <p className="body-sm c-muted" style={{ marginBottom: "var(--space-2)" }}>Have questions? My AI assistant knows the full menu.</p>
+            <p className="body-sm c-muted" style={{ marginBottom: "var(--space-2)" }}>Quick questions about my work? This assistant has read the whole portfolio.</p>
 
             <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
               {/* Chat header */}

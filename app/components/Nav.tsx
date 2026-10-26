@@ -5,16 +5,16 @@ import { AKMark } from "./ui";
 import { openPalette } from "../lib/events";
 
 const NAV = [
-  { label: "story",         href: "#about"          },
-  { label: "recipes",       href: "#projects"       },
-  { label: "expertise",     href: "#expertise"      },
-  { label: "journey",       href: "#timeline"       },
-  { label: "contributions", href: "#contributions"  },
-  { label: "library",       href: "#reading"        },
-  { label: "reserve",       href: "#contact"        },
+  { label: "projects",    href: "#projects"       },
+  { label: "experience",  href: "#experience"     },
+  { label: "open source", href: "#contributions"  },
+  { label: "skills",      href: "#expertise"      },
+  { label: "about",       href: "#about"          },
+  { label: "playground",  href: "#playground"     },
+  { label: "contact",     href: "#contact"        },
 ];
 
-const SECTIONS = ["about","projects","skills","experience","contributions","reading","contact"];
+const SECTIONS = ["projects","experience","contributions","expertise","about","playground","contact"];
 
 export default function Nav() {
   const [scrolled, setScrolled]   = useState(false);
@@ -42,7 +42,7 @@ export default function Nav() {
     <motion.nav
       initial={{ y: -18, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.55, delay: 3.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
         padding: "1rem var(--space-4)",

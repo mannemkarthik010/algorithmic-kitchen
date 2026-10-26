@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode, MutableRefObject } from "react";
+import { createContext, useContext, useState, useRef, useCallback, ReactNode, MutableRefObject } from "react";
 
 interface SoundContextType {
   muted: boolean;
@@ -9,44 +9,42 @@ interface SoundContextType {
   registry: MutableRefObject<Map<string, HTMLAudioElement>>;
 }
 
+const AMBIENT = "/sounds/ambient-kitchen.mp3";
 const noopRegistry = { current: new Map<string, HTMLAudioElement>() };
 
 const SoundContext = createContext<SoundContextType>({
-  muted: false,
+  muted: true,
   toggle: () => {},
   registry: noopRegistry,
 });
 
 export function SoundProvider({ children }: { children: ReactNode }) {
-  // Always starts false so the server-rendered HTML and the client's first
-  // render match exactly; the real saved preference is applied right after
-  // mount, once localStorage is actually available (avoids a hydration
-  // mismatch for anyone who previously muted the site).
-  const [muted, setMuted] = useState(false);
+  // Sound is opt-in: browsers block autoplay anyway, so the site starts silent
+  // and the toggle starts the ambient loop on the visitor's first click.
+  const [muted, setMuted] = useState(true);
   const registry = useRef<Map<string, HTMLAudioElement>>(new Map());
 
-  useEffect(() => {
-    // Intentional: localStorage only exists client-side, so this can't be read
-    // during the initial render without causing a hydration mismatch. Syncing
-    // here, once, after mount is the correct pattern for this case.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (localStorage.getItem("ak_muted") === "true") setMuted(true);
-  }, []);
-
   const toggle = useCallback(() => {
-    setMuted((prev) => {
-      const next = !prev;
-      localStorage.setItem("ak_muted", String(next));
-      if (next) {
-        // Muting: stop every currently playing sound immediately, including any ambient loop.
-        registry.current.forEach((audio) => {
-          audio.pause();
-          audio.currentTime = 0;
-        });
-      }
-      return next;
-    });
-  }, []);
+    const next = !muted;
+    setMuted(next);
+    if (next) {
+      // Muting: stop every currently playing sound immediately, including any ambient loop.
+      registry.current.forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+      return;
+    }
+    let ambient = registry.current.get(AMBIENT);
+    if (!ambient) {
+      ambient = new Audio(AMBIENT);
+      ambient.addEventListener("error", () => {});
+      registry.current.set(AMBIENT, ambient);
+    }
+    ambient.loop = true;
+    ambient.volume = 0.06;
+    ambient.play().catch(() => {});
+  }, [muted]);
 
   return (
     <SoundContext.Provider value={{ muted, toggle, registry }}>

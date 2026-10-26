@@ -8,16 +8,18 @@ import { OPEN_PALETTE, openProject, scrollToId } from "../lib/events";
 type Cmd = { id: string; group: string; label: string; hint?: string; keywords?: string; run: () => void };
 
 const SECTIONS: [string, string, string][] = [
-  ["about", "The story", "about me bio chef"],
-  ["projects", "Recipes — projects", "work portfolio"],
-  ["play", "Play — Real or Fake? & build a plate", "game fun quiz"],
-  ["expertise", "Expertise lab", "skills stack"],
-  ["timeline", "The journey", "career education"],
+  ["projects", "Projects", "work portfolio featured"],
   ["experience", "Experience", "work jobs handshake"],
   ["contributions", "Open-source contributions", "pytorch pandera pr"],
-  ["live", "Live kitchen — what's cooking now", "status pass tickets"],
+  ["expertise", "Skills — focus areas", "skills stack expertise"],
+  ["skills", "Skills — tech stack", "tools languages"],
+  ["about", "About me", "bio story education"],
+  ["timeline", "Journey", "career education"],
+  ["playground", "Playground", "games fun extras"],
+  ["play", "Games — Real or Fake? & build a plate", "game fun quiz"],
+  ["live", "Now cooking — current projects", "status tickets woodlands"],
   ["reading", "Reading room", "books library"],
-  ["contact", "Reserve a table — contact", "email hire"],
+  ["contact", "Contact", "email hire"],
 ];
 
 /** ⌘K / Ctrl+K — jump anywhere, open any project, grab links. */

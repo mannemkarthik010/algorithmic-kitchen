@@ -16,9 +16,9 @@ export default function Contributions() {
 
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionHeader
-          index="§ 05.7"
+          index="03"
           label="Open Source"
-          title={<>Beyond the <span className="t-grad">Day Job</span></>}
+          title={<>Open-Source <span className="t-grad">Contributions</span></>}
           subtitle="Pull requests to open-source projects, with their real status — merged, open, or closed — and what each one taught me."
         />
 

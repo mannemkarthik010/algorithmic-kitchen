@@ -3,15 +3,14 @@ import { useEffect, useState } from "react";
 import { scrollToId } from "../lib/events";
 
 const COURSES: [string, string][] = [
-  ["hero", "Amuse-bouche"],
-  ["about", "The story"],
-  ["projects", "Mains"],
-  ["expertise", "Technique"],
-  ["experience", "Service"],
+  ["hero", "Top"],
+  ["projects", "Projects"],
+  ["experience", "Experience"],
   ["contributions", "Open source"],
-  ["live", "Specials"],
-  ["reading", "Library"],
-  ["contact", "The check"],
+  ["expertise", "Skills"],
+  ["about", "About"],
+  ["playground", "Playground"],
+  ["contact", "Contact"],
 ];
 
 /** A "tasting menu" progress rail on the right edge — shows which course you're on. */

@@ -5,6 +5,12 @@ import { expertiseLab } from "../data/resume";
 import { SectionHeader, GlowBlob, FadeUp } from "./ui";
 import { EASE, DUR } from "../lib/motion";
 
+const LEVEL = {
+  core:     { bars: 5, label: "CORE STRENGTH" },
+  advanced: { bars: 4, label: "ADVANCED" },
+  working:  { bars: 3, label: "WORKING KNOWLEDGE" },
+} as const;
+
 export default function ExpertiseLab() {
   const [active, setActive] = useState<number | null>(null);
   const rm = useReducedMotion();
@@ -15,8 +21,8 @@ export default function ExpertiseLab() {
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader
-          index="§ 04"
-          label="Expertise Lab"
+          index="04"
+          label="Skills · Focus areas"
           title={<>What I <span className="t-grad">Actually Build</span></>}
           subtitle="Six specialisations. Each one proven by shipped work, not just listed skills."
         />
@@ -73,7 +79,7 @@ export default function ExpertiseLab() {
 
                   {/* Mastery flame bars */}
                   <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 22, marginBottom: "var(--space-2)", position: "relative", zIndex: 1 }}>
-                    {[1,2,3,4,5].map((bar) => (
+                    {[1,2,3,4,5].map((bar) => { const lit = LEVEL[area.level].bars; return (
                       <motion.div
                         key={bar}
                         initial={rm ? false : { scaleY: 0 }}
@@ -83,15 +89,15 @@ export default function ExpertiseLab() {
                         style={{
                           width: 5, borderRadius: 3,
                           height: `${Math.min(100, 40 + bar * 12)}%`,
-                          background: bar <= 4
+                          background: bar <= lit
                             ? `linear-gradient(to top, ${area.accent}, ${area.color})`
                             : `linear-gradient(to top, ${area.accent}60, ${area.accent}22)`,
                           transformOrigin: "bottom",
-                          opacity: bar <= 4 ? 0.9 : 0.3,
+                          opacity: bar <= lit ? 0.9 : 0.3,
                         }}
                       />
-                    ))}
-                    <span className="label" style={{ fontSize: 8, color: area.accent, opacity: 0.65, marginLeft: 6, lineHeight: 1, alignSelf: "center" }}>EXPERT</span>
+                    ); })}
+                    <span className="label" style={{ fontSize: 8, color: area.accent, opacity: 0.8, marginLeft: 6, lineHeight: 1, alignSelf: "center" }}>{LEVEL[area.level].label}</span>
                   </div>
 
                   {/* Expandable content */}

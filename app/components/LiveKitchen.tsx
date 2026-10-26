@@ -22,7 +22,7 @@ export default function LiveKitchen() {
       <section id="live" className="s-deep" style={{ position: "relative" }}>
         <GlowBlob size={350} color="rgba(200,145,58,0.04)" style={{ top: "50%", right: -60, transform: "translateY(-50%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
-          <SectionHeader index="§ 05" label="Live Kitchen"
+          <SectionHeader index="06" label="Now cooking"
             title={<>What&apos;s <span className="t-grad">Cooking</span></>}
           />
           <KitchenPass />

@@ -2,15 +2,15 @@
 import { motion } from "framer-motion";
 import { resume } from "../data/resume";
 import { AKMark } from "./ui";
-import FooterPlay from "./FooterPlay";
 
 const NAV = [
-  { l: "story",       h: "#about"      },
-  { l: "recipes",     h: "#projects"   },
-  { l: "ingredients", h: "#skills"     },
-  { l: "experience",  h: "#experience" },
-  { l: "library",     h: "#reading"    },
-  { l: "reserve",     h: "#contact"    },
+  { l: "projects",    h: "#projects"      },
+  { l: "experience",  h: "#experience"    },
+  { l: "open source", h: "#contributions" },
+  { l: "skills",      h: "#expertise"     },
+  { l: "about",       h: "#about"         },
+  { l: "playground",  h: "#playground"    },
+  { l: "contact",     h: "#contact"       },
 ];
 
 const SOCIAL = [
@@ -23,8 +23,6 @@ const SOCIAL = [
 export default function Footer() {
   return (
     <footer style={{ borderTop: "1px solid var(--border)", background: "linear-gradient(180deg, transparent, rgba(6,4,2,0.6))" }}>
-      <FooterPlay />
-
       {/* Chunky sign-off */}
       <div className="container" style={{ paddingTop: "var(--space-5)" }}>
         <motion.a

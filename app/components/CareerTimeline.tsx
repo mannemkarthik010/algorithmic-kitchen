@@ -116,8 +116,8 @@ export default function CareerTimeline() {
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader
-          index="§ 05"
-          label="Evolution"
+          index="05"
+          label="About · Journey"
           title={<>The <span className="t-grad">Journey</span></>}
           subtitle="Seven years. One direction. Every year a sharper focus on intelligent systems."
         />

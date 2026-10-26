@@ -6,13 +6,13 @@ import { contributions } from "../data/contributions";
 import { useGithubPulse } from "../hooks/useGithubPulse";
 import { EASE } from "../lib/motion";
 
+/** Renders the real value in the HTML (crawlers, link previews, no-JS) and animates up from 0 once on screen. */
 function CountUp({ to, decimals = 0, run }: { to: number; decimals?: number; run: boolean }) {
   const rm = useReducedMotion();
-  const [v, setV] = useState(0);
+  const [v, setV] = useState(to);
 
   useEffect(() => {
-    if (!run) return;
-    if (rm) { queueMicrotask(() => setV(to)); return; }
+    if (!run || rm) return;
     const start = performance.now();
     const dur = 1300;
     let raf = 0;
@@ -35,10 +35,12 @@ export default function KitchenStats() {
   const pulse = useGithubPulse();
 
   const merged = contributions.filter((c) => c.prStatus === "merged").length;
+  const open = contributions.filter((c) => c.prStatus === "open").length;
+  const closed = contributions.filter((c) => c.prStatus === "closed").length;
   const stats = [
-    { n: resume.projects.length, label: "dishes on the menu", sub: `${resume.projects.filter((p) => p.status === "live" || p.status === "beta").length} you can taste today` },
+    { n: resume.projects.length, label: "projects built", sub: `${resume.projects.filter((p) => p.demo).length} with live demos` },
     { n: 3.92, d: 2, label: "M.S. GPA", sub: "CSUN · graduated May 2026" },
-    { n: contributions.length, label: "open-source PRs", sub: `${merged} merged · rest in review` },
+    { n: contributions.length, label: "open-source PRs", sub: `${merged} merged · ${open} open · ${closed} closed` },
     ...(pulse ? [{ n: pulse.repos, label: "public repos", sub: "live from GitHub" }] : []),
   ];
   const max = Math.max(1, ...(pulse?.days ?? [1]));
@@ -47,7 +49,7 @@ export default function KitchenStats() {
     <section aria-label="By the numbers" style={{ padding: "var(--space-5) 0 var(--space-4)" }}>
       <div className="container" ref={ref}>
         <p className="mono c-gold" style={{ textAlign: "center", letterSpacing: "0.24em", fontSize: 11, marginBottom: "var(--space-3)" }}>
-          ✦ &nbsp;THE KITCHEN, BY THE NUMBERS&nbsp; ✦
+          ✦ &nbsp;AT A GLANCE&nbsp; ✦
         </p>
         <div className="stats-grid">
           {stats.map((s, i) => (

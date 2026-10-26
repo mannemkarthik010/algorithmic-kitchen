@@ -8,8 +8,8 @@ export default function PlayZone() {
     <section id="play" style={{ position: "relative", padding: "var(--space-6) 0" }}>
       <div className="container">
         <SectionHeader
-          index="03½"
-          label="Play"
+          index="06"
+          label="Games"
           title={<>Taste-test <span className="c-gold">the kitchen</span></>}
           subtitle="Two quick games — see if you can spot what's real, then build a plate of projects that fits what you're hiring for."
         />

@@ -12,8 +12,8 @@ export default function Experience() {
       <div aria-hidden="true" style={{ position: "absolute", top: "20%", right: -80, width: 380, height: 380, borderRadius: "50%", background: "rgba(200,145,58,0.04)", filter: "blur(90px)", pointerEvents: "none", zIndex: 0 }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="§ 04" label="Kitchen Experience"
-          title={<>Time in the <span className="t-grad">Kitchen</span></>}
+        <SectionHeader index="02" label="Experience"
+          title={<>Work <span className="t-grad">Experience</span></>}
         />
 
         <Stagger style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>

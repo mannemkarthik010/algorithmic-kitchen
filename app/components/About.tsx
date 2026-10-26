@@ -41,8 +41,8 @@ export default function About() {
 
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionHeader
-          index="§ 01"
-          label="Chef's Story"
+          index="05"
+          label="About"
           title={<>A Recipe for <span className="t-grad">Curiosity</span></>}
           subtitle={resume.summary}
         />
@@ -63,7 +63,7 @@ export default function About() {
                   { sym: "◉", label: "Location",   val: resume.location },
                   { sym: "◎", label: "Education",  val: "M.S. Computer Science, CSUN" },
                   { sym: "◆", label: "GPA",        val: "3.92 / 4.0" },
-                  { sym: "◈", label: "Experience", val: "3+ years ML Engineering" },
+                  { sym: "◈", label: "Experience", val: "3+ years building ML/AI projects & systems" },
                   { sym: "▲", label: "Email",      val: resume.email },
                 ].map(({ sym, label, val }) => (
                   <div key={label} className="flex-row gap-2">

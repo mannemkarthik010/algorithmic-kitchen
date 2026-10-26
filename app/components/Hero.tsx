@@ -8,27 +8,6 @@ import { EASE, DUR } from "../lib/motion";
 import { STATUS } from "../lib/status";
 import { openProject, scrollToId } from "../lib/events";
 
-/* ─── Typewriter ─────────────────────────── */
-function Typewriter({ text, speed = 30, startDelay = 0 }: { text: string; speed?: number; startDelay?: number }) {
-  const [out, setOut]   = useState("");
-  const [done, setDone] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => {
-      let i = 0;
-      const iv = setInterval(() => {
-        i++;
-        setOut(text.slice(0, i));
-        if (i >= text.length) { setDone(true); clearInterval(iv); }
-      }, speed);
-      return () => clearInterval(iv);
-    }, startDelay);
-    return () => clearTimeout(t);
-  }, [text, speed, startDelay]);
-  return (
-    <>{out}{!done && <motion.span animate={{ opacity: [1,0,1] }} transition={{ duration: 0.75, repeat: Infinity }} style={{ color: "var(--gold)" }}>|</motion.span>}</>
-  );
-}
-
 /* ─── Particle canvas ────────────────────── */
 function Particles({ active }: { active: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -353,11 +332,15 @@ function Curtain() {
 type Stage = 0 | 1 | 2 | 3 | 3.5 | 4;
 
 export default function Hero() {
-  const [stage, setStage]       = useState<Stage>(0);
+  const [stage, setStage]       = useState<Stage>(4);
   const [showCurtain, setShowCurtain] = useState(false);
   const { play, loop }          = useSoundFx();
 
+  // The cinematic intro (gate + curtain) is still available at /?intro=1.
+  // By default the page opens straight onto the hero so visitors see the work immediately.
   useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has("intro")) return;
+    queueMicrotask(() => setStage(0));
     const t1 = setTimeout(() => setStage(1), 380);
     const t2 = setTimeout(() => setStage(2), 1700);
     const t3 = setTimeout(() => setStage(3), 3100);
@@ -375,8 +358,8 @@ export default function Hero() {
 
   return (
     <section id="hero"
-      style={{ minHeight: "calc(100svh + 120px)", display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "120px 0 160px", position: "relative", overflow: "hidden" }}
+      style={{ minHeight: "100svh", display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "110px 0 90px", position: "relative", overflow: "hidden" }}
     >
       <Particles active={open} />
 
@@ -458,56 +441,56 @@ export default function Hero() {
 
               {/* LEFT — dramatic stacked title */}
               <div>
-                {/* Label */}
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5, duration: DUR.moderate, ease: EASE }}
+                {/* Brand eyebrow */}
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: DUR.moderate, ease: EASE }}
                   style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: "var(--space-3)" }}>
                   <AKMark size="sm" />
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ width: 32, height: 1, background: "var(--gold)", display: "block", opacity: 0.5 }} />
-                    <span className="label c-gold" style={{ letterSpacing: "0.2em" }}>MICHELIN-GRADE AI ENGINEERING</span>
-                  </div>
+                  <span className="label c-gold" style={{ letterSpacing: "0.2em" }}>THE ALGORITHMIC KITCHEN · PORTFOLIO</span>
                 </motion.div>
 
-                {/* Stacked brand title */}
-                <div style={{ marginBottom: "var(--space-3)", lineHeight: 1 }}>
-                  {[
-                    { word: "The", cls: "hero-word-the", delay: 0.58 },
-                    { word: "Algorithmic", cls: "hero-word-algorithmic", delay: 0.70 },
-                    { word: "Kitchen", cls: "hero-word-kitchen", delay: 0.82 },
-                  ].map(({ word, cls, delay }) => (
-                    <motion.div key={word}
-                      initial={{ opacity: 0, x: -28 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay, duration: DUR.moderate, ease: EASE }}
-                    >
-                      <span className={cls}>{word}</span>
-                    </motion.div>
-                  ))}
-                </div>
+                {/* Name */}
+                <h1 style={{ marginBottom: "var(--space-2)", lineHeight: 1, fontWeight: 400 }}>
+                  <motion.span className="hero-word-algorithmic" style={{ display: "block" }}
+                    initial={{ opacity: 0, x: -28 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15, duration: DUR.moderate, ease: EASE }}>Karthik</motion.span>
+                  <motion.span className="hero-word-kitchen" style={{ display: "block" }}
+                    initial={{ opacity: 0, x: -28 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.27, duration: DUR.moderate, ease: EASE }}>Mannem</motion.span>
+                </h1>
 
-                {/* Subtitle */}
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.96, duration: DUR.moderate }}
-                  className="body-xl c-muted" style={{ fontStyle: "italic", maxWidth: 500, lineHeight: 1.7, marginBottom: "var(--space-3)" }}>
-                  Cooking intelligent systems from raw data, creativity, and machine learning.
+                {/* Role + one-line specialisation */}
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: DUR.moderate }}
+                  className="hero-role">Machine Learning &amp; AI Engineer</motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: DUR.moderate }}
+                  className="body-xl c-muted" style={{ maxWidth: 520, lineHeight: 1.6, marginBottom: "var(--space-3)" }}>
+                  Building production AI systems with LLMs, RAG, classical ML, and agentic workflows.
                 </motion.p>
 
-                {/* Mono tagline typewriter */}
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.5 }}
-                  className="mono c-gold" style={{ maxWidth: 480, minHeight: 36, letterSpacing: "0.03em", lineHeight: 1.65, marginBottom: "var(--space-4)", fontSize: 12 }}>
-                  <Typewriter text={`"${resume.tagline}"`} startDelay={1200} />
-                </motion.p>
+                {/* Proof chips */}
+                <motion.ul initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: DUR.moderate }}
+                  className="hero-proof" aria-label="Highlights">
+                  <li>M.S. Computer Science · CSUN · 3.92 GPA</li>
+                  <li>Merged open-source PR · pandera</li>
+                  <li>{resume.projects.filter((p) => p.demo).length} live demos</li>
+                </motion.ul>
 
                 {/* CTAs */}
-                <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.22, duration: DUR.moderate, ease: EASE }}
-                  style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap" }}>
-                  <Btn href="#projects" variant="primary">View the Menu</Btn>
-                  <Btn href="#contact" variant="secondary">Reserve a Table</Btn>
+                <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: DUR.moderate, ease: EASE }}
+                  style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", marginBottom: "var(--space-3)" }}>
+                  <Btn href="#projects" variant="primary">View Projects</Btn>
+                  <Btn href="/Karthik_Mannem_Resume.pdf" variant="secondary" target="_blank" rel="noopener noreferrer">Résumé ↗</Btn>
                   <Btn href={resume.github} variant="secondary" target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
+                  <Btn href="#contact" variant="secondary">Contact</Btn>
                 </motion.div>
+
+                {/* Currently building */}
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85, duration: DUR.moderate }}
+                  className="hero-now">
+                  <span className="status-dot status-dot--pulse" style={{ background: STATUS.cooking.color }} aria-hidden="true" />
+                  Now: {resume.currentProject}
+                </motion.p>
 
                 {/* Terminal hint */}
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 0.22 }} transition={{ delay: 3.5, duration: 1.5 }}
-                  className="label c-muted" style={{ marginTop: "var(--space-3)" }}>
+                  className="label c-muted hero-hint" style={{ marginTop: "var(--space-3)" }}>
                   PRESS ⌃` FOR DEVELOPER MODE
                 </motion.p>
               </div>

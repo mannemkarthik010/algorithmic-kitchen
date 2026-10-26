@@ -6,7 +6,7 @@ export const resume = {
   linkedin: "https://linkedin.com/in/karthik-mannem-2008b4225",
   github: "https://github.com/mannemkarthik010",
   tagline: "Cooking intelligent systems with machine learning, creativity, and curiosity.",
-  summary: "Machine Learning Engineer who approaches problem-solving as an end-to-end AI pipeline — ingesting complex real-world inputs, performing structured feature engineering, training transformer-based architectures, and deploying scalable inference systems. 3+ years across predictive modeling, computer vision, and LLM-powered RAG workflows.",
+  summary: "Machine Learning Engineer who approaches problem-solving as an end-to-end AI pipeline — ingesting complex real-world inputs, performing structured feature engineering, training transformer-based architectures, and deploying scalable inference systems. 3+ years building ML/AI projects and systems across predictive modeling, computer vision, and LLM-powered RAG workflows.",
 
   skills: {
     "Base Ingredients":    ["Python", "SQL", "Java", "TypeScript"],
@@ -579,17 +579,19 @@ export type Book    = typeof bookArchive.engineering[number];
 export const expertiseLab = [
   {
     id: "llm",
+    level: "core" as const,
     icon: "◈",
     title: "LLM Systems & RAG",
     tagline: "Production-grade retrieval-augmented generation",
     what: "Design and deploy LLM pipelines that answer domain-specific questions with cited, grounded responses. Not demos — shipped systems.",
     tools: ["LangChain", "OpenAI", "FAISS", "Pinecone", "ChromaDB", "Prompt Eng."],
-    proof: "Preventive Care RAG Agent — 38% hallucination reduction on CDC corpus",
+    proof: "Preventive Care Agent — LangGraph + Chroma RAG with a critic loop; every recommendation cites its source and page",
     color: "#1A3A5C",
     accent: "#4A9ECC",
   },
   {
     id: "ml",
+    level: "core" as const,
     icon: "◉",
     title: "ML Engineering",
     tagline: "End-to-end model development & training",
@@ -601,6 +603,7 @@ export const expertiseLab = [
   },
   {
     id: "cv",
+    level: "working" as const,
     icon: "◇",
     title: "Computer Vision",
     tagline: "Custom CNN architectures for visual tasks",
@@ -612,6 +615,7 @@ export const expertiseLab = [
   },
   {
     id: "rec",
+    level: "working" as const,
     icon: "▲",
     title: "Recommender Systems",
     tagline: "Collaborative filtering & latent factor models",
@@ -623,6 +627,7 @@ export const expertiseLab = [
   },
   {
     id: "deploy",
+    level: "advanced" as const,
     icon: "◆",
     title: "AI Deployment & Infra",
     tagline: "Containerised, production-ready AI systems",
@@ -634,6 +639,7 @@ export const expertiseLab = [
   },
   {
     id: "eval",
+    level: "advanced" as const,
     icon: "◎",
     title: "LLM Evaluation",
     tagline: "Safety, accuracy & alignment assessment",
@@ -697,3 +703,39 @@ export const careerTimeline = [
     milestone: true,
   },
 ];
+
+/** The three projects that lead the portfolio, with the evidence behind each. Only facts already stated in the project data and repos. */
+export const featuredWork = [
+  {
+    slug: "taxproof",
+    headline: "A tax workpaper where every number carries its proof.",
+    evalRows: [
+      ["Approach", "Source packet is SHA-256 hashed and frozen; an evidence graph links each line to its inputs, rule, document and page."],
+      ["Verification", "225 backend tests (passing on SQLite and PostgreSQL) plus 36 frontend tests."],
+      ["Integrity checks", "Every packet reference must resolve (test-enforced); hash-chain verification detects any edited or deleted audit row."],
+      ["AI guardrail", "The AI may investigate but not calculate: claims must cite evidence, and with no model the app says so instead of faking it."],
+      ["Result", "10 shipped iterations, live on Vercel with role switching (preparer, reviewer, partner, client)."],
+    ],
+  },
+  {
+    slug: "retail-intel",
+    headline: "Demand forecasts that are honest about their own accuracy.",
+    evalRows: [
+      ["Dataset", "240 store/department sales series."],
+      ["Baselines", "Seasonal-naive and Holt-Winters, compared against a gradient-boosted model."],
+      ["Experiment", "Rolling-origin backtesting; the winning model is chosen per series rather than one global model."],
+      ["Metrics", "WAPE, 80% prediction-interval coverage, and tool-routing accuracy of the LLM agent."],
+      ["Result", "Gradient-boosted won 154/240 series at 7.9% WAPE. Intervals covered 74.2% against an 80% target, a real calibration gap the validation surfaced. 37-case agent eval harness runs in CI."],
+    ],
+  },
+  {
+    slug: "preventive-care",
+    headline: "A RAG agent that cites its sources and never does the arithmetic.",
+    evalRows: [
+      ["Reference check", "The risk function (Pooled Cohort Equations, plain Python) reproduces the guideline's published worked example: 2.1% / 3.0% (white / Black women) and 5.4% / 6.1% (white / Black men)."],
+      ["Grounding", "Plans are drafted only from the top-5 retrieved guideline chunks; every recommendation traces to a cited source and page."],
+      ["Critic loop", "A four-point rubric (complete, grounded, tier-specific, nothing contraindicated) gates each plan, with at most two revisions."],
+      ["Scope", "Prototype corpus of 12 mock guideline PDFs. It demonstrates the pipeline and is not medical advice."],
+    ],
+  },
+] as const;

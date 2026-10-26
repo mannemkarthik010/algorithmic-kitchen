@@ -117,9 +117,9 @@ export default function Skills() {
       <div aria-hidden="true" style={{ position: "absolute", bottom: 0, left: "50%", width: 500, height: 500, borderRadius: "50%", background: "rgba(200,145,58,0.04)", filter: "blur(90px)", transform: "translateX(-50%)", pointerEvents: "none", zIndex: 0 }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="§ 04" label="Ingredients Shelf"
-          title={<>The <span className="t-grad">Pantry</span></>}
-          subtitle="Every great dish starts with quality ingredients. Hover to explore the depth."
+        <SectionHeader index="04" label="Skills · Tech stack"
+          title={<>Technical <span className="t-grad">Stack</span></>}
+          subtitle="The tools I use, grouped by what they are for. Hover a group to explore."
         />
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: "var(--space-2)" }}>

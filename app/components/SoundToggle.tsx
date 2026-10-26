@@ -11,7 +11,7 @@ export default function SoundToggle() {
       onClick={toggle}
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 5, duration: 0.5 }}
+      transition={{ delay: 1, duration: 0.5 }}
       whileHover={{ borderColor: "var(--border-hover)" }}
       aria-label={muted ? "Enable sound" : "Mute sound"}
       style={{

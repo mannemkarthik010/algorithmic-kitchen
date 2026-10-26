@@ -22,9 +22,9 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   metadataBase: new URL(SITE_URL),
-  title: "The Algorithmic Kitchen — Karthik Mannem | ML Engineer",
+  title: "Karthik Mannem — Machine Learning & AI Engineer | The Algorithmic Kitchen",
   description:
-    "Portfolio of Karthik Mannem — ML Engineer cooking intelligent systems with LangChain, RAG, PyTorch, and LLMs. M.S. CS at CSUN, Los Angeles.",
+    "Karthik Mannem is a Machine Learning & AI Engineer building production AI systems with LLMs, RAG, ML, and agentic workflows. M.S. CS at CSUN, Los Angeles. Open to full-time roles.",
   keywords: [
     "Machine Learning Engineer",
     "AI Engineer",
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: SITE_URL,
-    title: "The Algorithmic Kitchen — Karthik Mannem",
+    title: "Karthik Mannem — Machine Learning & AI Engineer",
     description:
       "Cooking intelligent systems from raw data, creativity, and machine learning. ML Engineer portfolio by Karthik Mannem.",
     siteName: "The Algorithmic Kitchen",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Algorithmic Kitchen — Karthik Mannem",
+    title: "Karthik Mannem — Machine Learning & AI Engineer",
     description: "ML Engineer portfolio. Cooking AI systems with LangChain, RAG, and PyTorch.",
     images: ["/og-image.png"],
   },
