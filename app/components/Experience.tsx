@@ -41,6 +41,17 @@ export default function Experience() {
                         </li>
                       ))}
                     </ul>}
+                    {resume.roleDetails[exp.company] && (
+                      <details className="fw-eval" style={{ marginTop: "var(--space-2)" }}>
+                        <summary>More about this role</summary>
+                        <ul className="exp-more">
+                          {resume.roleDetails[exp.company].summary.map((t) => <li key={t}>{t}</li>)}
+                        </ul>
+                        <ul className="fw-stack" aria-label="Tools" style={{ padding: "0 16px 16px" }}>
+                          {resume.roleDetails[exp.company].tools.map((t) => <li key={t}>{t}</li>)}
+                        </ul>
+                      </details>
+                    )}
                   </div>
 
                   <span className="mono c-muted exp-period" style={{ fontSize: 11, whiteSpace: "nowrap", textAlign: "right", flexShrink: 0 }}>{exp.period}</span>

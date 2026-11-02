@@ -383,6 +383,23 @@ export const resume = {
     },
   ],
 
+  // Longer write-ups shown under a role on the site (keyed by company). Present tense, no client names,
+  // and no numbers until they are measured: add real figures here once you can explain how each was measured.
+  roleDetails: {
+    "SLN Solutions": {
+      summary: [
+        "Working with retail clients to add AI and machine learning to their existing inventory management systems, with a focus on early warning for potential shortages and stock-outs.",
+        "Analyzing historical sales, purchase, and stock-transaction data to find demand trends, seasonal patterns, fast-moving products, and unusual stock movements.",
+        "Building demand-forecasting and stock-out prediction models (regression, classification, time-series forecasting, anomaly detection) and an alert mechanism that notifies business teams as inventory approaches critical thresholds.",
+        "Preprocessing, validating, and engineering features from large inventory datasets held in SQL databases.",
+        "Developing Python REST APIs that accept stock data and return predictions, shortage-risk scores, and replenishment recommendations to the client's existing inventory application.",
+        "Creating dashboards and reports for inventory health, shortage risk, demand forecasts, and stock-movement trends, and documenting models, assumptions, data pipelines, and integrations.",
+        "Collaborating with developers, business analysts, and retail stakeholders to turn inventory requirements into AI-based solutions.",
+      ],
+      tools: ["Python", "SQL", "Pandas", "NumPy", "scikit-learn", "XGBoost", "Random Forest", "Time-series forecasting", "Anomaly detection", "FastAPI", "Flask", "REST APIs", "MySQL", "PostgreSQL", "Power BI", "Tableau", "Matplotlib", "Docker", "AWS / Azure", "Git & GitHub", "Postman", "Jupyter"],
+    },
+  } as Record<string, { summary: string[]; tools: string[] }>,
+
   // On the site but not on the résumé: the website holds the longer version of the story.
   leadership: [
     {

@@ -1673,3 +1673,5 @@ nav a[href="#hero"] .mono { font-family: var(--f-chunk); font-size: 15px; letter
 .exp-lead__card { padding: var(--space-3) var(--space-4); border: 1px dashed var(--border-hover); border-radius: var(--radius-lg); background: rgba(0,0,0,0.2); }
 .exp-lead__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: var(--space-1); }
 .exp-lead__card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted-hi); font-size: 13.5px; line-height: 1.55; }
+
+.exp-more { margin: 0; padding: 4px 16px 14px 34px; display: grid; gap: 8px; color: var(--muted-hi); font-size: 13.5px; line-height: 1.55; }
