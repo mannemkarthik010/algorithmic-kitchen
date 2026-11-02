@@ -189,9 +189,9 @@ const CMD: Record<string, () => Line[]> = {
   "why hire karthik": () => [
     { text: "", type: "output" },
     { text: "  End-to-end ML: data → model → production. Not just notebooks.", type: "gold" },
-    { text: "  RAG pipelines that actually reduce hallucinations in production.", type: "output" },
+    { text: "  RAG pipelines that cite their sources instead of guessing.", type: "output" },
     { text: "  CNN, NLP, Recommenders, full-stack AI — complete menu.", type: "output" },
-    { text: "  1,000+ LLM outputs graded as Generative AI Analyst @ Handshake AI.", type: "output" },
+    { text: "  1,000+ LLM responses scored as AI Model Evaluation Analyst @ Handshake AI.", type: "output" },
     { text: "  Docker + Flask + AWS: ships real systems, not demos.", type: "output" },
     { text: "  3.92 GPA M.S. CS — rigorous academic foundation.", type: "output" },
     { text: "", type: "output" },

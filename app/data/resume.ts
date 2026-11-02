@@ -339,39 +339,43 @@ export const resume = {
     },
   ],
 
+  // Mirrors the résumé (resume/resume.tex) exactly: titles, employers, dates and bullets.
+  // The résumé is the source of truth for this section. Run `npm run sync:check` after editing either.
   experience: [
     {
-      role: "Generative AI Analyst",
+      role: "AI Model Evaluation Analyst",
       kitchenRole: "Quality Tasting Specialist",
       company: "Handshake AI",
+      location: "Remote",
       period: "Sep 2025 – Apr 2026",
       icon: "◈",
       bullets: [
-        "Evaluated 1,000+ LLM outputs using structured quality benchmarks",
-        "Identified hallucination patterns, reducing evaluation inconsistencies by 20%",
-        "Collaborated cross-functionally on prompt refinement workflows",
-        "Maintained high annotation agreement across large datasets",
+        "Scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following.",
+        "Catalogued recurring failure modes and hallucination patterns into reusable categories that fed prompt-refinement workflows and tightened rubrics where graders disagreed.",
+        "Sustained high inter-annotator agreement and escalated ambiguous rubric cases, improving benchmark reliability.",
       ],
     },
     {
-      role: "Machine Learning Engineer",
+      role: "Machine Learning Engineer (Freelance)",
       kitchenRole: "Custom AI Recipe Builder",
-      company: "Freelance",
+      company: "Self-Employed",
+      location: "Remote",
       period: "Aug 2023 – Jun 2024",
       icon: "◇",
       bullets: [
-        "Designed and deployed deep learning models (LSTM, CNN) for 3+ client applications",
-        "Built end-to-end ML workflows, improving training efficiency by 30%",
-        "Containerized ML services with Docker + Flask REST APIs",
-        "Reduced training time by 25% and improved inference latency",
+        "Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, feature engineering, cross-validated training, and the deployed inference endpoint.",
+        "Containerized ML services with Docker behind Flask REST APIs for reproducible deployment and real-time prediction.",
+        "Cut training time by roughly 25% through pipeline profiling, batched preprocessing, and training-config tuning.",
       ],
     },
+  ],
+
+  // On the site but not on the résumé: the website holds the longer version of the story.
+  leadership: [
     {
       role: "Content Lead",
-      kitchenRole: "Community Workshop Chef",
-      company: "Google Developer Student Clubs",
+      org: "Google Developer Student Clubs",
       period: "Aug 2022 – Apr 2024",
-      icon: "◉",
       bullets: [
         "Led a team of 8+ members organizing workshops for 200+ participants",
         "Published technical content, mentored contributors in Git/GitHub workflows",
@@ -645,7 +649,7 @@ export const expertiseLab = [
     tagline: "Safety, accuracy & alignment assessment",
     what: "Designing rubrics for hallucination detection, factual grounding, and response quality at scale. Professional annotation workflow experience.",
     tools: ["Annotation", "Rubric Design", "Hallucination Detection", "RAGAS", "TruthfulQA"],
-    proof: "Handshake AI — evaluating LLM outputs for accuracy and safety in production systems",
+    proof: "Handshake AI — scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following",
     color: "#2A1A1A",
     accent: "#CC4A4A",
   },
@@ -690,9 +694,9 @@ export const careerTimeline = [
   },
   {
     year: "2025",
-    title: "Generative AI Analyst",
-    desc: "Joined Handshake AI as a Generative AI Analyst — deep RAG workflows, production evaluation frameworks, LLM alignment research at CSUN.",
-    tags: ["RAG", "Alignment", "LLM Eval", "Handshake AI"],
+    title: "AI Model Evaluation Analyst",
+    desc: "Joined Handshake AI to evaluate LLM outputs: scored 1,000+ responses against rubrics and catalogued failure modes and hallucination patterns.",
+    tags: ["LLM Eval", "Rubrics", "Hallucination Analysis", "Handshake AI"],
     milestone: true,
   },
   {

@@ -32,7 +32,7 @@ export default function Experience() {
                       <p className="body-lg c-cream" style={{ fontWeight: 500 }}>{exp.role}</p>
                       <Badge>{exp.kitchenRole}</Badge>
                     </div>
-                    <p className="label c-gold" style={{ marginBottom: "var(--space-2)" }}>{exp.company}</p>
+                    <p className="label c-gold" style={{ marginBottom: "var(--space-2)" }}>{exp.company} · {exp.location}</p>
                     <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.38rem" }}>
                       {exp.bullets.map((b, j) => (
                         <li key={j} style={{ display: "flex", gap: "var(--space-1)", alignItems: "flex-start" }}>
@@ -49,6 +49,21 @@ export default function Experience() {
             </Item>
           ))}
         </Stagger>
+
+        <h3 className="exp-sub">Leadership &amp; community</h3>
+        <div className="exp-lead">
+          {resume.leadership.map((l) => (
+            <div key={l.role} className="exp-lead__card">
+              <div className="exp-lead__top">
+                <p className="body-lg c-cream" style={{ fontWeight: 500 }}>{l.role} <span className="c-gold">· {l.org}</span></p>
+                <span className="mono c-muted" style={{ fontSize: 11 }}>{l.period}</span>
+              </div>
+              <ul>
+                {l.bullets.map((b) => <li key={b}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,24 @@
+name: Résumé / site sync check
+
+on:
+  push:
+    paths:
+      - "resume/resume.tex"
+      - "app/data/resume.ts"
+      - "scripts/check-sync.mjs"
+  pull_request:
+    paths:
+      - "resume/resume.tex"
+      - "app/data/resume.ts"
+      - "scripts/check-sync.mjs"
+
+jobs:
+  sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Experience and education match resume.tex
+        run: node scripts/check-sync.mjs

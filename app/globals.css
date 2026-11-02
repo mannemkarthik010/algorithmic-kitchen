@@ -1667,3 +1667,9 @@ nav a[href="#hero"] .mono { font-family: var(--f-chunk); font-size: 15px; letter
 .contact-primary .pill-cta { font-size: 17px; padding: 15px 34px; }
 
 @media (max-width: 768px) { .hero-hint { display: none; } }
+
+/* experience: leadership & community */
+.exp-sub { font-family: var(--f-chunk); font-weight: 400; font-size: clamp(1.1rem, 2.4vw, 1.5rem); color: var(--cream); margin: var(--space-5) 0 var(--space-2); }
+.exp-lead__card { padding: var(--space-3) var(--space-4); border: 1px dashed var(--border-hover); border-radius: var(--radius-lg); background: rgba(0,0,0,0.2); }
+.exp-lead__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: var(--space-1); }
+.exp-lead__card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted-hi); font-size: 13.5px; line-height: 1.55; }
