@@ -343,6 +343,16 @@ export const resume = {
   // The résumé is the source of truth for this section. Run `npm run sync:check` after editing either.
   experience: [
     {
+      role: "AI Engineer",
+      kitchenRole: "Production AI",
+      company: "SLN Solutions",
+      location: "",
+      period: "Oct 2026 – Present",
+      icon: "◆",
+      // Add 2-4 bullets here and in resume.tex once you know what is shareable (the offer letter has a confidentiality clause).
+      bullets: [] as string[],
+    },
+    {
       role: "AI Model Evaluation Analyst",
       kitchenRole: "Quality Tasting Specialist",
       company: "Handshake AI",

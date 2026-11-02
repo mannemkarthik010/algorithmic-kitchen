@@ -32,15 +32,15 @@ export default function Experience() {
                       <p className="body-lg c-cream" style={{ fontWeight: 500 }}>{exp.role}</p>
                       <Badge>{exp.kitchenRole}</Badge>
                     </div>
-                    <p className="label c-gold" style={{ marginBottom: "var(--space-2)" }}>{exp.company} · {exp.location}</p>
-                    <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.38rem" }}>
+                    <p className="label c-gold" style={{ marginBottom: "var(--space-2)" }}>{exp.location ? `${exp.company} · ${exp.location}` : exp.company}</p>
+                    {exp.bullets.length > 0 && <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.38rem" }}>
                       {exp.bullets.map((b, j) => (
                         <li key={j} style={{ display: "flex", gap: "var(--space-1)", alignItems: "flex-start" }}>
                           <span className="mono c-gold" style={{ fontSize: 11, marginTop: 4, flexShrink: 0, opacity: 0.65 }}>▸</span>
                           <span className="body-sm c-muted">{b}</span>
                         </li>
                       ))}
-                    </ul>
+                    </ul>}
                   </div>
 
                   <span className="mono c-muted exp-period" style={{ fontSize: 11, whiteSpace: "nowrap", textAlign: "right", flexShrink: 0 }}>{exp.period}</span>
