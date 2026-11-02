@@ -349,8 +349,11 @@ export const resume = {
       location: "",
       period: "Oct 2026 – Present",
       icon: "◆",
-      // Add 2-4 bullets here and in resume.tex once you know what is shareable (the offer letter has a confidentiality clause).
-      bullets: [] as string[],
+      // Responsibilities, present tense, no client names (the offer letter has a confidentiality clause).
+      bullets: [
+        "Building ML models to forecast demand and flag stock-out risk from retail sales and stock-transaction data.",
+        "Serving shortage-risk scores and alerts to the client's inventory app via Python REST APIs and SQL pipelines.",
+      ],
     },
     {
       role: "AI Model Evaluation Analyst",
