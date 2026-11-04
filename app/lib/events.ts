@@ -1,11 +1,10 @@
-/* Tiny cross-component event bus (window CustomEvents) so the hero book,
-   the command palette and the project section can talk without prop-drilling. */
+/* Tiny cross-component event bus (window CustomEvents) so the hero, the command palette
+   and the project section can talk without prop-drilling. */
 export const OPEN_PROJECT = "ak:open-project";
 export const OPEN_PALETTE = "ak:open-palette";
-export const OPEN_PLAYGROUND = "ak:open-playground";
 
-/** Section ids that live inside the collapsed Playground. */
-export const PLAYGROUND_IDS = ["playground", "play", "live", "cook"];
+/** Section ids that live on the /lab page instead of the homepage. */
+export const LAB_IDS = ["lab", "play", "live", "cook", "library", "tiffin"];
 
 export function openProject(slug: string) {
   window.dispatchEvent(new CustomEvent(OPEN_PROJECT, { detail: { slug } }));
@@ -15,11 +14,9 @@ export function openPalette() {
   window.dispatchEvent(new Event(OPEN_PALETTE));
 }
 
+/** Scroll to a section on this page, or navigate to the page that owns it (homepage or /lab). */
 export function scrollToId(id: string) {
-  const go = () => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  if (document.getElementById(id)) { go(); return; }
-  if (PLAYGROUND_IDS.includes(id)) {
-    window.dispatchEvent(new Event(OPEN_PLAYGROUND));
-    setTimeout(go, 400);
-  }
+  const el = document.getElementById(id);
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+  window.location.assign(LAB_IDS.includes(id) ? (id === "lab" ? "/lab" : `/lab#${id}`) : `/#${id}`);
 }

@@ -15,7 +15,7 @@ export default function Contributions() {
 
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionHeader
-          index="03"
+          index="02"
           label="Open Source"
           align="split"
           title={<>Open-Source <span className="t-grad">Contributions</span></>}

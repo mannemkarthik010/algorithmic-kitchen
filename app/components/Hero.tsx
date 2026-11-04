@@ -6,7 +6,7 @@ import { AKMark, Btn } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";
 import { EASE, DUR } from "../lib/motion";
 import { STATUS } from "../lib/status";
-import { openProject, scrollToId } from "../lib/events";
+import HeroPipeline from "./HeroPipeline";
 
 /* ─── Particle canvas ────────────────────── */
 function Particles({ active }: { active: boolean }) {
@@ -55,262 +55,6 @@ function Fog() {
         />
       ))}
     </div>
-  );
-}
-
-/* ─── Kitchen counter SVG ────────────────── */
-function Counter() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 1440 200"
-      style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: 200, pointerEvents: "none" }}
-      preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1B1309"/><stop offset="100%" stopColor="#0C0805"/>
-        </linearGradient>
-        <linearGradient id="eg" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="transparent"/>
-          <stop offset="22%" stopColor="rgba(200,145,58,0.32)"/>
-          <stop offset="50%" stopColor="rgba(200,145,58,0.58)"/>
-          <stop offset="78%" stopColor="rgba(200,145,58,0.32)"/>
-          <stop offset="100%" stopColor="transparent"/>
-        </linearGradient>
-        <radialGradient id="pg" cx="50%" cy="100%" r="50%">
-          <stop offset="0%" stopColor="rgba(200,145,58,0.09)"/>
-          <stop offset="100%" stopColor="transparent"/>
-        </radialGradient>
-      </defs>
-      <ellipse cx="720" cy="170" rx="700" ry="58" fill="url(#pg)"/>
-      <rect x="0" y="140" width="1440" height="60" fill="url(#cg)"/>
-      <rect x="0" y="138" width="1440" height="2" fill="url(#eg)"/>
-      <rect x="82" y="88" width="84" height="52" rx="6" fill="#100C05"/>
-      <ellipse cx="124" cy="88" rx="42" ry="9" fill="#1B1309"/>
-      <ellipse cx="124" cy="140" rx="42" ry="9" fill="#090604"/>
-      <rect x="80" y="84" width="88" height="4" rx="2" fill="rgba(200,145,58,0.18)"/>
-      <rect x="294" y="112" width="58" height="10" rx="2" fill="#1B1309"/>
-      <rect x="296" y="102" width="52" height="10" rx="2" fill="#140F07"/>
-      <rect x="290" y="90" width="60" height="2" rx="1" fill="rgba(200,145,58,0.22)"/>
-      <rect x="700" y="100" width="40" height="40" rx="6" fill="#100C05"/>
-      <ellipse cx="720" cy="100" rx="20" ry="6" fill="#1B1309"/>
-      <rect x="698" y="96" width="44" height="4" rx="2" fill="rgba(200,145,58,0.26)"/>
-      <rect x="452" y="106" width="13" height="34" rx="2" fill="#1C1410"/>
-      <ellipse cx="458" cy="101" rx="3" ry="5.5" fill="rgba(225,172,82,0.68)"/>
-      <ellipse cx="458" cy="100" rx="1.6" ry="3.2" fill="rgba(255,218,100,0.88)"/>
-      <rect x="1292" y="110" width="13" height="30" rx="2" fill="#1C1410"/>
-      <ellipse cx="1298" cy="105" rx="3" ry="5.5" fill="rgba(225,172,82,0.62)"/>
-      <ellipse cx="1298" cy="104" rx="1.6" ry="3.2" fill="rgba(255,218,100,0.82)"/>
-    </svg>
-  );
-}
-
-/* ─── Floating cookbook artifact ─────────── */
-function CookbookArtifact({ visible }: { visible: boolean }) {
-  const rm = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [flipped, setFlipped] = useState(false);
-  const chips = ["LangChain","PyTorch","RAG","OpenAI","FAISS"];
-  const chipPositions = [
-    { top: "6%",  left: "-16%", delay: 0.6 },
-    { top: "28%", left: "104%", delay: 0.8 },
-    { top: "62%", left: "100%", delay: 1.0 },
-    { top: "78%", left: "-14%", delay: 0.7 },
-    { top: "46%", left: "-18%", delay: 0.9 },
-  ];
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (rm || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);
-    const dy = (e.clientY - cy) / (rect.height / 2);
-    setTilt({ x: dy * -12, y: dx * 14 });
-  }, [rm]);
-
-  const handleMouseLeave = useCallback(() => setTilt({ x: 0, y: 0 }), []);
-
-  return (
-    <motion.div
-      ref={containerRef}
-      initial={{ opacity: 0, x: 40 }}
-      animate={visible ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
-      transition={{ duration: DUR.slow, ease: EASE, delay: 0.6 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ position: "relative", width: "100%", maxWidth: 340, margin: "0 auto", perspective: 900 }}
-    >
-      {/* Ambient glow */}
-      <motion.div
-        animate={rm ? {} : { opacity: [0.4, 0.75, 0.4], scale: [1, 1.08, 1] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position: "absolute", inset: -50, borderRadius: "50%", background: "radial-gradient(circle, rgba(200,145,58,0.14), transparent 68%)", filter: "blur(28px)", pointerEvents: "none" }}
-      />
-
-      {/* 3D Book wrapper */}
-      <motion.div
-        animate={rm ? {} : {
-          rotateY: tilt.y !== 0 ? tilt.y : [-4, 4, -4],
-          rotateX: tilt.x !== 0 ? tilt.x : [1, -1, 1],
-          rotateZ: [-0.6, 0.6, -0.6],
-          y: [0, -8, 0],
-        }}
-        transition={tilt.x !== 0 || tilt.y !== 0
-          ? { type: "spring", stiffness: 180, damping: 22 }
-          : { duration: 6, repeat: Infinity, ease: "easeInOut" }
-        }
-        style={{ transformStyle: "preserve-3d", position: "relative", transformOrigin: "center center" }}
-      >
-        {/* Floor shadow */}
-        <motion.div
-          animate={rm ? {} : { scaleX: [1, 1.06, 1], opacity: [0.55, 0.35, 0.55] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: "absolute", bottom: -28, left: "50%", transform: "translateX(-50%)", width: "88%", height: 22, background: "radial-gradient(ellipse, rgba(0,0,0,0.65), transparent 72%)", filter: "blur(10px)", pointerEvents: "none" }}
-        />
-
-        {/* SPINE — 3D left face */}
-        <div style={{
-          position: "absolute", top: "2%", left: 0, bottom: "2%", width: 22,
-          background: "linear-gradient(90deg, #090604, #1A1008, #0C0805)",
-          transform: "translateX(-20px) rotateY(-90deg)",
-          transformOrigin: "right center",
-          borderRadius: "4px 0 0 4px",
-          boxShadow: "inset -3px 0 8px rgba(0,0,0,0.6)",
-          opacity: flipped ? 0 : 1, transition: "opacity .3s",
-        }}>
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <p style={{ fontFamily: "var(--f-mono)", fontSize: 8, color: "rgba(200,145,58,0.55)", letterSpacing: "0.2em", writingMode: "vertical-rl", transform: "rotate(180deg)" }}>AK · 2026</p>
-          </div>
-        </div>
-
-        {/* PAGE BLOCK — 3D right edge */}
-        <div style={{
-          position: "absolute", top: "3%", right: -6, bottom: "3%", width: 10,
-          background: "repeating-linear-gradient(to bottom, rgba(240,228,200,0.18) 0px, rgba(240,228,200,0.18) 1px, rgba(200,180,140,0.06) 1px, rgba(200,180,140,0.06) 4px)",
-          transform: "rotateY(90deg)",
-          transformOrigin: "left center",
-          borderRadius: "0 2px 2px 0",
-          opacity: flipped ? 0 : 1, transition: "opacity .3s",
-        }} />
-
-        {/* FLIPPER — click / Enter turns the book to "Tonight's Menu" */}
-        <motion.div
-          role="button"
-          tabIndex={0}
-          aria-pressed={flipped}
-          aria-label={flipped ? "Close the menu and show the cover" : "Open the cookbook to tonight's menu"}
-          onClick={() => setFlipped((f) => !f)}
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlipped((f) => !f); } }}
-          animate={{ rotateY: flipped ? 180 : 0 }}
-          transition={rm ? { duration: 0 } : { duration: 0.9, ease: EASE }}
-          style={{ position: "relative", width: "100%", aspectRatio: "3/4", transformStyle: "preserve-3d", cursor: "pointer", outline: "none" }}
-        >
-        {/* FRONT COVER */}
-        <div style={{
-          position: "absolute", inset: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
-          background: "linear-gradient(148deg, #1E1509 0%, #0E0906 55%, #080503 100%)",
-          borderRadius: "4px 14px 14px 4px",
-          boxShadow: "18px 22px 60px rgba(0,0,0,0.82), -2px 0 6px rgba(0,0,0,0.5), inset 20px 0 0 rgba(0,0,0,0.4), inset 0 0 40px rgba(200,145,58,0.04)",
-          border: "1px solid rgba(200,145,58,0.5)",
-          overflow: "hidden",
-        }}>
-          {/* Light catch — specular highlight */}
-          <div style={{ position: "absolute", top: 0, left: 0, width: "55%", height: "45%", background: "radial-gradient(ellipse at 25% 20%, rgba(255,240,200,0.05), transparent 65%)", pointerEvents: "none" }} />
-
-          {/* Embossed border frames */}
-          <div style={{ position: "absolute", inset: 10, border: "1px solid rgba(200,145,58,0.22)", borderRadius: 8, pointerEvents: "none" }} />
-          <div style={{ position: "absolute", inset: 13, border: "1px solid rgba(200,145,58,0.1)", borderRadius: 6, pointerEvents: "none" }} />
-
-          {/* Gold rules */}
-          <div style={{ position: "absolute", top: "13%", left: "9%", right: "9%", height: 1, background: "linear-gradient(90deg, transparent, rgba(200,145,58,0.6), transparent)" }} />
-          <div style={{ position: "absolute", bottom: "15%", left: "9%", right: "9%", height: 1, background: "linear-gradient(90deg, transparent, rgba(200,145,58,0.35), transparent)" }} />
-
-          {/* Cover text */}
-          <div style={{ position: "absolute", inset: 0, padding: "18% 12% 20%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 6 }}>
-            <p style={{ fontFamily: "var(--f-mono)", fontSize: "clamp(7px,1.1vw,9px)", color: "rgba(200,145,58,0.55)", letterSpacing: "0.22em" }}>THE</p>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(15px,2.4vw,22px)", color: "var(--cream)", lineHeight: 1.1, textAlign: "center", fontWeight: 600, textShadow: "0 2px 12px rgba(200,145,58,0.2)" }}>ALGORITHMIC</p>
-            <p style={{ fontFamily: "var(--f-display)", fontSize: "clamp(15px,2.4vw,22px)", color: "var(--cream)", lineHeight: 1.1, textAlign: "center", fontWeight: 600, textShadow: "0 2px 12px rgba(200,145,58,0.2)" }}>KITCHEN</p>
-            <div style={{ width: 32, height: 1, background: "rgba(200,145,58,0.35)", margin: "4px 0" }} />
-            <p style={{ fontFamily: "var(--f-mono)", fontSize: "clamp(6px,0.9vw,8px)", color: "rgba(200,145,58,0.4)", letterSpacing: "0.14em", textAlign: "center" }}>Intelligence · Craft · Systems</p>
-            <motion.div
-              animate={rm ? {} : { boxShadow: ["0 0 8px rgba(200,145,58,0.2)", "0 0 18px rgba(200,145,58,0.45)", "0 0 8px rgba(200,145,58,0.2)"] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              style={{ marginTop: 14, width: 52, height: 52, borderRadius: "50%", background: "radial-gradient(circle, rgba(200,145,58,0.1), rgba(200,145,58,0.03))", border: "1.5px solid rgba(200,145,58,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              <AKMark size="sm" />
-            </motion.div>
-            <p style={{ fontFamily: "var(--f-mono)", fontSize: "clamp(5px,0.8vw,7px)", color: "rgba(200,145,58,0.28)", letterSpacing: "0.18em", marginTop: 8 }}>KARTHIK MANNEM · 2026</p>
-          </div>
-
-          {/* Spine-edge inner shadow */}
-          <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: "14%", background: "linear-gradient(90deg, rgba(0,0,0,0.6), transparent)", pointerEvents: "none" }} />
-        </div>
-
-        {/* BACK — "Tonight's Menu" */}
-        <div style={{
-          position: "absolute", inset: 0, transform: "rotateY(180deg)",
-          backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden",
-          background: "linear-gradient(160deg, #F1E4C6 0%, #E4D2A8 100%)",
-          borderRadius: "14px 4px 4px 14px",
-          boxShadow: "-18px 22px 60px rgba(0,0,0,0.75), inset 0 0 40px rgba(120,80,20,0.18)",
-          border: "1px solid rgba(120,80,20,0.5)",
-          color: "#2A1B0A", overflow: "hidden",
-          padding: "9% 9% 7%", display: "flex", flexDirection: "column",
-        }}>
-          <p style={{ textAlign: "center", fontFamily: "var(--f-mono)", fontSize: 8, letterSpacing: "0.28em", color: "#7A5418" }}>✦ TONIGHT&apos;S MENU ✦</p>
-          <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #7A5418, transparent)", margin: "7px 0 8px" }} />
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: 0 }}>
-            {resume.projects.slice(0, 5).map((p) => (
-              <button
-                key={p.slug}
-                type="button"
-                onClick={(e) => { e.stopPropagation(); scrollToId("projects"); setTimeout(() => openProject(p.slug), 450); }}
-                onKeyDown={(e) => e.stopPropagation()}
-                tabIndex={flipped ? 0 : -1}
-                style={{ background: "none", border: "none", padding: "3px 0", textAlign: "left", cursor: "pointer", color: "inherit" }}
-              >
-                <span style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
-                  <span style={{ fontFamily: "var(--f-display)", fontWeight: 600, fontSize: "clamp(11px,1.6vw,13.5px)", lineHeight: 1.15 }}>{p.title.split(" — ")[0]}</span>
-                  <span style={{ flex: 1, borderBottom: "1.5px dotted rgba(122,84,24,0.55)", transform: "translateY(-3px)" }} />
-                  <span style={{ fontFamily: "var(--f-mono)", fontSize: 7.5, letterSpacing: "0.08em", color: "#5a3d10" }}>{STATUS[p.status].label.toUpperCase()}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-          <p style={{ textAlign: "center", fontFamily: "var(--f-display)", fontStyle: "italic", fontSize: 10, color: "#6b4a14", marginTop: 6 }}>tap a dish to read its recipe · tap the page to close</p>
-        </div>
-        </motion.div>
-      </motion.div>
-
-      <p aria-hidden="true" style={{ textAlign: "center", marginTop: 34, fontFamily: "var(--f-mono)", fontSize: 10, letterSpacing: "0.16em", color: "rgba(200,145,58,0.55)" }}>
-        {flipped ? "↺ CLOSE THE BOOK" : "↻ OPEN THE COOKBOOK"}
-      </p>
-
-      {/* Floating tech chips */}
-      {chips.map((chip, i) => (
-        <motion.div
-          key={chip}
-          initial={{ opacity: 0, scale: 0.65, y: 10 }}
-          animate={visible ? { opacity: 1, scale: 1, y: rm ? 0 : [0, -(4 + i * 1.5), 0] } : { opacity: 0 }}
-          transition={{
-            delay: chipPositions[i].delay, duration: DUR.moderate, ease: EASE,
-            y: { duration: 2.8 + i * 0.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }
-          }}
-          style={{
-            position: "absolute",
-            top: chipPositions[i].top, left: chipPositions[i].left,
-            padding: "5px 13px", borderRadius: 22,
-            background: "rgba(8,5,2,0.92)",
-            border: "1px solid rgba(200,145,58,0.45)",
-            fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)",
-            whiteSpace: "nowrap", backdropFilter: "blur(12px)",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(200,145,58,0.08)",
-          }}
-        >
-          {chip}
-        </motion.div>
-      ))}
-    </motion.div>
   );
 }
 
@@ -370,7 +114,6 @@ export default function Hero() {
       {/* Environment */}
       <motion.div initial={false} animate={{ opacity: open ? 1 : 0 }} transition={{ duration: 1.3 }}
         style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-        <Counter />
         <Fog />
       </motion.div>
 
@@ -461,7 +204,7 @@ export default function Hero() {
                   className="hero-role">Machine Learning &amp; AI Engineer</motion.p>
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: DUR.moderate }}
                   className="body-xl c-muted" style={{ maxWidth: 520, lineHeight: 1.6, marginBottom: "var(--space-3)" }}>
-                  Building production AI systems with LLMs, RAG, classical ML, and agentic workflows.
+                  I build AI systems you can inspect, test, and trust. From real-world data to measurable, deployed intelligence.
                 </motion.p>
 
                 {/* Proof chips */}
@@ -475,17 +218,16 @@ export default function Hero() {
                 {/* CTAs */}
                 <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: DUR.moderate, ease: EASE }}
                   style={{ display: "flex", gap: "var(--space-2)", flexWrap: "wrap", marginBottom: "var(--space-3)" }}>
-                  <Btn href="#projects" variant="primary">View Projects</Btn>
+                  <Btn href="#projects" variant="primary">Selected work</Btn>
                   <Btn href="/Karthik_Mannem_Resume.pdf" variant="secondary" target="_blank" rel="noopener noreferrer">Résumé ↗</Btn>
                   <Btn href={resume.github} variant="secondary" target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
-                  <Btn href="#contact" variant="secondary">Contact</Btn>
                 </motion.div>
 
-                {/* Currently building */}
+                {/* Availability */}
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85, duration: DUR.moderate }}
                   className="hero-now">
-                  <span className="status-dot status-dot--pulse" style={{ background: STATUS.cooking.color }} aria-hidden="true" />
-                  Now: {resume.currentProject}
+                  <span className="status-dot status-dot--pulse" style={{ background: STATUS.live.color }} aria-hidden="true" />
+                  Open to full-time roles
                 </motion.p>
 
                 {/* Terminal hint */}
@@ -496,7 +238,7 @@ export default function Hero() {
               </div>
 
               {/* RIGHT — floating cookbook artifact */}
-              <CookbookArtifact visible={open} />
+              <HeroPipeline />
             </div>
 
             {/* Scroll indicator */}

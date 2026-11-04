@@ -39,6 +39,15 @@ function TiltPortrait() {
   );
 }
 
+const TIMELINE: [string, string, string][] = [
+  ["2020", "Started B.Tech in CS", "Vel Tech, Chennai. First lines of Python."],
+  ["2022", "GDSC Content Lead", "Workshops for 200+ students; led a team of 8."],
+  ["2023", "First freelance ML work", "Deep learning models, Docker pipelines, production APIs."],
+  ["2024", "Moved to Los Angeles", "Finished the B.Tech (9.21 CGPA) and started the M.S. at CSUN."],
+  ["2025", "AI Model Evaluation Analyst", "Handshake AI. Scored 1,000+ LLM responses against rubrics."],
+  ["2026", "Graduated, now an AI Engineer", "M.S. complete (3.92 GPA). AI Engineer at SLN Solutions."],
+];
+
 const FACTS: [string, string][] = [
   ["Based in", resume.location],
   ["Studied", "M.S. Computer Science, CSUN"],
@@ -82,6 +91,13 @@ export default function About() {
               </ul>
             </div>
           </div>
+
+          <p className="sh-label" style={{ marginTop: "var(--space-4)" }}>Timeline</p>
+          <ol className="about-time">
+            {TIMELINE.map(([y, t, d]) => (
+              <li key={y}><span className="about-time__y">{y}</span><span className="about-time__t">{t}</span><span className="about-time__d">{d}</span></li>
+            ))}
+          </ol>
         </motion.div>
       </div>
     </section>

@@ -15,6 +15,7 @@ export default function Contact() {
   const [chatInput, setChatInput] = useState("");
   const [msgs, setMsgs]         = useState<Msg[]>([{ role: "assistant", text: "Welcome! I'm ChefGPT, Karthik's AI assistant. Ask me anything about his skills, projects, or experience." }]);
   const [loading, setLoading]   = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const bottomRef   = useRef<HTMLDivElement>(null);
   const hasMounted  = useRef(false);
   const { play }    = useSoundFx();
@@ -84,7 +85,7 @@ export default function Contact() {
     <section id="contact" className="s-warm" style={{ position: "relative" }}>
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="08" label="Contact"
+        <SectionHeader index="06" label="Contact"
           title={<>Let&apos;s <span className="t-grad">Work Together</span></>}
           subtitle="Open to full-time ML/AI engineering roles. Email is the fastest way to reach me."
         />
@@ -153,10 +154,14 @@ export default function Contact() {
 
           {/* ChefGPT */}
           <FadeUp delay={0.12}>
-            <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "0.4rem" }}>Ask ChefGPT</h3>
-            <p className="body-sm c-muted" style={{ marginBottom: "var(--space-2)" }}>Quick questions about my work? This assistant has read the whole portfolio.</p>
+            <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "0.4rem" }}>Ask about my work</h3>
+            <p className="body-sm c-muted" style={{ marginBottom: "var(--space-2)" }}>Optional. An AI assistant that has read this portfolio can answer quick questions about my projects and background.</p>
 
-            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            {!chatOpen && (
+              <button type="button" className="fw-ghost" onClick={() => setChatOpen(true)}>Start a chat →</button>
+            )}
+
+            {chatOpen && <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
               {/* Chat header */}
               <div style={{ padding: "0.85rem var(--space-3)", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
                 <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(200,145,58,0.12)", border: "1px solid var(--border-active)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -202,7 +207,7 @@ export default function Contact() {
                 />
                 <Btn onClick={sendChat} variant="primary" disabled={loading} style={{ padding: "8px 16px", fontSize: 11, flexShrink: 0 }}>Send</Btn>
               </div>
-            </div>
+            </div>}
           </FadeUp>
         </div>
       </div>

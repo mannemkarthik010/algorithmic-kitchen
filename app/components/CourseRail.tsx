@@ -4,17 +4,15 @@ import { scrollToId } from "../lib/events";
 
 const COURSES: [string, string][] = [
   ["hero", "Top"],
-  ["projects", "Projects"],
-  ["experience", "Experience"],
+  ["projects", "Work"],
   ["contributions", "Open source"],
-  ["expertise", "Skills"],
+  ["experience", "Experience"],
+  ["expertise", "What I build"],
   ["about", "About"],
-  ["library", "Library"],
-  ["playground", "Playground"],
   ["contact", "Contact"],
 ];
 
-/** A "tasting menu" progress rail on the right edge — shows which course you're on. */
+/** A progress rail on the right edge that shows which section you are on. */
 export default function CourseRail() {
   const [active, setActive] = useState("hero");
   const [shown, setShown] = useState(false);
@@ -29,8 +27,6 @@ export default function CourseRail() {
         if (el && el.getBoundingClientRect().top <= mid) cur = id;
       }
       setActive(cur);
-      // the library is a full-bleed scene; the dots would sit on top of its right-end books
-      if (cur === "library") setShown(false);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

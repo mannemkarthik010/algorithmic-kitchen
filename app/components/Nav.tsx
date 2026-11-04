@@ -2,25 +2,24 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AKMark } from "./ui";
+import { usePathname } from "next/navigation";
 import { openPalette } from "../lib/events";
 
 const NAV = [
-  { label: "projects",    href: "#projects"       },
-  { label: "experience",  href: "#experience"     },
-  { label: "open source", href: "#contributions"  },
-  { label: "skills",      href: "#expertise"      },
-  { label: "about",       href: "#about"          },
-  { label: "library",     href: "#library"        },
-  { label: "playground",  href: "#playground"     },
-  { label: "contact",     href: "#contact"        },
+  { label: "work",        href: "/#projects",      id: "projects"      },
+  { label: "open source", href: "/#contributions", id: "contributions" },
+  { label: "about",       href: "/#about",         id: "about"         },
+  { label: "lab",         href: "/lab",            id: "lab"           },
+  { label: "contact",     href: "/#contact",       id: "contact"       },
 ];
 
-const SECTIONS = ["projects","experience","contributions","expertise","about","library","playground","contact"];
+const SECTIONS = ["projects", "contributions", "about", "contact"];
 
 export default function Nav() {
   const [scrolled, setScrolled]   = useState(false);
   const [open, setOpen]           = useState(false);
   const [active, setActive]       = useState<string>("");
+  const onLab = usePathname() === "/lab";
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,7 +56,7 @@ export default function Nav() {
     >
       <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 0 }}>
         {/* Brand */}
-        <motion.a href="#hero" whileHover={{ opacity: 0.75 }}
+        <motion.a href="/" whileHover={{ opacity: 0.75 }}
           style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
           <AKMark size="sm" />
           <span className="mono c-gold" style={{ letterSpacing: "0.04em" }}>The Algorithmic Kitchen</span>
@@ -66,7 +65,7 @@ export default function Nav() {
         {/* Desktop nav */}
         <div className="hidden md:flex" style={{ alignItems: "center", gap: "var(--space-4)" }}>
           {NAV.map((n) => {
-            const isActive = active === n.href.replace("#", "");
+            const isActive = n.id === "lab" ? onLab : !onLab && active === n.id;
             return (
               <div key={n.label} style={{ position: "relative" }}>
                 <motion.a

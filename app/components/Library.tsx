@@ -444,7 +444,7 @@ export default function Library() {
     <section id="library" ref={rootRef} className="lib" tabIndex={0} aria-label="Reading room: Karthik's bookshelf" data-no-ember>
       {/* top bar */}
       <div className="lib-bar">
-        <span className="lib-lbl lib-box">06 / Library</span>
+        <span className="lib-lbl lib-box">LAB / Library</span>
         <div className="lib-logo">
           <span className="lib-logo__t">The Reading Room</span>
           <span className="lib-logo__s">KARTHIK MANNEM</span>

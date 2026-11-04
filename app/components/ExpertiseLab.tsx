@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { expertiseLab } from "../data/resume";
 import { SectionHeader, FadeUp } from "./ui";
+import { StackSheet } from "./Skills";
 import { EASE, DUR } from "../lib/motion";
 
 const LEVEL = {
@@ -21,8 +22,8 @@ export default function ExpertiseLab() {
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader
           index="04"
-          label="Skills · Focus areas"
-          title={<>What I <span className="t-grad">Actually Build</span></>}
+          label="What I build"
+          title={<>What I <span className="t-grad">actually build</span></>}
           subtitle="Six specialisations. Each one proven by shipped work, not just listed skills."
         />
 
@@ -136,6 +137,11 @@ export default function ExpertiseLab() {
             );
           })}
         </div>
+
+        <details className="fw-eval stack-toggle">
+          <summary>Full tech stack</summary>
+          <div style={{ padding: "0 16px 8px" }}><StackSheet /></div>
+        </details>
       </div>
     </section>
   );

@@ -8,18 +8,16 @@ import { OPEN_PALETTE, openProject, scrollToId } from "../lib/events";
 type Cmd = { id: string; group: string; label: string; hint?: string; keywords?: string; run: () => void };
 
 const SECTIONS: [string, string, string][] = [
-  ["projects", "Projects", "work portfolio featured"],
-  ["experience", "Experience", "work jobs handshake"],
+  ["projects", "Work: featured projects", "work portfolio featured"],
   ["contributions", "Open-source contributions", "pytorch pandera pr"],
-  ["expertise", "Skills: focus areas", "skills stack expertise"],
-  ["skills", "Skills: tech stack", "tools languages"],
-  ["about", "About me", "bio story education"],
-  ["timeline", "Journey", "career education"],
-  ["playground", "Playground", "games fun extras"],
-  ["play", "Games: Real or Fake? & build a plate", "game fun quiz"],
-  ["live", "Now cooking: current projects", "status tickets woodlands"],
-  ["library", "Library: reading room", "books reading shelf"],
+  ["experience", "Experience", "work jobs handshake"],
+  ["expertise", "What I build, and the full tech stack", "skills stack expertise tools"],
+  ["about", "About me", "bio story education timeline"],
   ["contact", "Contact", "email hire"],
+  ["lab", "The Lab", "games fun extras"],
+  ["play", "Lab: Real or Fake? and build a plate", "game fun quiz"],
+  ["library", "Lab: the library", "books reading shelf"],
+  ["live", "Lab: what I am building now", "status tickets"],
 ];
 
 /** ⌘K / Ctrl+K — jump anywhere, open any project, grab links. */

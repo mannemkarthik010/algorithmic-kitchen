@@ -1,22 +1,19 @@
 "use client";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
-import About from "./components/About";
+import KitchenStats from "./components/KitchenStats";
+import Ticker from "./components/Ticker";
 import Projects from "./components/Projects";
-import ExpertiseLab from "./components/ExpertiseLab";
-import Skills from "./components/Skills";
-import CareerTimeline from "./components/CareerTimeline";
-import Experience from "./components/Experience";
 import Contributions from "./components/Contributions";
-import Library from "./components/Library";
-import Playground from "./components/Playground";
+import Experience from "./components/Experience";
+import ExpertiseLab from "./components/ExpertiseLab";
+import About from "./components/About";
+import LabTeaser from "./components/LabTeaser";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Terminal from "./components/Terminal";
 import ScrollToTop from "./components/ScrollToTop";
 import SoundToggle from "./components/SoundToggle";
-import KitchenStats from "./components/KitchenStats";
-import Ticker from "./components/Ticker";
 import CourseRail from "./components/CourseRail";
 import EmberCursor from "./components/EmberCursor";
 import CommandPalette from "./components/CommandPalette";
@@ -34,18 +31,14 @@ export default function Home() {
       <Ticker />
       <Projects />
       <SectionDivider />
-      <Experience />
-      <SectionDivider />
       <Contributions />
       <SectionDivider />
+      <Experience />
+      <SectionDivider />
       <ExpertiseLab />
-      <Skills />
       <SectionDivider />
       <About />
-      <CareerTimeline />
-      <Library />
-      <Playground />
-      <SectionDivider />
+      <LabTeaser />
       <Contact />
       <Footer />
       <Terminal />

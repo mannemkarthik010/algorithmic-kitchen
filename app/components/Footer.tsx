@@ -5,14 +5,12 @@ import { resume } from "../data/resume";
 import { AKMark } from "./ui";
 
 const NAV = [
-  { l: "projects",    h: "#projects"      },
-  { l: "experience",  h: "#experience"    },
-  { l: "open source", h: "#contributions" },
-  { l: "skills",      h: "#expertise"     },
-  { l: "about",       h: "#about"         },
-  { l: "library",     h: "#library"       },
-  { l: "playground",  h: "#playground"    },
-  { l: "contact",     h: "#contact"       },
+  { l: "work",        h: "/#projects"      },
+  { l: "open source", h: "/#contributions" },
+  { l: "experience",  h: "/#experience"    },
+  { l: "about",       h: "/#about"         },
+  { l: "lab",         h: "/lab"            },
+  { l: "contact",     h: "/#contact"       },
 ];
 
 const SOCIAL = [
@@ -33,7 +31,7 @@ export default function Footer() {
       {/* Chunky sign-off */}
       <div className="container footer-persp" ref={nameRef} style={{ paddingTop: "var(--space-5)" }}>
         <motion.a
-          href="#contact"
+          href="/#contact"
           className="footer-mega"
           aria-label="Karthik Mannem, get in touch"
           style={rm ? undefined : { rotateX, y: lift, transformOrigin: "50% 100%" }}

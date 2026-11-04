@@ -228,7 +228,7 @@ export default function Projects() {
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <SectionHeader
             index="01"
-            label="Projects"
+            label="Work"
             title={<>Featured <span className="t-grad">Work</span></>}
             subtitle="Three projects that show how I build: the problem, the approach, and the evidence."
           />
