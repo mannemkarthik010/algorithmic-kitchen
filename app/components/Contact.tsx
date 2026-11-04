@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { resume } from "../data/resume";
-import { SectionHeader, GlowBlob, Btn, FadeUp } from "./ui";
+import { SectionHeader, Btn, FadeUp } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";
 
 type Msg = { role: "user" | "assistant"; text: string };
@@ -82,7 +82,6 @@ export default function Contact() {
 
   return (
     <section id="contact" className="s-warm" style={{ position: "relative" }}>
-      <GlowBlob size={500} color="rgba(200,145,58,0.055)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader index="08" label="Contact"

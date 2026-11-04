@@ -1,5 +1,6 @@
 "use client";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { resume } from "../data/resume";
 import { AKMark } from "./ui";
 
@@ -22,15 +23,20 @@ const SOCIAL = [
 ];
 
 export default function Footer() {
+  const nameRef = useRef<HTMLDivElement>(null);
+  const rm = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: nameRef, offset: ["start end", "end 0.85"] });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [55, 0]);
+  const lift = useTransform(scrollYProgress, [0, 1], [90, 0]);
   return (
     <footer style={{ borderTop: "1px solid var(--border)", background: "linear-gradient(180deg, transparent, rgba(6,4,2,0.6))" }}>
       {/* Chunky sign-off */}
-      <div className="container" style={{ paddingTop: "var(--space-5)" }}>
+      <div className="container footer-persp" ref={nameRef} style={{ paddingTop: "var(--space-5)" }}>
         <motion.a
           href="#contact"
           className="footer-mega"
           aria-label="Karthik Mannem, get in touch"
-          initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
+          style={rm ? undefined : { rotateX, y: lift, transformOrigin: "50% 100%" }}
         >
           <span>KARTHIK</span>
           <span className="footer-mega__fill">MANNEM</span>

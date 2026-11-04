@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { careerTimeline } from "../data/resume";
-import { SectionHeader, GlowBlob } from "./ui";
+import { SectionHeader } from "./ui";
 import { EASE, DUR } from "../lib/motion";
 
 function TimelineNode({ entry, index, isLast }: {
@@ -112,7 +112,6 @@ function TimelineNode({ entry, index, isLast }: {
 export default function CareerTimeline() {
   return (
     <section id="timeline" style={{ position: "relative", paddingTop: "var(--space-6)", paddingBottom: "var(--space-6)" }}>
-      <GlowBlob size={400} color="rgba(200,145,58,0.04)" style={{ top: "30%", right: -80 }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader

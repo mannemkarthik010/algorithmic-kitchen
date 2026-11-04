@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { contributions, Contribution } from "../data/contributions";
-import { SectionHeader, Badge, GlowBlob, Stagger, Item } from "./ui";
+import { SectionHeader } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";
 import ContributionModal from "./ContributionModal";
 
@@ -11,8 +11,7 @@ export default function Contributions() {
   const { play } = useSoundFx();
 
   return (
-    <section id="contributions" className="s-warm" style={{ position: "relative" }}>
-      <GlowBlob size={420} color="rgba(200,145,58,0.05)" style={{ top: "10%", right: -100 }} />
+    <section id="contributions" style={{ position: "relative", padding: "var(--space-5) 0 var(--space-6)" }}>
 
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
         <SectionHeader
@@ -23,32 +22,29 @@ export default function Contributions() {
           subtitle="Pull requests to open-source projects, with their real status (merged, open, or closed) and what each one taught me."
         />
 
-        <Stagger style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
-          {contributions.map((c) => (
-            <Item key={c.slug}>
-              <motion.div
-                whileHover={{ y: -3, borderColor: "var(--border-hover)" }}
-                className="card"
-                style={{ padding: "var(--space-4)", cursor: "pointer", transition: "border-color 0.22s" }}
-                onClick={() => { play("/sounds/click.mp3", 0.2); setActive(c); }}
-              >
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-3)", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div style={{ flex: 1, minWidth: 240 }}>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: "var(--space-1)" }}>
-                      <Badge>{c.repo}</Badge>
-                      <Badge style={{ opacity: 0.6 }}>★ {c.stars}</Badge>
-                      <Badge style={{ opacity: 0.6 }}>{c.statusLabel}</Badge>
-                    </div>
-                    <p className="heading-md c-cream" style={{ marginBottom: 6, lineHeight: 1.25 }}>{c.title}</p>
-                    <p className="body-sm c-muted" style={{ lineHeight: 1.65, marginBottom: "var(--space-1)" }}>{c.excerpt}</p>
-                    <p className="mono c-gold" style={{ fontSize: 11, opacity: 0.7 }}>PR #{c.prNumber} · {c.diffStat}</p>
-                  </div>
-                  <span className="mono c-gold" style={{ fontSize: 11, opacity: 0.55, flexShrink: 0, whiteSpace: "nowrap" }}>Read the writeup →</span>
-                </div>
-              </motion.div>
-            </Item>
+        <div className="oss-list">
+          {contributions.map((c, i) => (
+            <motion.button
+              key={c.slug}
+              type="button"
+              className="oss-row"
+              initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.5, delay: i * 0.05 }}
+              onClick={() => { play("/sounds/click.mp3", 0.2); setActive(c); }}
+            >
+              <span className="oss-row__meta">
+                <span className={`oss-status oss-status--${c.prStatus}`}>{c.statusLabel}</span>
+                <span className="oss-row__repo">{c.repo}</span>
+                <span className="oss-row__pr">PR #{c.prNumber} · {c.diffStat}</span>
+              </span>
+              <span className="oss-row__body">
+                <span className="oss-row__title">{c.title}</span>
+                <span className="oss-row__ex">{c.excerpt}</span>
+                <span className="oss-row__go">Read the write-up →</span>
+              </span>
+            </motion.button>
           ))}
-        </Stagger>
+        </div>
       </div>
 
       <ContributionModal contribution={active} onClose={() => setActive(null)} />

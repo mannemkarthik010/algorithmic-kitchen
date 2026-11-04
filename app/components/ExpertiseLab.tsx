@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { expertiseLab } from "../data/resume";
-import { SectionHeader, GlowBlob, FadeUp } from "./ui";
+import { SectionHeader, FadeUp } from "./ui";
 import { EASE, DUR } from "../lib/motion";
 
 const LEVEL = {
@@ -17,7 +17,6 @@ export default function ExpertiseLab() {
 
   return (
     <section id="expertise" style={{ position: "relative", paddingTop: "var(--space-6)", paddingBottom: "var(--space-6)" }}>
-      <GlowBlob size={500} color="rgba(200,145,58,0.04)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader

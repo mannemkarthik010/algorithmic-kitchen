@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { resume } from "../data/resume";
-import { SectionHeader, GlowBlob, Stagger, Item } from "./ui";
+import { SectionHeader, Stagger, Item } from "./ui";
 import CookAnAI from "./CookAnAI";
 import KitchenPass from "./KitchenPass";
 
@@ -20,7 +20,6 @@ export default function LiveKitchen() {
     <>
       {/* ── Live Kitchen §05 ── */}
       <section id="live" className="s-deep" style={{ position: "relative" }}>
-        <GlowBlob size={350} color="rgba(200,145,58,0.04)" style={{ top: "50%", right: -60, transform: "translateY(-50%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
           <SectionHeader index="07" label="Now cooking"
             title={<>What&apos;s <span className="t-grad">Cooking</span></>}
@@ -47,7 +46,6 @@ export default function LiveKitchen() {
 
       {/* ── Cook an AI game ── */}
       <section id="cook" className="s-warm" style={{ position: "relative" }}>
-        <GlowBlob size={400} color="rgba(200,145,58,0.04)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
           <div style={{ textAlign: "center", marginBottom: "var(--space-4)" }}>
             <span className="label c-gold" style={{ display: "block", marginBottom: "var(--space-1)" }}>The Experiment Lab</span>

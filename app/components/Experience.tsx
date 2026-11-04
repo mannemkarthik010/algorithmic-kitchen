@@ -6,10 +6,6 @@ import { SectionHeader } from "./ui";
 export default function Experience() {
   return (
     <section id="experience" className="s-deep" style={{ position: "relative" }}>
-      <div className="section-glow" aria-hidden="true" />
-      <div className="section-top-glow" />
-      <div className="section-bottom-glow" />
-      <div aria-hidden="true" style={{ position: "absolute", top: "20%", right: -80, width: 380, height: 380, borderRadius: "50%", background: "rgba(200,145,58,0.04)", filter: "blur(90px)", pointerEvents: "none", zIndex: 0 }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
         <SectionHeader index="02" label="Experience" align="split"

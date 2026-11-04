@@ -224,7 +224,6 @@ export default function Projects() {
   return (
     <>
       <section id="projects" style={{ position: "relative", paddingTop: "var(--space-6)", paddingBottom: "var(--space-6)" }}>
-        <div aria-hidden="true" style={{ position: "absolute", top: "50%", right: -100, width: 500, height: 500, borderRadius: "50%", background: "rgba(212,93,32,0.04)", filter: "blur(90px)", transform: "translateY(-50%)", pointerEvents: "none" }} />
 
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <SectionHeader

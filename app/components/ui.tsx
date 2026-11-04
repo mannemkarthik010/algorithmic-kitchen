@@ -80,7 +80,7 @@ export function SectionHeader({
         viewport={{ once: true }} transition={{ duration: 0.42 }}
         style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: "var(--space-2)" }}
       >
-        <span className="sticker sticker--gold section-sticker">{index} · {label}</span>
+        <span className="sh-label sh-label--center">{index} / {label}</span>
       </motion.div>
 
       <motion.h2
