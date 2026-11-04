@@ -1675,3 +1675,20 @@ nav a[href="#hero"] .mono { font-family: var(--f-chunk); font-size: 15px; letter
 .exp-lead__card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted-hi); font-size: 13.5px; line-height: 1.55; }
 
 .exp-more { margin: 0; padding: 4px 16px 14px 34px; display: grid; gap: 8px; color: var(--muted-hi); font-size: 13.5px; line-height: 1.55; }
+
+/* featured work: browser-framed screenshots with parallax + hover zoom */
+.fw-shot { display: block; margin: 0 0 var(--space-3); text-decoration: none; }
+.fw-shot__frame { border: 1px solid var(--border-hover); border-radius: var(--radius-lg); overflow: hidden; background: #0b0805; box-shadow: 0 24px 60px rgba(0,0,0,0.5); transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
+a.fw-shot:hover .fw-shot__frame { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 34px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,145,58,0.25); }
+.fw-shot__bar { display: flex; align-items: center; gap: 6px; padding: 9px 14px; background: linear-gradient(180deg, #1d150b, #130d07); border-bottom: 1px solid var(--border); }
+.fw-shot__bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+.fw-shot__bar i:nth-child(1) { background: #d4574a; } .fw-shot__bar i:nth-child(2) { background: #d9a441; } .fw-shot__bar i:nth-child(3) { background: #5aa95a; }
+.fw-shot__bar span { margin-left: 10px; padding: 3px 14px; border-radius: 999px; background: rgba(0,0,0,0.4); font-family: var(--f-mono); font-size: 10.5px; color: var(--muted-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fw-shot__view { position: relative; overflow: hidden; max-height: 460px; }
+.fw-shot__img { position: absolute; inset: 0; scale: 1.08; transform-origin: 50% 0; }
+.fw-shot__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+a.fw-shot:hover .fw-shot__img img { transform: scale(1.05); }
+.fw-shot__cta { position: absolute; right: 14px; bottom: 14px; padding: 9px 18px; border-radius: 999px; background: var(--ember-grad); color: #1a0e04; font-family: var(--f-chunk); font-size: 13px; opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s; box-shadow: 0 8px 22px rgba(0,0,0,0.45); }
+a.fw-shot:hover .fw-shot__cta, a.fw-shot:focus-visible .fw-shot__cta { opacity: 1; transform: none; }
+@media (hover: none) { .fw-shot__cta { opacity: 1; transform: none; } }
+a.fw-shot:focus-visible .fw-shot__frame { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold); }

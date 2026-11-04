@@ -742,6 +742,7 @@ export const careerTimeline = [
 export const featuredWork = [
   {
     slug: "taxproof",
+    shot: { src: "/images/projects/taxproof.jpg", width: 1200, height: 750, alt: "TaxProof overview screen: return assurance score, evidence coverage, critical issues and the role switcher", host: "taxproof-web.vercel.app" },
     headline: "A tax workpaper where every number carries its proof.",
     evalRows: [
       ["Approach", "Source packet is SHA-256 hashed and frozen; an evidence graph links each line to its inputs, rule, document and page."],
@@ -753,6 +754,7 @@ export const featuredWork = [
   },
   {
     slug: "retail-intel",
+    shot: { src: "/images/projects/retail-intel.jpg", width: 1200, height: 750, alt: "Retail Demand Intelligence Platform: eight-week forecast with prediction interval, model backtest comparison and flagged anomalies", host: "retail-intel-platform.vercel.app" },
     headline: "Demand forecasts that are honest about their own accuracy.",
     evalRows: [
       ["Dataset", "240 store/department sales series."],
@@ -764,6 +766,7 @@ export const featuredWork = [
   },
   {
     slug: "preventive-care",
+    shot: { src: "/images/projects/preventive-care.jpg", width: 1200, height: 676, alt: "Preventive Care Recommendation Agent: patient data form and the educational-demo notice", host: "preventive-care-recommendation.streamlit.app" },
     headline: "A RAG agent that cites its sources and never does the arithmetic.",
     evalRows: [
       ["Reference check", "The risk function (Pooled Cohort Equations, plain Python) reproduces the guideline's published worked example: 2.1% / 3.0% (white / Black women) and 5.4% / 6.1% (white / Black men)."],
