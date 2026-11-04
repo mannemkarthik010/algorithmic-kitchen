@@ -28,6 +28,7 @@ export default function EmberCursor() {
     resize();
 
     const onMove = (e: PointerEvent) => {
+      if ((e.target as HTMLElement | null)?.closest?.("[data-no-ember]")) return;
       const now = performance.now();
       if (now - lastSpawn < 28) return;
       lastSpawn = now;

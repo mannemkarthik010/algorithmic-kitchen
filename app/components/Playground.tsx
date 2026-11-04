@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SectionHeader } from "./ui";
 import PlayZone from "./PlayZone";
 import LiveKitchen from "./LiveKitchen";
-import ReadingRoom from "./ReadingRoom";
+import Library from "./Library";
 import FooterPlay from "./FooterPlay";
 import { OPEN_PLAYGROUND, PLAYGROUND_IDS } from "../lib/events";
 
@@ -31,7 +31,7 @@ export default function Playground() {
           index="06"
           label="Playground"
           title={<>The <span className="t-grad">Playground</span></>}
-          subtitle="The fun side of the kitchen: two games, what I'm cooking now, my reading room, and a dosa illusion. Optional — the work is above."
+          subtitle="The fun side of the kitchen: two games, what I'm cooking now, the library, and a dosa illusion. Optional — the work is above."
         />
         <div className="fw-more" style={{ marginTop: 0 }}>
           <button type="button" className="pill-cta" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
@@ -48,7 +48,7 @@ export default function Playground() {
           >
             <PlayZone />
             <LiveKitchen />
-            <ReadingRoom />
+            <Library />
             <FooterPlay />
             <div className="fw-more">
               <button type="button" className="fw-ghost" onClick={() => { setOpen(false); document.getElementById("playground")?.scrollIntoView(); }}>Close the playground ↑</button>
