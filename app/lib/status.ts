@@ -9,9 +9,9 @@
 export type Status = "live" | "beta" | "cooking" | "review" | "plated";
 
 export const STATUS: Record<Status, { label: string; stamp: string; color: string; pulse?: boolean }> = {
-  live:    { label: "Live",        stamp: "SERVED",       color: "#6FCF7C" },
+  live:    { label: "Live",        stamp: "SERVED",       color: "#70D5B3" },
   beta:    { label: "Open beta",   stamp: "HELP ME TEST", color: "#7AA2FF" },
-  cooking: { label: "On the line", stamp: "FIRED",        color: "#E4AD52", pulse: true },
-  review:  { label: "On the pass", stamp: "IN REVIEW",    color: "#C8913A" },
+  cooking: { label: "On the line", stamp: "FIRED",        color: "#FF9B76", pulse: true },
+  review:  { label: "On the pass", stamp: "IN REVIEW",    color: "#FF865B" },
   plated:  { label: "Plated",      stamp: "PLATED",       color: "#9A8A70" },
 };

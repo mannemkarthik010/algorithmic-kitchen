@@ -27,7 +27,7 @@ export default function Footer() {
   const rotateX = useTransform(scrollYProgress, [0, 1], [55, 0]);
   const lift = useTransform(scrollYProgress, [0, 1], [90, 0]);
   return (
-    <footer style={{ borderTop: "1px solid var(--border)", background: "linear-gradient(180deg, transparent, rgba(6,4,2,0.6))" }}>
+    <footer style={{ borderTop: "1px solid var(--border)", background: "linear-gradient(180deg, transparent, rgba(10,13,16,0.6))" }}>
       {/* Chunky sign-off */}
       <div className="container footer-persp" ref={nameRef} style={{ paddingTop: "var(--space-5)" }}>
         <motion.a
@@ -48,7 +48,7 @@ export default function Footer() {
         <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "var(--space-2)" }}>
             <AKMark size="sm" />
-            <span className="mono c-gold" style={{ letterSpacing: "0.04em", fontSize: 11 }}>The Algorithmic Kitchen</span>
+            <span style={{ fontFamily: "var(--f-body)", fontWeight: 600, fontSize: 14, letterSpacing: "-0.02em", color: "var(--cream)" }}>Karthik Mannem</span>
           </div>
           <p className="body-sm c-muted" style={{ fontStyle: "italic", lineHeight: 1.7, maxWidth: 260 }}>
             Cooking intelligent systems from raw data, creativity, and machine learning.
@@ -103,9 +103,9 @@ export default function Footer() {
                 <motion.div
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1.8, repeat: Infinity }}
-                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80" }}
+                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#70D5B3" }}
                 />
-                <span className="body-sm" style={{ color: "#4ade80" }}>Open to ML/AI roles</span>
+                <span className="body-sm" style={{ color: "#70D5B3" }}>Open to ML/AI roles</span>
               </div>
             </div>
             <div>
@@ -121,7 +121,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar — branded kitchen closing */}
-      <div style={{ borderTop: "1px solid rgba(200,145,58,0.08)", padding: "var(--space-3) 0" }}>
+      <div style={{ borderTop: "1px solid rgba(255,134,91,0.08)", padding: "var(--space-3) 0" }}>
         <div className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           {/* Steam curls above the closing line */}
           <div aria-hidden="true" style={{ display: "flex", gap: 20, alignItems: "flex-end", height: 28, opacity: 0.35 }}>
@@ -137,7 +137,7 @@ export default function Footer() {
 
           {/* AK mark centered */}
           <motion.div whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }}
-            style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(200,145,58,0.06)", border: "1px solid rgba(200,145,58,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(255,134,91,0.06)", border: "1px solid rgba(255,134,91,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", letterSpacing: "0.05em" }}>AK</span>
           </motion.div>
 
@@ -147,9 +147,9 @@ export default function Footer() {
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", flexWrap: "wrap", gap: 8 }}>
             <p className="label c-muted" style={{ opacity: 0.35, fontSize: 9 }}>
-              © {new Date().getFullYear()} {resume.name} · The Algorithmic Kitchen
+              © {new Date().getFullYear()} {resume.name}
             </p>
-            <p className="label" style={{ color: "rgba(200,145,58,0.18)", fontSize: 9 }}>
+            <p className="label" style={{ color: "rgba(255,134,91,0.18)", fontSize: 9 }}>
               PRESS ⌃` FOR DEVELOPER MODE
             </p>
           </div>

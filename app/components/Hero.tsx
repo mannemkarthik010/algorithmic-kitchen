@@ -30,7 +30,7 @@ function Particles({ active }: { active: boolean }) {
         p.x += p.vx; p.y += p.vy;
         if (p.y < 0) { p.y = c.height; p.x = Math.random() * c.width; }
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,145,58,${p.a})`; ctx.fill();
+        ctx.fillStyle = `rgba(255,134,91,${p.a})`; ctx.fill();
       });
       id = requestAnimationFrame(draw);
     };
@@ -48,7 +48,7 @@ function Fog() {
       {[0,1,2].map((i) => (
         <motion.div key={i}
           style={{ position: "absolute", bottom: 0, left: `${-8+i*4}%`, width: "120%", height: 50 + i * 38,
-            background: `radial-gradient(ellipse 75% 100% at 50% 100%, rgba(200,145,58,${0.03+i*0.01}), transparent 70%)`,
+            background: `radial-gradient(ellipse 75% 100% at 50% 100%, rgba(255,134,91,${0.03+i*0.01}), transparent 70%)`,
             filter: "blur(18px)" }}
           animate={rm ? {} : { x: ["-2%","2%","-2%"] }}
           transition={{ duration: 14 + i*5, repeat: Infinity, ease: "easeInOut", delay: i*3 }}
@@ -63,9 +63,9 @@ function Curtain() {
   return (
     <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 120, pointerEvents: "none" }}>
       <motion.div initial={{ x: 0 }} animate={{ x: "-100%" }} transition={{ duration: 1.45, ease: EASE }}
-        style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "50%", background: "linear-gradient(180deg, #1b1208, #070402)", boxShadow: "inset -24px 0 50px rgba(255,210,130,0.08)" }} />
+        style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "50%", background: "linear-gradient(180deg, #161B20, #0A0D10)", boxShadow: "inset -24px 0 50px rgba(255,155,118,0.08)" }} />
       <motion.div initial={{ x: 0 }} animate={{ x: "100%" }} transition={{ duration: 1.45, ease: EASE }}
-        style={{ position: "absolute", top: 0, bottom: 0, right: 0, width: "50%", background: "linear-gradient(180deg, #1b1208, #070402)", boxShadow: "inset 24px 0 50px rgba(255,210,130,0.08)" }} />
+        style={{ position: "absolute", top: 0, bottom: 0, right: 0, width: "50%", background: "linear-gradient(180deg, #161B20, #0A0D10)", boxShadow: "inset 24px 0 50px rgba(255,155,118,0.08)" }} />
       <motion.div initial={{ opacity: 0.9 }} animate={{ opacity: 0 }} transition={{ duration: 1.2 }}
         style={{ position: "absolute", left: "50%", top: 0, height: "100%", width: 1, background: "linear-gradient(to bottom, transparent, rgba(255,220,160,0.55), transparent)" }} />
     </div>
@@ -108,8 +108,8 @@ export default function Hero() {
       <Particles active={open} />
 
       {/* Depth atmosphere */}
-      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 120% 65% at 50% 110%, rgba(200,145,58,0.09) 0%, transparent 55%)", pointerEvents: "none", zIndex: 0, opacity: open ? 1 : 0, transition: "opacity 1.2s ease" }} />
-      <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "30%", background: "linear-gradient(to bottom,rgba(6,4,2,0.55),transparent)", pointerEvents: "none", zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 120% 65% at 50% 110%, rgba(255,134,91,0.09) 0%, transparent 55%)", pointerEvents: "none", zIndex: 0, opacity: open ? 1 : 0, transition: "opacity 1.2s ease" }} />
+      <div aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, right: 0, height: "30%", background: "linear-gradient(to bottom,rgba(10,13,16,0.55),transparent)", pointerEvents: "none", zIndex: 0 }} />
 
       {/* Environment */}
       <motion.div initial={false} animate={{ opacity: open ? 1 : 0 }} transition={{ duration: 1.3 }}
@@ -128,13 +128,13 @@ export default function Hero() {
             transition={{ duration: 0.55, ease: [0.4,0,0.2,1] }}
             style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", zIndex: 20, gap: "var(--space-2)" }}
           >
-            <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 55% at 50% 50%, transparent 0%, rgba(6,4,2,0.82) 100%)", pointerEvents: "none" }} />
+            <div aria-hidden="true" style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 55% 55% at 50% 50%, transparent 0%, rgba(10,13,16,0.82) 100%)", pointerEvents: "none" }} />
 
             <AnimatePresence>
               {stage >= 1 && (
                 <motion.div key="ak" initial={{ opacity: 0, scale: 0.45, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.85, ease: EASE }} style={{ position: "relative", zIndex: 1 }}>
                   <motion.div animate={{ scale: [1,1.15,1], opacity: [0.25,0.55,0.25] }} transition={{ duration: 3.2, repeat: Infinity }}
-                    style={{ position: "absolute", inset: -18, borderRadius: 26, background: "radial-gradient(circle, rgba(200,145,58,0.2), transparent 70%)", filter: "blur(12px)" }} />
+                    style={{ position: "absolute", inset: -18, borderRadius: 26, background: "radial-gradient(circle, rgba(255,134,91,0.2), transparent 70%)", filter: "blur(12px)" }} />
                   <AKMark size="lg" />
                 </motion.div>
               )}
@@ -162,7 +162,7 @@ export default function Hero() {
                 <motion.button onClick={handleOpen}
                   className="btn btn-primary anim-pulse"
                   style={{ padding: "14px 56px", fontSize: 13, letterSpacing: "0.2em", cursor: "pointer", borderRadius: 27 }}
-                  whileHover={{ scale: 1.04, boxShadow: "0 0 32px rgba(200,145,58,0.4)" }}
+                  whileHover={{ scale: 1.04, boxShadow: "0 0 32px rgba(255,134,91,0.4)" }}
                   whileTap={{ scale: 0.96 }}>
                   Open Kitchen
                 </motion.button>
@@ -188,7 +188,7 @@ export default function Hero() {
                 <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1, duration: DUR.moderate, ease: EASE }}
                   style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: "var(--space-3)" }}>
                   <AKMark size="sm" />
-                  <span className="label c-gold" style={{ letterSpacing: "0.2em" }}>THE ALGORITHMIC KITCHEN · PORTFOLIO</span>
+                  <span className="label c-gold" style={{ letterSpacing: "0.2em" }}>PORTFOLIO 2026 · LOS ANGELES</span>
                 </motion.div>
 
                 {/* Name */}

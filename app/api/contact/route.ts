@@ -65,19 +65,19 @@ export async function POST(req: NextRequest) {
         reply_to: email,
         subject: `[Algorithmic Kitchen] ${safeSubject || "New Reservation from " + name}`,
         html: `
-          <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #0C0805; color: #F0E6CE; padding: 32px; border-radius: 12px;">
-            <h2 style="color: #C8913A; font-size: 22px; margin-bottom: 4px;">🍽️ New Table Reservation</h2>
-            <p style="color: #72604E; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #2a1f0e; padding-bottom: 16px;">The Algorithmic Kitchen — Contact Form</p>
+          <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #101317; color: #F2EFE8; padding: 32px; border-radius: 12px;">
+            <h2 style="color: #FF865B; font-size: 22px; margin-bottom: 4px;">🍽️ New Table Reservation</h2>
+            <p style="color: #6D7882; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #2a1f0e; padding-bottom: 16px;">The Algorithmic Kitchen — Contact Form</p>
             <table style="width: 100%; border-collapse: collapse;">
-              <tr><td style="color: #72604E; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em; width: 90px;">Name</td><td style="color: #F0E6CE; font-size: 15px;">${escapeHtml(name)}</td></tr>
-              <tr><td style="color: #72604E; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Email</td><td><a href="mailto:${escapeHtml(email)}" style="color: #C8913A;">${escapeHtml(email)}</a></td></tr>
-              <tr><td style="color: #72604E; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Subject</td><td style="color: #F0E6CE;">${escapeHtml(safeSubject) || "—"}</td></tr>
+              <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em; width: 90px;">Name</td><td style="color: #F2EFE8; font-size: 15px;">${escapeHtml(name)}</td></tr>
+              <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Email</td><td><a href="mailto:${escapeHtml(email)}" style="color: #FF865B;">${escapeHtml(email)}</a></td></tr>
+              <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Subject</td><td style="color: #F2EFE8;">${escapeHtml(safeSubject) || "—"}</td></tr>
             </table>
-            <div style="margin-top: 24px; padding: 16px 20px; background: rgba(200,145,58,0.08); border-left: 3px solid #C8913A; border-radius: 0 8px 8px 0;">
-              <p style="color: #72604E; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Message</p>
-              <p style="color: #F0E6CE; font-size: 15px; line-height: 1.7; white-space: pre-wrap;">${escapeHtml(message)}</p>
+            <div style="margin-top: 24px; padding: 16px 20px; background: rgba(255,134,91,0.08); border-left: 3px solid #FF865B; border-radius: 0 8px 8px 0;">
+              <p style="color: #6D7882; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Message</p>
+              <p style="color: #F2EFE8; font-size: 15px; line-height: 1.7; white-space: pre-wrap;">${escapeHtml(message)}</p>
             </div>
-            <p style="color: #72604E; font-size: 11px; margin-top: 24px; text-align: center;">Sent via The Algorithmic Kitchen portfolio</p>
+            <p style="color: #6D7882; font-size: 11px; margin-top: 24px; text-align: center;">Sent via The Algorithmic Kitchen portfolio</p>
           </div>
         `,
       }),

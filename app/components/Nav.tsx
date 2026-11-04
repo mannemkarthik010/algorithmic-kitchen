@@ -46,11 +46,11 @@ export default function Nav() {
       style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
         padding: "1rem var(--space-4)",
-        background: scrolled ? "rgba(6,4,2,0.92)" : "transparent",
+        background: scrolled ? "rgba(10,13,16,0.92)" : "transparent",
         backdropFilter: scrolled ? "blur(28px) saturate(1.6)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(28px) saturate(1.6)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(200,145,58,0.14)" : "none",
-        boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(200,145,58,0.08)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,134,91,0.14)" : "none",
+        boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,134,91,0.08)" : "none",
         transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
       }}
     >
@@ -59,7 +59,7 @@ export default function Nav() {
         <motion.a href="/" whileHover={{ opacity: 0.75 }}
           style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
           <AKMark size="sm" />
-          <span className="mono c-gold" style={{ letterSpacing: "0.04em" }}>The Algorithmic Kitchen</span>
+          <span style={{ fontFamily: "var(--f-body)", fontWeight: 600, fontSize: 15, letterSpacing: "-0.02em", color: "var(--cream)" }}>Karthik Mannem</span>
         </motion.a>
 
         {/* Desktop nav */}
@@ -135,7 +135,7 @@ export default function Nav() {
           <motion.div
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }}
-            style={{ overflow: "hidden", background: "rgba(8,5,2,0.97)", borderTop: "1px solid var(--border)", padding: "var(--space-1) var(--space-4) var(--space-2)" }}
+            style={{ overflow: "hidden", background: "rgba(13,17,21,0.97)", borderTop: "1px solid var(--border)", padding: "var(--space-1) var(--space-4) var(--space-2)" }}
           >
             <button type="button" onClick={() => { setOpen(false); openPalette(); }} className="label c-gold"
               style={{ display: "block", padding: "0.7rem 0", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>

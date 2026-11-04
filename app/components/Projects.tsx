@@ -19,8 +19,8 @@ function ComplexityBar({ value }: { value: number }) {
           <div key={n} style={{
             width: 20, height: 4, borderRadius: 2,
             background: n <= value
-              ? `rgba(200,145,58,${0.3 + n * 0.18})`
-              : "rgba(200,145,58,0.1)",
+              ? `rgba(255,134,91,${0.3 + n * 0.18})`
+              : "rgba(255,134,91,0.1)",
           }} />
         ))}
       </div>
@@ -40,8 +40,8 @@ function MiniPipeline({ steps }: { steps: { step: string }[] }) {
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <span className="label" style={{
             fontSize: 8, padding: "2px 6px", borderRadius: 4,
-            background: "rgba(200,145,58,0.08)",
-            border: "1px solid rgba(200,145,58,0.18)",
+            background: "rgba(255,134,91,0.08)",
+            border: "1px solid rgba(255,134,91,0.18)",
             color: "var(--gold)", whiteSpace: "nowrap",
           }}>{s.step}</span>
           {i < show.length - 1 && (
@@ -97,20 +97,20 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
         <div style={{
           position: "absolute", inset: 0, backfaceVisibility: "hidden",
           padding: "var(--space-3)",
-          background: "linear-gradient(135deg, rgba(27,19,8,0.95), rgba(10,7,4,0.98))",
-          border: "1px solid rgba(200,145,58,0.22)",
+          background: "linear-gradient(135deg, rgba(22,27,32,0.95), rgba(13,17,21,0.98))",
+          border: "1px solid rgba(255,134,91,0.22)",
           borderRadius: "var(--radius-xl)",
           overflow: "hidden",
           boxShadow: "0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3)",
           display: "flex", flexDirection: "column",
         }}>
           {/* Top gold accent */}
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, rgba(200,145,58,0.35), transparent)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, rgba(255,134,91,0.35), transparent)" }} />
 
           {/* Flip hint badge */}
           <div
             onClick={(e) => { e.stopPropagation(); play("/sounds/click.mp3", 0.08); setFlipped(f => !f); }}
-            style={{ position: "absolute", top: 12, right: 12, padding: "3px 9px", background: "rgba(200,145,58,0.08)", border: "1px solid rgba(200,145,58,0.2)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(200,145,58,0.55)", cursor: "pointer", zIndex: 2 }}
+            style={{ position: "absolute", top: 12, right: 12, padding: "3px 9px", background: "rgba(255,134,91,0.08)", border: "1px solid rgba(255,134,91,0.2)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(255,134,91,0.55)", cursor: "pointer", zIndex: 2 }}
           >flip ↺</div>
 
           {/* Kitchen status — top-left, mirroring the flip badge */}
@@ -145,26 +145,26 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
           position: "absolute", inset: 0, backfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
           padding: "var(--space-3)",
-          background: "linear-gradient(145deg, rgba(30,20,8,0.98), rgba(8,5,2,0.99))",
-          border: "1px solid rgba(200,145,58,0.4)",
+          background: "linear-gradient(145deg, rgba(22,27,32,0.98), rgba(13,17,21,0.99))",
+          border: "1px solid rgba(255,134,91,0.4)",
           borderRadius: "var(--radius-xl)",
           overflow: "hidden",
           boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
           display: "flex", flexDirection: "column", gap: 10,
         }}>
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, rgba(200,145,58,0.6), transparent)" }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, rgba(255,134,91,0.6), transparent)" }} />
 
           {/* Back flip button */}
           <div
             onClick={(e) => { e.stopPropagation(); setFlipped(false); }}
-            style={{ alignSelf: "flex-end", padding: "3px 9px", background: "rgba(200,145,58,0.08)", border: "1px solid rgba(200,145,58,0.25)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(200,145,58,0.6)", cursor: "pointer" }}
+            style={{ alignSelf: "flex-end", padding: "3px 9px", background: "rgba(255,134,91,0.08)", border: "1px solid rgba(255,134,91,0.25)", borderRadius: 12, fontFamily: "var(--f-mono)", fontSize: 9, color: "rgba(255,134,91,0.6)", cursor: "pointer" }}
           >← back</div>
 
           <div>
             <p className="label c-gold" style={{ marginBottom: 6, letterSpacing: "0.12em" }}>TECH STACK</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
               {project.ingredients.map((ing) => (
-                <span key={ing} style={{ padding: "4px 10px", borderRadius: 16, background: "rgba(200,145,58,0.08)", border: "1px solid rgba(200,145,58,0.25)", fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)" }}>{ing}</span>
+                <span key={ing} style={{ padding: "4px 10px", borderRadius: 16, background: "rgba(255,134,91,0.08)", border: "1px solid rgba(255,134,91,0.25)", fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)" }}>{ing}</span>
               ))}
             </div>
           </div>
@@ -186,14 +186,14 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
           <div style={{ marginTop: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
             {project.github && (
               <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(200,145,58,0.1)", border: "1px solid rgba(200,145,58,0.3)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", textDecoration: "none" }}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(255,134,91,0.1)", border: "1px solid rgba(255,134,91,0.3)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", textDecoration: "none" }}
               >
                 GitHub ↗
               </a>
             )}
             {project.demo && (
               <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(200,145,58,0.16)", border: "1px solid rgba(200,145,58,0.5)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold-hi)", textDecoration: "none" }}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 14px", background: "rgba(255,134,91,0.16)", border: "1px solid rgba(255,134,91,0.5)", borderRadius: 10, fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold-hi)", textDecoration: "none" }}
               >
                 Live ↗
               </a>

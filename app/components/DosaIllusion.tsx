@@ -62,7 +62,7 @@ export default function DosaIllusion() {
           <g className="dosa-ill__spin"><path d={a} fill="none" stroke="#E7B05A" strokeWidth={sw} strokeLinecap="butt" /></g>
           <g className="dosa-ill__spin dosa-ill__spin--rev" style={{ mixBlendMode: "screen" }}><path d={b} fill="none" stroke="#FFE2A6" strokeOpacity="0.22" strokeWidth={sw} /></g>
           <circle cx={C} cy={C} r="9" fill="#FFF1C9" /><circle cx={C} cy={C} r="3.5" fill="#B8321C" />
-          {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.6" fill="#F3E3C0" opacity="0.8" />)}
+          {dots.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.6" fill="#E9E4D8" opacity="0.8" />)}
         </svg>
       </div>
 

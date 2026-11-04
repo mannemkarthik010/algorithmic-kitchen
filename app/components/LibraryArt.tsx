@@ -4,16 +4,16 @@ import type { LibBook } from "../lib/library";
 /** Generated cover and spine art: no image files, no real book covers. Fully deterministic per book. */
 
 const PAL = [
-  { bg: "#1B1309", a: "#F0E6CE", b: "#C8913A", c: "#D45D20" },
-  { bg: "#C8913A", a: "#140E06", b: "#F0E6CE", c: "#7A2E10" },
-  { bg: "#D45D20", a: "#140A04", b: "#F0E6CE", c: "#E4AD52" },
-  { bg: "#F0E6CE", a: "#1B1309", b: "#C8913A", c: "#D45D20" },
-  { bg: "#3A1C10", a: "#F0E6CE", b: "#E4AD52", c: "#D45D20" },
+  { bg: "#1A2027", a: "#F2EFE8", b: "#FF865B", c: "#E56B43" },
+  { bg: "#FF865B", a: "#140E06", b: "#F2EFE8", c: "#7A2E10" },
+  { bg: "#E56B43", a: "#140A04", b: "#F2EFE8", c: "#FF9B76" },
+  { bg: "#F2EFE8", a: "#1A2027", b: "#FF865B", c: "#E56B43" },
+  { bg: "#26201F", a: "#F2EFE8", b: "#FF9B76", c: "#E56B43" },
 ];
 type P = (typeof PAL)[number];
 
-const SERIF = "var(--font-cormorant), Georgia, serif";
-const SANS = "var(--font-dm-mono), 'Courier New', monospace";
+const SERIF = "var(--font-instrument), Georgia, serif";
+const SANS = "var(--font-geist-mono), ui-monospace, monospace";
 export const COVER_W = 612;
 
 export const palette = (b: LibBook): P => {

@@ -31,9 +31,9 @@ export function AKMark({ size = "md" }: { size?: keyof typeof AK_SIZES }) {
   return (
     <div className="ak" style={{ width: px, height: px, borderRadius: r }}>
       <svg width={px * 0.6} height={px * 0.6} viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <path d="M3 24 L9.5 8 L16 24 M6 18 L13 18"
+        <path d="M4 24 V8 M4 17 L13 8 M4 17 L13 24"
           stroke="var(--gold)" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M18 8 L18 24 M18 16 L28 8 M18 16 L28 24"
+        <path d="M17 24 V8 L22.5 17 L28 8 V24"
           stroke="var(--gold)" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     </div>
@@ -156,7 +156,7 @@ function AnimatedBlob({ size, color, style, duration }: { size: number; color: s
 
 /* ── Glow blob ───────────────────────────────────── */
 export function GlowBlob({
-  size = 400, color = "rgba(200,145,58,0.06)", style, animate: shouldAnimate = true,
+  size = 400, color = "rgba(255,134,91,0.06)", style, animate: shouldAnimate = true,
 }: { size?: number; color?: string; style?: React.CSSProperties; animate?: boolean }) {
   if (shouldAnimate) {
     return <AnimatedBlob size={size} color={color} style={style} duration={10 + size / 100} />;
@@ -228,7 +228,7 @@ export function Item({ children, style }: { children: ReactNode; style?: React.C
 export function SkillPill({ label }: { label: string }) {
   return (
     <motion.span className="badge"
-      whileHover={{ scale: 1.06, borderColor: "var(--border-active)", color: "var(--gold-hi)", background: "rgba(200,145,58,0.14)" }}
+      whileHover={{ scale: 1.06, borderColor: "var(--border-active)", color: "var(--gold-hi)", background: "rgba(255,134,91,0.14)" }}
       transition={{ duration: 0.14 }}
       style={{ cursor: "default" }}>
       {label}

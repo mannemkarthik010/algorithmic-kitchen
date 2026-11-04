@@ -6,10 +6,10 @@ import { openProject, scrollToId } from "../lib/events";
 /** The pipeline behind the Retail Demand Intelligence Platform, drawn as four layers in depth.
  *  Every figure comes from that project's own results. */
 const STEPS = [
-  { key: "Data", head: "240 store and department series", body: "Weekly sales history, backtested with a rolling origin." },
+  { key: "Data", head: "240 synthetic store and department series", body: "Five years of weekly sales generated to mirror a retail chain, backtested with a rolling origin." },
   { key: "Model", head: "A winner chosen per series", body: "Seasonal-naive, Holt-Winters and gradient boosting compete; no single model wins everywhere." },
   { key: "Evaluation", head: "7.9% WAPE, and an honest gap", body: "The 80% prediction intervals covered 74.2% on held-out data. Reported, not hidden." },
-  { key: "Deployment", head: "Shipped, not just trained", body: "AWS (SageMaker, Lambda, Bedrock) via Terraform, with CI and drift detection." },
+  { key: "Deployment", head: "Live demo, honest scope", body: "Runs on Vercel with passing CI. The AWS Terraform is written and mock-tested, not yet applied to an account." },
 ] as const;
 
 const GAP = 66; // px between layers in depth
@@ -20,7 +20,7 @@ function PlateArt({ i }: { i: number }) {
       <svg viewBox="0 0 120 70" aria-hidden="true">
         {Array.from({ length: 40 }).map((_, k) => {
           const c = k % 10, r = Math.floor(k / 10);
-          return <rect key={k} x={6 + c * 11} y={8 + r * 15} width="8" height="10" rx="1.5" fill={(k * 7) % 5 === 0 ? "#E4AD52" : "rgba(240,230,206,.22)"} />;
+          return <rect key={k} x={6 + c * 11} y={8 + r * 15} width="8" height="10" rx="1.5" fill={(k * 7) % 5 === 0 ? "#FF9B76" : "rgba(242,239,232,.22)"} />;
         })}
       </svg>
     );
@@ -28,29 +28,29 @@ function PlateArt({ i }: { i: number }) {
   if (i === 1) {
     return (
       <svg viewBox="0 0 120 70" aria-hidden="true">
-        <rect x="16" y="38" width="22" height="24" fill="rgba(240,230,206,.25)" />
-        <rect x="49" y="30" width="22" height="32" fill="rgba(240,230,206,.25)" />
-        <rect x="82" y="14" width="22" height="48" fill="#E4AD52" />
-        <rect x="6" y="62" width="108" height="1.5" fill="rgba(240,230,206,.4)" />
+        <rect x="16" y="38" width="22" height="24" fill="rgba(242,239,232,.25)" />
+        <rect x="49" y="30" width="22" height="32" fill="rgba(242,239,232,.25)" />
+        <rect x="82" y="14" width="22" height="48" fill="#FF9B76" />
+        <rect x="6" y="62" width="108" height="1.5" fill="rgba(242,239,232,.4)" />
       </svg>
     );
   }
   if (i === 2) {
     return (
       <svg viewBox="0 0 120 70" aria-hidden="true">
-        <rect x="8" y="18" width="104" height="12" fill="none" stroke="rgba(240,230,206,.45)" strokeDasharray="3 3" />
-        <rect x="8" y="18" width="77" height="12" fill="#E4AD52" />
-        <rect x="8" y="44" width="104" height="12" fill="none" stroke="rgba(240,230,206,.45)" strokeDasharray="3 3" />
-        <rect x="8" y="44" width="38" height="12" fill="rgba(240,230,206,.5)" />
-        <line x1="90" y1="10" x2="90" y2="64" stroke="#E4AD52" strokeWidth="1.2" />
+        <rect x="8" y="18" width="104" height="12" fill="none" stroke="rgba(242,239,232,.45)" strokeDasharray="3 3" />
+        <rect x="8" y="18" width="77" height="12" fill="#FF9B76" />
+        <rect x="8" y="44" width="104" height="12" fill="none" stroke="rgba(242,239,232,.45)" strokeDasharray="3 3" />
+        <rect x="8" y="44" width="38" height="12" fill="rgba(242,239,232,.5)" />
+        <line x1="90" y1="10" x2="90" y2="64" stroke="#FF9B76" strokeWidth="1.2" />
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 120 70" aria-hidden="true">
-      <path d="M18 35 H50 M50 35 L72 18 H102 M50 35 L72 52 H102" stroke="rgba(240,230,206,.45)" strokeWidth="1.5" fill="none" />
+      <path d="M18 35 H50 M50 35 L72 18 H102 M50 35 L72 52 H102" stroke="rgba(242,239,232,.45)" strokeWidth="1.5" fill="none" />
       {[[18, 35], [50, 35], [72, 18], [102, 18], [72, 52], [102, 52]].map(([x, y], k) => (
-        <circle key={k} cx={x} cy={y} r="5" fill={k === 0 || k === 3 ? "#E4AD52" : "rgba(240,230,206,.35)"} />
+        <circle key={k} cx={x} cy={y} r="5" fill={k === 0 || k === 3 ? "#FF9B76" : "rgba(242,239,232,.35)"} />
       ))}
     </svg>
   );

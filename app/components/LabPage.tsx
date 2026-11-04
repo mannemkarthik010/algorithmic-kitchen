@@ -11,7 +11,6 @@ import Terminal from "./Terminal";
 import SoundToggle from "./SoundToggle";
 import CommandPalette from "./CommandPalette";
 import EmberCursor from "./EmberCursor";
-import TimeThemeProvider from "./TimeThemeProvider";
 
 /** The optional side of the portfolio: games, the reading room, what is on the stove, and experiments. */
 export default function LabPage() {
@@ -25,7 +24,6 @@ export default function LabPage() {
 
   return (
     <main>
-      <TimeThemeProvider />
       <Nav />
       <header id="lab" className="lab-head">
         <div className="container">

@@ -23,7 +23,7 @@ export default function SoundToggle() {
         alignItems: "center",
         gap: 7,
         padding: "7px 14px",
-        background: "rgba(8,5,2,0.88)",
+        background: "rgba(13,17,21,0.88)",
         border: "1px solid var(--border)",
         borderRadius: "var(--radius-sm)",
         cursor: "pointer",

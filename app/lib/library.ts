@@ -36,17 +36,17 @@ const hash = (s: string) => {
 
 /** Open Library cover ids, matched by title and author. Books without a matching edition keep generated art. */
 const COVERS: Record<string, { id: number; tint: string; ink: string; accent: string }> = {
-  "Build a Large Language Model From Scratch": { id: 15225524, tint: "#17020D", ink: "#F0E6CE", accent: "#5D3E37" },
-  "Hands-On Machine Learning": { id: 9388208, tint: "#FFFFFF", ink: "#1A1410", accent: "#A79B8D" },
-  "Designing Machine Learning Systems": { id: 13314480, tint: "#FFFFFF", ink: "#1A1410", accent: "#59483D" },
-  "AI Engineering": { id: 15091156, tint: "#FFFFFF", ink: "#1A1410", accent: "#1C1611" },
-  "Quiet: The Power of Introverts in a World That Can't Stop Talking": { id: 7079753, tint: "#7F8185", ink: "#1A1410", accent: "#C8913A" },
-  "Do Epic Shit": { id: 12550538, tint: "#FFF217", ink: "#1A1410", accent: "#9FC860" },
-  "Rich Dad Poor Dad": { id: 8315603, tint: "#60544D", ink: "#F0E6CE", accent: "#1E1819" },
-  "One Arranged Murder": { id: 10504047, tint: "#E7E6D2", ink: "#1A1410", accent: "#7E726A" },
-  "Journey of Self Discovery": { id: 7273805, tint: "#1C1D22", ink: "#F0E6CE", accent: "#6A5A4D" },
-  "The Higher Taste": { id: 689824, tint: "#66222B", ink: "#F0E6CE", accent: "#A37356" },
-  "Sanatana Dharma": { id: 13507353, tint: "#506437", ink: "#F0E6CE", accent: "#E29B16" },
+  "Build a Large Language Model From Scratch": { id: 15225524, tint: "#17020D", ink: "#F2EFE8", accent: "#5D3E37" },
+  "Hands-On Machine Learning": { id: 9388208, tint: "#FFFFFF", ink: "#101317", accent: "#A79B8D" },
+  "Designing Machine Learning Systems": { id: 13314480, tint: "#FFFFFF", ink: "#101317", accent: "#59483D" },
+  "AI Engineering": { id: 15091156, tint: "#FFFFFF", ink: "#101317", accent: "#1C1611" },
+  "Quiet: The Power of Introverts in a World That Can't Stop Talking": { id: 7079753, tint: "#7F8185", ink: "#101317", accent: "#FF865B" },
+  "Do Epic Shit": { id: 12550538, tint: "#FFF217", ink: "#101317", accent: "#9FC860" },
+  "Rich Dad Poor Dad": { id: 8315603, tint: "#60544D", ink: "#F2EFE8", accent: "#1E1819" },
+  "One Arranged Murder": { id: 10504047, tint: "#E7E6D2", ink: "#101317", accent: "#7E726A" },
+  "Journey of Self Discovery": { id: 7273805, tint: "#1C1D22", ink: "#F2EFE8", accent: "#6A5A4D" },
+  "The Higher Taste": { id: 689824, tint: "#66222B", ink: "#F2EFE8", accent: "#A37356" },
+  "Sanatana Dharma": { id: 13507353, tint: "#506437", ink: "#F2EFE8", accent: "#E29B16" },
 };
 
 const coverFor = (title: string) => {

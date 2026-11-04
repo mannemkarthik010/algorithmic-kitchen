@@ -38,8 +38,8 @@ export default function ExpertiseLab() {
                   style={{
                     padding: "var(--space-3) var(--space-3)",
                     background: isActive
-                      ? `linear-gradient(135deg, ${area.color}55, rgba(10,7,4,0.97))`
-                      : "linear-gradient(135deg, rgba(27,19,8,0.82), rgba(10,7,4,0.96))",
+                      ? `linear-gradient(135deg, ${area.color}55, rgba(13,17,21,0.97))`
+                      : "linear-gradient(135deg, rgba(22,27,32,0.82), rgba(13,17,21,0.96))",
                     border: "1px solid",
                     borderColor: isActive ? area.accent + "88" : "var(--border)",
                     borderRadius: "var(--radius-xl)",

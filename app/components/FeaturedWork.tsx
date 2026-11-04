@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useMotionValue, useScroll, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { resume, featuredWork } from "../data/resume";
 import { StatusChip } from "./StatusChip";
@@ -122,7 +123,9 @@ export default function FeaturedWork() {
               <div className="fw-actions">
                 {p.demo && <a className="pill-cta" href={p.demo} target="_blank" rel="noopener noreferrer">{p.status === "beta" ? "Try the beta" : "Live demo"} ↗</a>}
                 {p.github && <a className="fw-ghost" href={p.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>}
-                <button type="button" className="fw-ghost" onClick={() => openProject(p.slug)}>Full write-up →</button>
+                {"caseStudy" in fw && fw.caseStudy
+                  ? <Link className="fw-ghost" href={fw.caseStudy}>Read the case study →</Link>
+                  : <button type="button" className="fw-ghost" onClick={() => openProject(p.slug)}>Full write-up →</button>}
               </div>
             </footer>
           </Card>

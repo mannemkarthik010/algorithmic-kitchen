@@ -20,7 +20,7 @@ function ComplexityMeter({ value }: { value: number }) {
             animate={{ scaleY: 1 }}
             transition={{ delay: n * 0.06, duration: DUR.normal, ease: EASE }}
             style={{ width: 20, height: 6, borderRadius: 3, transformOrigin: "bottom",
-              background: n <= value ? `rgba(200,145,58,${0.42 + n * 0.13})` : "rgba(200,145,58,0.1)" }}
+              background: n <= value ? `rgba(255,134,91,${0.42 + n * 0.13})` : "rgba(255,134,91,0.1)" }}
           />
         ))}
       </div>
@@ -49,7 +49,7 @@ function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
     <div style={{
       padding: "var(--space-2) var(--space-3)",
       borderRadius: "var(--radius-lg)",
-      background: "rgba(200,145,58,0.04)",
+      background: "rgba(255,134,91,0.04)",
       border: "1px solid var(--border)",
       overflowX: "auto",
     }}>
@@ -68,7 +68,7 @@ function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
                 minWidth: 88,
                 position: "relative",
                 borderColor: hot === i ? "var(--gold-hi)" : undefined,
-                boxShadow: hot === i ? "0 0 22px rgba(228,173,82,0.4), inset 0 0 12px rgba(228,173,82,0.1)" : "none",
+                boxShadow: hot === i ? "0 0 22px rgba(255,155,118,0.4), inset 0 0 12px rgba(255,155,118,0.1)" : "none",
                 transition: "border-color .35s, box-shadow .35s",
               }}
             >
@@ -76,7 +76,7 @@ function PipelineFlow({ steps }: { steps: { step: string; desc: string }[] }) {
               <p className="body-sm c-muted" style={{ fontSize: 11, lineHeight: 1.5 }}>{node.desc}</p>
               {/* Active glow on first node */}
               {i === 0 && (
-                <div style={{ position: "absolute", inset: 0, borderRadius: "var(--radius-md)", border: "1px solid rgba(200,145,58,0.35)", pointerEvents: "none" }} />
+                <div style={{ position: "absolute", inset: 0, borderRadius: "var(--radius-md)", border: "1px solid rgba(255,134,91,0.35)", pointerEvents: "none" }} />
               )}
             </motion.div>
             {i < steps.length - 1 && (
@@ -104,8 +104,8 @@ function RecruiterSnapshot({ text }: { text: string }) {
       transition={{ delay: 0.18, duration: DUR.moderate, ease: EASE }}
       style={{
         padding: "var(--space-2) var(--space-3)",
-        background: "linear-gradient(135deg, rgba(200,145,58,0.08), rgba(212,93,32,0.05))",
-        border: "1px solid rgba(200,145,58,0.3)",
+        background: "linear-gradient(135deg, rgba(255,134,91,0.08), rgba(229,107,67,0.05))",
+        border: "1px solid rgba(255,134,91,0.3)",
         borderRadius: "var(--radius-md)",
         borderLeft: "3px solid var(--gold)",
         marginBottom: "var(--space-3)",
@@ -175,7 +175,7 @@ export default function ProjectModal({ project, onClose }: {
                 </div>
                 <button
                   onClick={handleClose} aria-label="Close modal"
-                  style={{ background: "rgba(200,145,58,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--muted)", width: 34, height: 34, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.18s" }}
+                  style={{ background: "rgba(255,134,91,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--muted)", width: 34, height: 34, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.18s" }}
                   onMouseEnter={(e) => { e.currentTarget.style.color = "var(--cream)"; e.currentTarget.style.borderColor = "var(--border-active)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = "var(--muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
                 >✕</button>
@@ -212,7 +212,7 @@ export default function ProjectModal({ project, onClose }: {
                   <p className="label" style={{ marginBottom: 6 }}>The Problem</p>
                   <p className="body-sm c-2">{project.problem}</p>
                 </div>
-                <div style={{ padding: "var(--space-2) var(--space-3)", background: "rgba(200,145,58,0.04)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+                <div style={{ padding: "var(--space-2) var(--space-3)", background: "rgba(255,134,91,0.04)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
                   <p className="label" style={{ marginBottom: 6 }}>The Solution</p>
                   <p className="body-sm c-2">{project.solution}</p>
                 </div>
@@ -294,7 +294,7 @@ export default function ProjectModal({ project, onClose }: {
               {/* Lessons learned */}
               <div style={{
                 padding: "var(--space-2) var(--space-3)",
-                background: "rgba(200,145,58,0.05)",
+                background: "rgba(255,134,91,0.05)",
                 borderRadius: "var(--radius-md)",
                 borderLeft: "2px solid var(--gold)",
                 marginBottom: "var(--space-3)",

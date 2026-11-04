@@ -225,9 +225,9 @@ const MOTD: Line[] = [
 
 const lineColor = (t: Line["type"]) =>
   t === "input" ? "var(--gold)" :
-  t === "system" ? "rgba(200,145,58,0.52)" :
+  t === "system" ? "rgba(255,134,91,0.52)" :
   t === "gold"   ? "rgba(228,174,82,0.88)" :
-  "rgba(240,230,206,0.66)";
+  "rgba(242,239,232,0.66)";
 
 export default function Terminal() {
   const [open, setOpen]       = useState(false);
@@ -272,8 +272,8 @@ export default function Terminal() {
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }} transition={{ delay: 5, duration: 0.5 }}
             onClick={() => setOpen(true)}
-            style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "rgba(10,8,3,0.88)", border: "1px solid rgba(200,145,58,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer", fontFamily: "var(--f-mono)", fontSize: 11, color: "var(--muted)", backdropFilter: "blur(10px)", transition: "all 0.2s ease" }}
-            whileHover={{ borderColor: "rgba(200,145,58,0.6)", color: "var(--gold)" } as Parameters<typeof motion.button>[0]["whileHover"]}
+            style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "rgba(10,8,3,0.88)", border: "1px solid rgba(255,134,91,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer", fontFamily: "var(--f-mono)", fontSize: 11, color: "var(--muted)", backdropFilter: "blur(10px)", transition: "all 0.2s ease" }}
+            whileHover={{ borderColor: "rgba(255,134,91,0.6)", color: "var(--gold)" } as Parameters<typeof motion.button>[0]["whileHover"]}
             aria-label="Open developer terminal"
           >
             <span style={{ color: "var(--gold)" }}>⌃`</span> Terminal
@@ -289,13 +289,13 @@ export default function Terminal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 36, scale: 0.97 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            style={{ position: "fixed", bottom: 24, right: 24, width: "min(600px,calc(100vw - 48px))", height: 400, zIndex: 500, background: "rgba(5,3,1,0.97)", border: "1px solid rgba(200,145,58,0.3)", borderRadius: "var(--radius-lg)", display: "flex", flexDirection: "column", overflow: "hidden", backdropFilter: "blur(20px)", boxShadow: "0 28px 64px rgba(0,0,0,0.7)" }}
+            style={{ position: "fixed", bottom: 24, right: 24, width: "min(600px,calc(100vw - 48px))", height: 400, zIndex: 500, background: "rgba(5,3,1,0.97)", border: "1px solid rgba(255,134,91,0.3)", borderRadius: "var(--radius-lg)", display: "flex", flexDirection: "column", overflow: "hidden", backdropFilter: "blur(20px)", boxShadow: "0 28px 64px rgba(0,0,0,0.7)" }}
             onClick={() => inputRef.current?.focus()}
           >
             {/* Title bar */}
-            <div style={{ padding: "10px 14px", borderBottom: "1px solid rgba(200,145,58,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(0,0,0,0.18)" }}>
+            <div style={{ padding: "10px 14px", borderBottom: "1px solid rgba(255,134,91,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(0,0,0,0.18)" }}>
               <div className="flex-row gap-1">
-                {["#D45D20","#C8913A","rgba(200,145,58,0.25)"].map((c, i) => (
+                {["#E56B43","#FF865B","rgba(255,134,91,0.25)"].map((c, i) => (
                   <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c }} />
                 ))}
               </div>
@@ -313,7 +313,7 @@ export default function Terminal() {
             </div>
 
             {/* Input */}
-            <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(200,145,58,0.1)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(255,134,91,0.1)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <span className="mono c-gold">❯</span>
               <input ref={inputRef} value={input}
                 onChange={(e) => setInput(e.target.value)}

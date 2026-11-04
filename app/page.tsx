@@ -17,13 +17,11 @@ import SoundToggle from "./components/SoundToggle";
 import CourseRail from "./components/CourseRail";
 import EmberCursor from "./components/EmberCursor";
 import CommandPalette from "./components/CommandPalette";
-import TimeThemeProvider from "./components/TimeThemeProvider";
 import { SectionDivider } from "./components/ui";
 
 export default function Home() {
   return (
     <main>
-      <TimeThemeProvider />
       <ScrollToTop />
       <Nav />
       <Hero />

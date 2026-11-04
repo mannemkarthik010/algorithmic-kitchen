@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, DM_Mono, Bagel_Fat_One } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { SoundProvider } from "./hooks/SoundContext";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"], weight: ["300", "400", "600"], style: ["normal", "italic"],
-  variable: "--font-cormorant", display: "swap",
-});
-const dmSans = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-dm-sans", display: "swap" });
-const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono", display: "swap" });
-const bagel = Bagel_Fat_One({ subsets: ["latin"], weight: "400", variable: "--font-bagel", display: "swap" });
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", display: "swap" });
 
 const SITE_URL = "https://thealgorithmickitchen.vercel.app";
 
@@ -22,7 +18,7 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   metadataBase: new URL(SITE_URL),
-  title: "Karthik Mannem — Machine Learning & AI Engineer | The Algorithmic Kitchen",
+  title: "Karthik Mannem | Machine Learning & AI Engineer",
   description:
     "Karthik Mannem is a Machine Learning & AI Engineer building production AI systems with LLMs, RAG, ML, and agentic workflows. M.S. CS at CSUN, Los Angeles. Open to full-time roles.",
   keywords: [
@@ -47,13 +43,13 @@ export const metadata: Metadata = {
     title: "Karthik Mannem — Machine Learning & AI Engineer",
     description:
       "Cooking intelligent systems from raw data, creativity, and machine learning. ML Engineer portfolio by Karthik Mannem.",
-    siteName: "The Algorithmic Kitchen",
+    siteName: "Karthik Mannem",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "The Algorithmic Kitchen by Karthik Mannem",
+        alt: "Karthik Mannem, Machine Learning & AI Engineer",
       },
     ],
   },
@@ -98,7 +94,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${bagel.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${instrument.variable}`}>
       <head>
         <script
           type="application/ld+json"

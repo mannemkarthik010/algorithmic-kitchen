@@ -2,10 +2,9 @@
 
 const ROWS: { words: string[]; reverse?: boolean; outline?: boolean }[] = [
   { words: ["DATA.", "MODEL.", "SHIP."] },
-  { words: ["RETRIEVE.", "REASON.", "REPEAT."], reverse: true, outline: true },
 ];
 
-/** Big, chunky, endlessly scrolling tagline bands. */
+/** A slim, slow tagline strip: the small secondary brand element. */
 export default function Ticker() {
   return (
     <div className="ticker" aria-hidden="true">
