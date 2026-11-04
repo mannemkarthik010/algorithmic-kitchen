@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, useMotionValue, useTransform, useReducedMotion } from "framer-motion";
 
 const CLAIMS: { text: string; real: boolean; why: string }[] = [
-  { text: "TaxProof ships with 225 backend tests.", real: true, why: "Real: every figure in it traces back to evidence, and the tests keep that honest." },
+  { text: "TaxProof ships with 230 backend tests.", real: true, why: "Real: every figure in it traces back to evidence, and the tests keep that honest." },
   { text: "PyTorch PR #191439 was merged.", real: false, why: "Fake: it was closed as a duplicate. The site shows the real status of every PR, closed ones included." },
   { text: "Karthik has a merged pull request in pandera (#2437).", real: true, why: "Real: merged into the open-source data-validation library." },
   { text: "In Woodlands IMS, the AI edits stock balances directly.", real: false, why: "Fake: the AI only proposes. A person confirms, and balances come from an append-only ledger." },

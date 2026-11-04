@@ -53,7 +53,7 @@ const CMD: Record<string, () => Line[]> = {
     return [
       { text: `◈  ${p.title}  [LIVE]`, type: "gold" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
-      { text: `   Tests      : 225 backend · 36 frontend · 10 iterations`, type: "output" },
+      { text: `   Tests      : 230 backend · 36 frontend · 10 iterations`, type: "output" },
       { text: `   Key lesson : ${p.learned}`, type: "output" },
       { text: `   Live       : ${p.demo}`, type: "gold" },
       { text: `   GitHub     : ${p.github}`, type: "gold" },

@@ -83,7 +83,7 @@ export const resume = {
         { step: "Challenge", desc: "Assurance engine surfaces contradictions and confident mistakes" },
         { step: "Decide",    desc: "Server-enforced roles, hash-chained audit log, living sign-offs" },
       ],
-      results: ["10 shipped iterations, from an immutable source layer to the Return Assurance Twin","225 backend tests (passing on SQLite and PostgreSQL) plus 36 frontend tests","Live on Vercel: switch roles to act as preparer, reviewer, partner or client"],
+      results: ["10 shipped iterations, from an immutable source layer to the Return Assurance Twin","230 backend tests (passing on SQLite and PostgreSQL) plus 36 frontend tests","Live on Vercel: switch roles to act as preparer, reviewer, partner or client"],
       learned: "Trust is a data-model property, not a UI feature. Making the source immutable and pointing at it by reference, instead of copying values, is what let every later feature, adjustments, what-if, sign-offs, audit, attach to any number without ever corrupting the original.",
       recruiterSnapshot: "Full-stack engineering in a hard domain: immutable data, a hash-chained audit trail, server-side RBAC and sensitive-data masking, and an AI layer deliberately constrained to cited evidence. Built over ten tested iterations and deployed.",
       evaluation: [
@@ -444,7 +444,7 @@ export const resume = {
     },
     {
       no: "040", table: "Anyone with a browser", dish: "TaxProof", status: "live" as const,
-      items: ["Every number linked to its evidence", "Hash-chained audit log, server-side roles", "225 backend tests, 10 iterations"],
+      items: ["Every number linked to its evidence", "Hash-chained audit log, server-side roles", "230 backend tests, 10 iterations"],
       cta: "Taste it live", href: "https://taxproof-web.vercel.app",
     },
     {
@@ -742,11 +742,12 @@ export const careerTimeline = [
 export const featuredWork = [
   {
     slug: "taxproof",
+    caseStudy: "/work/taxproof",
     shot: { src: "/images/projects/taxproof.jpg", width: 1200, height: 750, alt: "TaxProof overview screen: return assurance score, evidence coverage, critical issues and the role switcher", host: "taxproof-web.vercel.app" },
     headline: "A tax workpaper where every number carries its proof.",
     evalRows: [
       ["Approach", "Source packet is SHA-256 hashed and frozen; an evidence graph links each line to its inputs, rule, document and page."],
-      ["Verification", "225 backend tests (passing on SQLite and PostgreSQL) plus 36 frontend tests."],
+      ["Verification", "230 backend tests (passing on SQLite and PostgreSQL) plus 36 frontend tests."],
       ["Integrity checks", "Every packet reference must resolve (test-enforced); hash-chain verification detects any edited or deleted audit row."],
       ["AI guardrail", "The AI may investigate but not calculate: claims must cite evidence, and with no model the app says so instead of faking it."],
       ["Result", "10 shipped iterations, live on Vercel with role switching (preparer, reviewer, partner, client)."],

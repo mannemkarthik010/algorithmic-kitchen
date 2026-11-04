@@ -1,0 +1,1514 @@
+{
+ "meta": {
+  "repo": "mannemkarthik010/TaxGraph",
+  "repoUrl": "https://github.com/mannemkarthik010/TaxGraph",
+  "sha": "773e4ea53dcd457dc79a8930e38e5f700830a279",
+  "builtAt": "2026-11-04",
+  "packetSha256": "ee01f8508bd2fd9854754b82fd9c4a055bdc55e2778a132002a25381c412ad19",
+  "packetName": "Okafor-Lindqvist household - tax year 2025",
+  "packetVersion": "1.0",
+  "counts": {
+   "documents": 74,
+   "extractedValues": 3012,
+   "returnVersions": [
+    {
+     "version": "v1",
+     "lines": 625,
+     "computedAt": "2026-03-04"
+    },
+    {
+     "version": "v2",
+     "lines": 625,
+     "computedAt": "2026-03-19"
+    },
+    {
+     "version": "v3",
+     "lines": 627,
+     "computedAt": "2026-06-23"
+    }
+   ]
+  },
+  "v3": {
+   "trigger": "Recompute: Ridgeline K-1 and state supplement received 2026-06-22; 2023 S corporation K-1 (received 2026-06-05), SEP confirmation and 2025 Form 5498 now in file; extension payments made 2026-04-14.",
+   "federalBalanceDue": 4220,
+   "federalTotalTax": 81962,
+   "federalAgi": 445590
+  }
+ },
+ "traces": [
+  {
+   "id": "mileage",
+   "tab": "Mileage deduction",
+   "question": "Where does the 11,800 business miles come from, and what does it do to the tax due?",
+   "summary": "The engine sums four page totals from the scanned mileage log. Page 3 is a second scan of page 2, so 3,700 miles are counted twice. The error flows through the car expense, net profit and self-employment tax to the amount owed.",
+   "nodes": [
+    {
+     "id": "D23#1",
+     "kind": "doc",
+     "label": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "doc": "D23",
+     "page": 1,
+     "docType": "mileage_log",
+     "pageCount": 4,
+     "fileName": "mileage_scan.pdf",
+     "received": "2026-02-18",
+     "heading": "Mileage log Jan-Apr"
+    },
+    {
+     "id": "D23#2",
+     "kind": "doc",
+     "label": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "doc": "D23",
+     "page": 2,
+     "docType": "mileage_log",
+     "pageCount": 4,
+     "fileName": "mileage_scan.pdf",
+     "received": "2026-02-18",
+     "heading": "Mileage log May-Aug"
+    },
+    {
+     "id": "D23#3",
+     "kind": "doc",
+     "label": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "doc": "D23",
+     "page": 3,
+     "docType": "mileage_log",
+     "pageCount": 4,
+     "fileName": "mileage_scan.pdf",
+     "received": "2026-02-18",
+     "heading": "Mileage log May-Aug"
+    },
+    {
+     "id": "D23#4",
+     "kind": "doc",
+     "label": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "doc": "D23",
+     "page": 4,
+     "docType": "mileage_log",
+     "pageCount": 4,
+     "fileName": "mileage_scan.pdf",
+     "received": "2026-02-18",
+     "heading": "Mileage log Sep-Dec"
+    },
+    {
+     "id": "ev-0226",
+     "kind": "evidence",
+     "label": "Page total miles",
+     "field": "page_total",
+     "value": 2600,
+     "unit": "mi",
+     "doc": "D23",
+     "page": 1,
+     "docTitle": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "textAsRead": "2600",
+     "confidence": 0.96
+    },
+    {
+     "id": "ev-0315",
+     "kind": "evidence",
+     "label": "Page total miles",
+     "field": "page_total",
+     "value": 3700,
+     "unit": "mi",
+     "doc": "D23",
+     "page": 2,
+     "docTitle": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "textAsRead": "3700",
+     "confidence": 0.96
+    },
+    {
+     "id": "ev-0404",
+     "kind": "evidence",
+     "label": "Page total miles",
+     "field": "page_total",
+     "value": 3700,
+     "unit": "mi",
+     "doc": "D23",
+     "page": 3,
+     "docTitle": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "textAsRead": "3700",
+     "confidence": 0.96
+    },
+    {
+     "id": "ev-0477",
+     "kind": "evidence",
+     "label": "Page total miles",
+     "field": "page_total",
+     "value": 1800,
+     "unit": "mi",
+     "doc": "D23",
+     "page": 4,
+     "docTitle": "Vehicle mileage log 2025 (scanned, 4 pages)",
+     "textAsRead": "1800",
+     "confidence": 0.96
+    },
+    {
+     "id": "SchC.44a",
+     "kind": "line",
+     "label": "Business miles (Part IV)",
+     "form": "SchC",
+     "value": 11800,
+     "unit": "mi",
+     "rule": "R-MILEAGE-PAGE-TOTALS",
+     "ruleText": "Business miles = sum of the page totals on every page of the mileage log.",
+     "inputs": [],
+     "sources": [
+      "ev-0226",
+      "ev-0315",
+      "ev-0477",
+      "ev-0404"
+     ],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "SchC.9",
+     "kind": "line",
+     "label": "Car and truck expenses (standard mileage)",
+     "form": "SchC",
+     "value": 8260,
+     "unit": "usd",
+     "rule": "R-STANDARD-MILEAGE",
+     "ruleText": "Business miles x standard mileage rate.",
+     "inputs": [
+      "SchC.44a"
+     ],
+     "sources": [
+      "ref:param.mileage_rate"
+     ],
+     "note": "Replaces books fuel expense (books line 'Car and truck - fuel').",
+     "core": true
+    },
+    {
+     "id": "SchC.28",
+     "kind": "line",
+     "label": "Total expenses",
+     "form": "SchC",
+     "value": 80646,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.8",
+      "SchC.9",
+      "SchC.11",
+      "SchC.13",
+      "SchC.15",
+      "SchC.17",
+      "SchC.18",
+      "SchC.22",
+      "SchC.24a",
+      "SchC.24b",
+      "SchC.25",
+      "SchC.27a.1",
+      "SchC.27a.2"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchC.29",
+     "kind": "line",
+     "label": "Tentative profit",
+     "form": "SchC",
+     "value": 83054,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.7",
+      "SchC.28"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchC.31",
+     "kind": "line",
+     "label": "Net profit",
+     "form": "SchC",
+     "value": 81854,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.29",
+      "SchC.30"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "SchSE.2",
+     "kind": "line",
+     "label": "Net profit from Schedule C",
+     "form": "SchSE",
+     "value": 81854,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "SchC.31"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.4a",
+     "kind": "line",
+     "label": "Net earnings (x 92.35%)",
+     "form": "SchSE",
+     "value": 75592,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.2"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.6",
+     "kind": "line",
+     "label": "Total net earnings",
+     "form": "SchSE",
+     "value": 75592,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.4a"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.10",
+     "kind": "line",
+     "label": "Social security portion",
+     "form": "SchSE",
+     "value": 9373,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.6"
+     ],
+     "sources": [
+      "ref:param.ss_wage_base"
+     ],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.12",
+     "kind": "line",
+     "label": "Self-employment tax",
+     "form": "SchSE",
+     "value": 11565,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchSE.10",
+      "SchSE.11"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "Sch2.4",
+     "kind": "line",
+     "label": "Self-employment tax",
+     "form": "Sch2",
+     "value": 11565,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "SchSE.12"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "Sch2.21",
+     "kind": "line",
+     "label": "Total other taxes",
+     "form": "Sch2",
+     "value": 19160,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "Sch2.4",
+      "Sch2.11",
+      "Sch2.12"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.23",
+     "kind": "line",
+     "label": "Other taxes from Schedule 2, line 21",
+     "form": "F1040",
+     "value": 19160,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "Sch2.21"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.24",
+     "kind": "line",
+     "label": "Total tax",
+     "form": "F1040",
+     "value": 81962,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.22",
+      "F1040.23"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.37",
+     "kind": "line",
+     "label": "Amount you owe",
+     "form": "F1040",
+     "value": 4220,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.24",
+      "F1040.33"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    }
+   ],
+   "edges": [
+    {
+     "from": "D23#1",
+     "to": "ev-0226",
+     "kind": "read"
+    },
+    {
+     "from": "D23#2",
+     "to": "ev-0315",
+     "kind": "read"
+    },
+    {
+     "from": "D23#3",
+     "to": "ev-0404",
+     "kind": "read"
+    },
+    {
+     "from": "D23#4",
+     "to": "ev-0477",
+     "kind": "read"
+    },
+    {
+     "from": "ev-0226",
+     "to": "SchC.44a",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0315",
+     "to": "SchC.44a",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0404",
+     "to": "SchC.44a",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0477",
+     "to": "SchC.44a",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.44a",
+     "to": "SchC.9",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.9",
+     "to": "SchC.28",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.28",
+     "to": "SchC.29",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.29",
+     "to": "SchC.31",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.31",
+     "to": "SchSE.2",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.2",
+     "to": "SchSE.4a",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.4a",
+     "to": "SchSE.6",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.6",
+     "to": "SchSE.10",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.10",
+     "to": "SchSE.12",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.12",
+     "to": "Sch2.4",
+     "kind": "feeds"
+    },
+    {
+     "from": "Sch2.4",
+     "to": "Sch2.21",
+     "kind": "feeds"
+    },
+    {
+     "from": "Sch2.21",
+     "to": "F1040.23",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.23",
+     "to": "F1040.24",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.24",
+     "to": "F1040.37",
+     "kind": "feeds"
+    },
+    {
+     "from": "D23#3",
+     "to": "D23#2",
+     "kind": "duplicate",
+     "label": "same sheet scanned twice"
+    }
+   ],
+   "flags": {
+    "D23#3": {
+     "type": "duplicate",
+     "title": "Duplicate page",
+     "text": "The page itself says it is a second scan of the May to August sheet (same handwriting and coffee stain as page 2). Its 3,700-mile total is added again."
+    },
+    "ev-0404": {
+     "type": "duplicate",
+     "title": "Counted twice",
+     "text": "Same total as page 2 (3,700). The rule sums every page total without checking for repeated sheets."
+    },
+    "SchC.44a": {
+     "type": "wrong",
+     "title": "Overstated input",
+     "text": "11,800 includes the repeated sheet. Without it the pages sum to 8,100."
+    }
+   },
+   "engine": {
+    "label": "Business miles (SchC.44a)",
+    "value": 11800,
+    "unit": "mi"
+   },
+   "independent": {
+    "label": "Without the repeated page",
+    "value": 8100,
+    "unit": "mi",
+    "how": "2,600 + 3,700 + 1,800 (pages 1, 2 and 4)",
+    "derived": true
+   },
+   "effect": {
+    "text": "Estimated tax effect of the correction: +$919 federal, +$80 California",
+    "source": "TaxProof iteration log, adjustment for this finding (an estimate through the engine's own mileage ratio, flagged for reviewer approval)"
+   },
+   "carry": {
+    "SchC.9": {
+     "engine": 8260,
+     "independent": 5670,
+     "how": "8,100 mi x $0.70 standard mileage rate"
+    }
+   }
+  },
+  {
+   "id": "receipts",
+   "tab": "Gross receipts",
+   "question": "Why is Schedule C gross receipts 163,700 when the books show 151,300?",
+   "summary": "The rule adds a Form 1099-K amount on top of the books' total income. The books already equal the five 1099-NEC forms plus 9,300 of other receipts, so the 12,400 card-processor amount may be money counted twice. TaxProof flags it as a failed check rather than deciding it.",
+   "nodes": [
+    {
+     "id": "D14#1",
+     "kind": "doc",
+     "label": "Lindqvist Studio - Profit and Loss, January-December 2025 (QuickBooks, cash basis)",
+     "doc": "D14",
+     "page": 1,
+     "docType": "books_profit_loss",
+     "pageCount": 2,
+     "fileName": "Lindqvist_Studio_PL_2025.pdf",
+     "received": "2026-02-11",
+     "heading": null
+    },
+    {
+     "id": "D21#1",
+     "kind": "doc",
+     "label": "2025 Form 1099-K - Paywell Payments",
+     "doc": "D21",
+     "page": 1,
+     "docType": "1099-K",
+     "pageCount": 1,
+     "fileName": "1099K_Paywell.pdf",
+     "received": "2026-02-06",
+     "heading": null
+    },
+    {
+     "id": "NEC#1",
+     "kind": "doc",
+     "label": "Forms 1099-NEC from five clients",
+     "doc": "D16-20",
+     "page": 1,
+     "docType": "1099-NEC",
+     "pageCount": 5,
+     "fileName": "five files (D16 to D20)",
+     "received": "2026-02-03",
+     "heading": null
+    },
+    {
+     "id": "ev-0103",
+     "kind": "evidence",
+     "label": "Books total income",
+     "field": "total_income",
+     "value": 151300.0,
+     "unit": "usd",
+     "doc": "D14",
+     "page": 1,
+     "docTitle": "Lindqvist Studio - Profit and Loss, January-December 2025 (QuickBooks, cash basis)",
+     "textAsRead": "151,300.00",
+     "confidence": 0.99
+    },
+    {
+     "id": "ev-0127",
+     "kind": "evidence",
+     "label": "Form 1099-K gross amount",
+     "field": "box1a",
+     "value": 12400.0,
+     "unit": "usd",
+     "doc": "D21",
+     "page": 1,
+     "docTitle": "2025 Form 1099-K - Paywell Payments",
+     "textAsRead": "12,400.00",
+     "confidence": 0.99
+    },
+    {
+     "id": "nec",
+     "kind": "evidence",
+     "label": "Form 1099-NEC box 1, five forms (sum)",
+     "field": "box1",
+     "value": 142000.0,
+     "unit": "usd",
+     "doc": "D16-20",
+     "page": 1,
+     "docTitle": "Forms 1099-NEC from five clients",
+     "textAsRead": "38,500.00 + 41,200.00 + 27,900.00 + 19,800.00 + 14,600.00",
+     "confidence": 0.99,
+     "members": [
+      {
+       "id": "ev-0113",
+       "doc": "D16",
+       "value": 38500.0
+      },
+      {
+       "id": "ev-0116",
+       "doc": "D17",
+       "value": 41200.0
+      },
+      {
+       "id": "ev-0119",
+       "doc": "D18",
+       "value": 27900.0
+      },
+      {
+       "id": "ev-0122",
+       "doc": "D19",
+       "value": 19800.0
+      },
+      {
+       "id": "ev-0125",
+       "doc": "D20",
+       "value": 14600.0
+      }
+     ]
+    },
+    {
+     "id": "SchC.1",
+     "kind": "line",
+     "label": "Gross receipts",
+     "form": "SchC",
+     "value": 163700,
+     "unit": "usd",
+     "rule": "R-SCHC-GROSS",
+     "ruleText": "Books revenue, plus payment-card (Form 1099-K) amounts that the engine could not match to a books deposit.",
+     "inputs": [],
+     "sources": [
+      "ev-0103",
+      "ev-0127",
+      "ev-0113",
+      "ev-0116",
+      "ev-0119",
+      "ev-0122",
+      "ev-0125"
+     ],
+     "note": "Gross receipts = books revenue plus Form 1099-K amounts not matched to a books deposit.",
+     "core": true
+    },
+    {
+     "id": "SchC.5",
+     "kind": "line",
+     "label": "Gross profit",
+     "form": "SchC",
+     "value": 163700,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.1"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchC.7",
+     "kind": "line",
+     "label": "Gross income",
+     "form": "SchC",
+     "value": 163700,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.5"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "SchC.29",
+     "kind": "line",
+     "label": "Tentative profit",
+     "form": "SchC",
+     "value": 83054,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.7",
+      "SchC.28"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchC.31",
+     "kind": "line",
+     "label": "Net profit",
+     "form": "SchC",
+     "value": 81854,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchC.29",
+      "SchC.30"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "SchSE.2",
+     "kind": "line",
+     "label": "Net profit from Schedule C",
+     "form": "SchSE",
+     "value": 81854,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "SchC.31"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.4a",
+     "kind": "line",
+     "label": "Net earnings (x 92.35%)",
+     "form": "SchSE",
+     "value": 75592,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.2"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.6",
+     "kind": "line",
+     "label": "Total net earnings",
+     "form": "SchSE",
+     "value": 75592,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.4a"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.10",
+     "kind": "line",
+     "label": "Social security portion",
+     "form": "SchSE",
+     "value": 9373,
+     "unit": "usd",
+     "rule": "R-SE",
+     "ruleText": "Schedule SE computation.",
+     "inputs": [
+      "SchSE.6"
+     ],
+     "sources": [
+      "ref:param.ss_wage_base"
+     ],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "SchSE.12",
+     "kind": "line",
+     "label": "Self-employment tax",
+     "form": "SchSE",
+     "value": 11565,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "SchSE.10",
+      "SchSE.11"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "Sch2.4",
+     "kind": "line",
+     "label": "Self-employment tax",
+     "form": "Sch2",
+     "value": 11565,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "SchSE.12"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "Sch2.21",
+     "kind": "line",
+     "label": "Total other taxes",
+     "form": "Sch2",
+     "value": 19160,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "Sch2.4",
+      "Sch2.11",
+      "Sch2.12"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.23",
+     "kind": "line",
+     "label": "Other taxes from Schedule 2, line 21",
+     "form": "F1040",
+     "value": 19160,
+     "unit": "usd",
+     "rule": "R-CARRY",
+     "ruleText": "Value carried from the listed line.",
+     "inputs": [
+      "Sch2.21"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.24",
+     "kind": "line",
+     "label": "Total tax",
+     "form": "F1040",
+     "value": 81962,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.22",
+      "F1040.23"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.37",
+     "kind": "line",
+     "label": "Amount you owe",
+     "form": "F1040",
+     "value": 4220,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.24",
+      "F1040.33"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    }
+   ],
+   "edges": [
+    {
+     "from": "D14#1",
+     "to": "ev-0103",
+     "kind": "read"
+    },
+    {
+     "from": "D21#1",
+     "to": "ev-0127",
+     "kind": "read"
+    },
+    {
+     "from": "NEC#1",
+     "to": "nec",
+     "kind": "read"
+    },
+    {
+     "from": "ev-0103",
+     "to": "SchC.1",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0127",
+     "to": "SchC.1",
+     "kind": "feeds"
+    },
+    {
+     "from": "nec",
+     "to": "SchC.1",
+     "kind": "corroborates"
+    },
+    {
+     "from": "SchC.1",
+     "to": "SchC.5",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.5",
+     "to": "SchC.7",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.7",
+     "to": "SchC.29",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.29",
+     "to": "SchC.31",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchC.31",
+     "to": "SchSE.2",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.2",
+     "to": "SchSE.4a",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.4a",
+     "to": "SchSE.6",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.6",
+     "to": "SchSE.10",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.10",
+     "to": "SchSE.12",
+     "kind": "feeds"
+    },
+    {
+     "from": "SchSE.12",
+     "to": "Sch2.4",
+     "kind": "feeds"
+    },
+    {
+     "from": "Sch2.4",
+     "to": "Sch2.21",
+     "kind": "feeds"
+    },
+    {
+     "from": "Sch2.21",
+     "to": "F1040.23",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.23",
+     "to": "F1040.24",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.24",
+     "to": "F1040.37",
+     "kind": "feeds"
+    }
+   ],
+   "flags": {
+    "ev-0127": {
+     "type": "wrong",
+     "title": "Possibly already in the books",
+     "text": "The engine adds this amount because it could not match it to a books deposit. TaxProof's check finds the books already reconcile to the 1099-NEC forms without it."
+    },
+    "ev-0103": {
+     "type": "note",
+     "title": "Reconciles without the 1099-K",
+     "text": "151,300 equals the five 1099-NEC amounts (142,000) plus 9,300 of other receipts."
+    },
+    "SchC.1": {
+     "type": "wrong",
+     "title": "Needs a CPA's judgment",
+     "text": "163,700 is books plus the unmatched 1099-K. If the 1099-K is already inside the books, it is 151,300."
+    }
+   },
+   "engine": {
+    "label": "Gross receipts (SchC.1)",
+    "value": 163700,
+    "unit": "usd"
+   },
+   "independent": {
+    "label": "If the 1099-K is already in the books",
+    "value": 151300,
+    "unit": "usd",
+    "how": "142,000 (five 1099-NEC) + 9,300 other = 151,300 books total",
+    "derived": true
+   },
+   "effect": {
+    "text": "Estimated tax effect of the correction: -$4,402 federal, -$384 California",
+    "source": "TaxProof iteration log, assurance results on v3 (an estimate, flagged for review)"
+   },
+   "carry": {}
+  },
+  {
+   "id": "wages",
+   "tab": "Wages",
+   "question": "How does a second photo of the same W-2 avoid being counted twice?",
+   "summary": "Two W-2s feed wages of 212,400. The client also uploaded a phone photo of the second W-2. Here the engine gets it right: it matches the images, counts the form once, and says so in the line's note.",
+   "nodes": [
+    {
+     "id": "D08#1",
+     "kind": "doc",
+     "label": "2025 Form W-2 - Corvane Systems, Inc. (Ngozi Okafor)",
+     "doc": "D08",
+     "page": 1,
+     "docType": "W-2",
+     "pageCount": 1,
+     "fileName": "W2_Corvane_2025.pdf",
+     "received": "2026-01-29",
+     "heading": null
+    },
+    {
+     "id": "D09#1",
+     "kind": "doc",
+     "label": "2025 Form W-2 - Halvorsen Data LLC (Ngozi Okafor)",
+     "doc": "D09",
+     "page": 1,
+     "docType": "W-2",
+     "pageCount": 1,
+     "fileName": "W2_Halvorsen.pdf",
+     "received": "2026-02-02",
+     "heading": null
+    },
+    {
+     "id": "D10#1",
+     "kind": "doc",
+     "label": "Form W-2 - Halvorsen Data LLC (phone photo)",
+     "doc": "D10",
+     "page": 1,
+     "docType": "W-2",
+     "pageCount": 1,
+     "fileName": "IMG_4519.jpg",
+     "received": "2026-02-09",
+     "heading": null
+    },
+    {
+     "id": "ev-0016",
+     "kind": "evidence",
+     "label": "Box 1 wages, tips, other compensation",
+     "field": "box1",
+     "value": 104600.0,
+     "unit": "usd",
+     "doc": "D08",
+     "page": 1,
+     "docTitle": "2025 Form W-2 - Corvane Systems, Inc. (Ngozi Okafor)",
+     "textAsRead": "104,600.00",
+     "confidence": 0.99
+    },
+    {
+     "id": "ev-0035",
+     "kind": "evidence",
+     "label": "Box 1 wages, tips, other compensation",
+     "field": "box1",
+     "value": 107800.0,
+     "unit": "usd",
+     "doc": "D09",
+     "page": 1,
+     "docTitle": "2025 Form W-2 - Halvorsen Data LLC (Ngozi Okafor)",
+     "textAsRead": "107,800.00",
+     "confidence": 0.99
+    },
+    {
+     "id": "ev-0052",
+     "kind": "evidence",
+     "label": "Box 1 wages, tips, other compensation",
+     "field": "box1",
+     "value": 107800.0,
+     "unit": "usd",
+     "doc": "D10",
+     "page": 1,
+     "docTitle": "Form W-2 - Halvorsen Data LLC (phone photo)",
+     "textAsRead": "107,800.00",
+     "confidence": 0.93
+    },
+    {
+     "id": "F1040.1a",
+     "kind": "line",
+     "label": "Wages (Forms W-2, box 1)",
+     "form": "F1040",
+     "value": 212400,
+     "unit": "usd",
+     "rule": "R-W2-BOX1-SUM",
+     "ruleText": "Sum box 1 of each distinct Form W-2 (images of the same W-2 are matched and counted once).",
+     "inputs": [],
+     "sources": [
+      "ev-0016",
+      "ev-0035"
+     ],
+     "note": "D10 is a second image of the Halvorsen W-2 (D09); counted once.",
+     "core": true
+    },
+    {
+     "id": "F1040.1z",
+     "kind": "line",
+     "label": "Total wages",
+     "form": "F1040",
+     "value": 212400,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.1a"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.9",
+     "kind": "line",
+     "label": "Total income",
+     "form": "F1040",
+     "value": 480987,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.1z",
+      "F1040.2b",
+      "F1040.3b",
+      "F1040.4b",
+      "F1040.7",
+      "F1040.8"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.11",
+     "kind": "line",
+     "label": "Adjusted gross income",
+     "form": "F1040",
+     "value": 445590,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.9",
+      "F1040.10"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.15",
+     "kind": "line",
+     "label": "Taxable income",
+     "form": "F1040",
+     "value": 346913,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.11",
+      "F1040.14"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.16",
+     "kind": "line",
+     "label": "Tax (Schedule D tax worksheet)",
+     "form": "F1040",
+     "value": 59727,
+     "unit": "usd",
+     "rule": "R-TAX-SCHD-WORKSHEET",
+     "ruleText": "Regular tax using the Schedule D tax worksheet (qualified dividends and capital gain at preferential rates; unrecaptured section 1250 gain at no more than 25%).",
+     "inputs": [
+      "F1040.15",
+      "F1040.3a",
+      "SchD.15",
+      "SchD.19"
+     ],
+     "sources": [
+      "ref:param.brackets_mfj"
+     ],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.18",
+     "kind": "line",
+     "label": "Add lines 16 and 17",
+     "form": "F1040",
+     "value": 63598,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.16",
+      "F1040.17"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.22",
+     "kind": "line",
+     "label": "Tax after nonrefundable credits",
+     "form": "F1040",
+     "value": 62802,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.18",
+      "F1040.19",
+      "F1040.20"
+     ],
+     "sources": [],
+     "note": null,
+     "core": false
+    },
+    {
+     "id": "F1040.24",
+     "kind": "line",
+     "label": "Total tax",
+     "form": "F1040",
+     "value": 81962,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.22",
+      "F1040.23"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    },
+    {
+     "id": "F1040.37",
+     "kind": "line",
+     "label": "Amount you owe",
+     "form": "F1040",
+     "value": 4220,
+     "unit": "usd",
+     "rule": "R-SUM",
+     "ruleText": "Arithmetic combination of the listed input lines.",
+     "inputs": [
+      "F1040.24",
+      "F1040.33"
+     ],
+     "sources": [],
+     "note": null,
+     "core": true
+    }
+   ],
+   "edges": [
+    {
+     "from": "D08#1",
+     "to": "ev-0016",
+     "kind": "read"
+    },
+    {
+     "from": "D09#1",
+     "to": "ev-0035",
+     "kind": "read"
+    },
+    {
+     "from": "D10#1",
+     "to": "ev-0052",
+     "kind": "read"
+    },
+    {
+     "from": "ev-0016",
+     "to": "F1040.1a",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0035",
+     "to": "F1040.1a",
+     "kind": "feeds"
+    },
+    {
+     "from": "ev-0052",
+     "to": "F1040.1a",
+     "kind": "excluded",
+     "label": "matched to D09, not added"
+    },
+    {
+     "from": "D10#1",
+     "to": "D09#1",
+     "kind": "duplicate",
+     "label": "second image of the same W-2"
+    },
+    {
+     "from": "F1040.1a",
+     "to": "F1040.1z",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.1z",
+     "to": "F1040.9",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.9",
+     "to": "F1040.11",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.11",
+     "to": "F1040.15",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.15",
+     "to": "F1040.16",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.16",
+     "to": "F1040.18",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.18",
+     "to": "F1040.22",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.22",
+     "to": "F1040.24",
+     "kind": "feeds"
+    },
+    {
+     "from": "F1040.24",
+     "to": "F1040.37",
+     "kind": "feeds"
+    }
+   ],
+   "flags": {
+    "D10#1": {
+     "type": "duplicate",
+     "title": "Duplicate document",
+     "text": "A phone photo of the Halvorsen W-2 (D09). Same box 1 reading, so it is the same form."
+    },
+    "ev-0052": {
+     "type": "ok",
+     "title": "Not an input",
+     "text": "Reads 107,800, the same as D09. The wages rule matches the images and counts the form once."
+    },
+    "F1040.1a": {
+     "type": "ok",
+     "title": "Engine and TaxProof agree",
+     "text": "104,600 + 107,800 = 212,400. The line's own note records that D10 was counted once."
+    }
+   },
+   "engine": {
+    "label": "Wages (F1040.1a)",
+    "value": 212400,
+    "unit": "usd"
+   },
+   "independent": {
+    "label": "Sum of the two distinct W-2s",
+    "value": 212400,
+    "unit": "usd",
+    "how": "104,600 + 107,800",
+    "derived": true
+   },
+   "effect": {
+    "text": "No correction needed",
+    "source": "Check passes in TaxProof's assurance run"
+   },
+   "carry": {}
+  }
+ ],
+ "chain": [
+  {
+   "engagement": "sample",
+   "at": "2026-06-23T09:02:11.000000+00:00",
+   "actor": "st-02",
+   "role": "preparer",
+   "action": "verification.add",
+   "target": "ev-0226",
+   "payload": {
+    "method": "viewed_source",
+    "note": "Page 1 total ties to the log"
+   },
+   "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+   "hash": "9a7a37b341f6eecf7336560fc5e4eea4a0d04fd96d1ed73144866f3cdcbefc9b"
+  },
+  {
+   "engagement": "sample",
+   "at": "2026-06-23T09:14:40.000000+00:00",
+   "actor": "st-02",
+   "role": "preparer",
+   "action": "finding.raise",
+   "target": "line:v3:SchC.44a",
+   "payload": {
+    "finding": "duplicate_page",
+    "pages": [
+     2,
+     3
+    ]
+   },
+   "prev": "9a7a37b341f6eecf7336560fc5e4eea4a0d04fd96d1ed73144866f3cdcbefc9b",
+   "hash": "8127789fbeacb48f6e6dc8faf3c505d107e300db45e3b82ed7f8e07f1b167cc6"
+  },
+  {
+   "engagement": "sample",
+   "at": "2026-06-23T10:31:05.000000+00:00",
+   "actor": "st-03",
+   "role": "reviewer",
+   "action": "adjustment.apply",
+   "target": "line:v3:SchC.44a",
+   "payload": {
+    "from": 11800,
+    "to": 8100,
+    "unit": "mi"
+   },
+   "prev": "8127789fbeacb48f6e6dc8faf3c505d107e300db45e3b82ed7f8e07f1b167cc6",
+   "hash": "00c8eab79fcb45b3f84809be9afb23eb1f57205f2915292fa0615711346fd6bc"
+  },
+  {
+   "engagement": "sample",
+   "at": "2026-06-23T10:33:52.000000+00:00",
+   "actor": "st-03",
+   "role": "reviewer",
+   "action": "judgment.record",
+   "target": "line:v3:SchC.1",
+   "payload": {
+    "decision": "keep_engine",
+    "rationale": "Awaiting client confirmation"
+   },
+   "prev": "00c8eab79fcb45b3f84809be9afb23eb1f57205f2915292fa0615711346fd6bc",
+   "hash": "84bfbc71a70b8bcd380878a3492d9f66730d2daad6db5c1344f681f5b4b22065"
+  }
+ ]
+}
