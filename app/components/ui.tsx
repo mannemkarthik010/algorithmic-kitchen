@@ -47,11 +47,29 @@ export function SectionDivider() {
 
 /* ── Section header ──────────────────────────────── */
 export function SectionHeader({
-  index, label, title, subtitle,
+  index, label, title, subtitle, align = "center",
 }: {
   index: string; label: string;
   title: ReactNode; subtitle?: string;
+  /** "split" is the editorial variant: outlined number, left-aligned heading, short note on the right. */
+  align?: "center" | "split";
 }) {
+  if (align === "split") {
+    return (
+      <motion.header
+        className="section-header section-header--split"
+        initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.6, ease: EASE }}
+      >
+        <span className="sh-no" aria-hidden="true">{index}</span>
+        <div className="sh-main">
+          <p className="sh-label">{label}</p>
+          <h2 className="heading-xl c-cream">{title}</h2>
+        </div>
+        {subtitle && <p className="sh-sub">{subtitle}</p>}
+      </motion.header>
+    );
+  }
   return (
     <div
       className="section-header"

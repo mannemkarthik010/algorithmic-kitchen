@@ -130,7 +130,7 @@ export default function ContributionModal({ contribution, onClose }: {
               <div className="project-summary-strip" style={{ marginBottom: "var(--space-4)" }}>
                 <div>
                   <p className="label">Pull Request</p>
-                  <p className="body-sm c-cream">#{contribution.prNumber} — {contribution.diffStat}</p>
+                  <p className="body-sm c-cream">#{contribution.prNumber} · {contribution.diffStat}</p>
                 </div>
                 <div>
                   <p className="label">Status</p>

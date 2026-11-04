@@ -52,7 +52,7 @@ export default function MenuBoard({ onOpen }: { onOpen: (p: Project) => void }) 
                       <span className="menu-row__tag">{p.category}</span>
                     </span>
                     <span className="menu-row__desc">
-                      {rest.length > 0 && <>{rest.join(" — ")} · </>}
+                      {rest.length > 0 && <>{rest.join(", ")} · </>}
                       {p.finalTaste}
                     </span>
                   </motion.button>

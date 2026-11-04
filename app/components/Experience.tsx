@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { resume } from "../data/resume";
-import { SectionHeader, Badge, Stagger, Item } from "./ui";
+import { SectionHeader } from "./ui";
 
 export default function Experience() {
   return (
@@ -12,54 +12,46 @@ export default function Experience() {
       <div aria-hidden="true" style={{ position: "absolute", top: "20%", right: -80, width: 380, height: 380, borderRadius: "50%", background: "rgba(200,145,58,0.04)", filter: "blur(90px)", pointerEvents: "none", zIndex: 0 }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="02" label="Experience"
+        <SectionHeader index="02" label="Experience" align="split"
           title={<>Work <span className="t-grad">Experience</span></>}
+          subtitle="Where I have worked, newest first."
         />
 
-        <Stagger style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
+        <div className="exp-list">
           {resume.experience.map((exp, i) => (
-            <Item key={i}>
-              <motion.div whileHover={{ y: -3, borderColor: "var(--border-hover)" }}
-                className="card"
-                style={{ padding: "var(--space-3) var(--space-4)", transition: "border-color 0.22s" }}>
-                <div className="exp-card-grid" style={{ display: "grid", gridTemplateColumns: "auto 1fr auto", gap: "var(--space-3)", alignItems: "flex-start" }}>
-                  <div style={{ width: 42, height: 42, borderRadius: "var(--radius-md)", background: "rgba(200,145,58,0.08)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <span className="mono c-gold" style={{ fontSize: 14, opacity: 0.58 }}>{exp.icon}</span>
-                  </div>
-
-                  <div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: "0.2rem" }}>
-                      <p className="body-lg c-cream" style={{ fontWeight: 500 }}>{exp.role}</p>
-                      <Badge>{exp.kitchenRole}</Badge>
-                    </div>
-                    <p className="label c-gold" style={{ marginBottom: "var(--space-2)" }}>{exp.location ? `${exp.company} · ${exp.location}` : exp.company}</p>
-                    {exp.bullets.length > 0 && <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.38rem" }}>
-                      {exp.bullets.map((b, j) => (
-                        <li key={j} style={{ display: "flex", gap: "var(--space-1)", alignItems: "flex-start" }}>
-                          <span className="mono c-gold" style={{ fontSize: 11, marginTop: 4, flexShrink: 0, opacity: 0.65 }}>▸</span>
-                          <span className="body-sm c-muted">{b}</span>
-                        </li>
-                      ))}
-                    </ul>}
-                    {resume.roleDetails[exp.company] && (
-                      <details className="fw-eval" style={{ marginTop: "var(--space-2)" }}>
-                        <summary>More about this role</summary>
-                        <ul className="exp-more">
-                          {resume.roleDetails[exp.company].summary.map((t) => <li key={t}>{t}</li>)}
-                        </ul>
-                        <ul className="fw-stack" aria-label="Tools" style={{ padding: "0 16px 16px" }}>
-                          {resume.roleDetails[exp.company].tools.map((t) => <li key={t}>{t}</li>)}
-                        </ul>
-                      </details>
-                    )}
-                  </div>
-
-                  <span className="mono c-muted exp-period" style={{ fontSize: 11, whiteSpace: "nowrap", textAlign: "right", flexShrink: 0 }}>{exp.period}</span>
-                </div>
-              </motion.div>
-            </Item>
+            <motion.article
+              key={exp.role + exp.company}
+              className="exp-row"
+              initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.55, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="exp-row__meta">
+                <p className="exp-row__period">{exp.period}</p>
+                <p className="exp-row__co">{exp.company}</p>
+                {exp.location && <p className="exp-row__loc">{exp.location}</p>}
+              </div>
+              <div className="exp-row__body">
+                <h3 className="exp-row__role">{exp.role}</h3>
+                {exp.bullets.length > 0 && (
+                  <ul className="exp-row__bullets">
+                    {exp.bullets.map((b) => <li key={b}>{b}</li>)}
+                  </ul>
+                )}
+                {resume.roleDetails[exp.company] && (
+                  <details className="fw-eval" style={{ marginTop: "var(--space-2)" }}>
+                    <summary>More about this role</summary>
+                    <ul className="exp-more">
+                      {resume.roleDetails[exp.company].summary.map((t) => <li key={t}>{t}</li>)}
+                    </ul>
+                    <ul className="fw-stack" aria-label="Tools" style={{ padding: "0 16px 16px" }}>
+                      {resume.roleDetails[exp.company].tools.map((t) => <li key={t}>{t}</li>)}
+                    </ul>
+                  </details>
+                )}
+              </div>
+            </motion.article>
           ))}
-        </Stagger>
+        </div>
 
         <h3 className="exp-sub">Leadership &amp; community</h3>
         <div className="exp-lead">

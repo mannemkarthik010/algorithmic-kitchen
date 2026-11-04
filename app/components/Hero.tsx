@@ -198,7 +198,7 @@ function CookbookArtifact({ visible }: { visible: boolean }) {
           role="button"
           tabIndex={0}
           aria-pressed={flipped}
-          aria-label={flipped ? "Close the menu — show the cover" : "Open the cookbook to tonight's menu"}
+          aria-label={flipped ? "Close the menu and show the cover" : "Open the cookbook to tonight's menu"}
           onClick={() => setFlipped((f) => !f)}
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFlipped((f) => !f); } }}
           animate={{ rotateY: flipped ? 180 : 0 }}

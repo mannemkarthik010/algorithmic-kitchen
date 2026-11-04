@@ -30,7 +30,7 @@ export default function Playground() {
           index="07"
           label="Playground"
           title={<>The <span className="t-grad">Playground</span></>}
-          subtitle="The fun side of the kitchen: two games, what I'm cooking now, and a dosa illusion. Optional — the work is above."
+          subtitle="The fun side of the kitchen: two games, what I'm cooking now, and a dosa illusion. Optional: the work is above."
         />
         <div className="fw-more" style={{ marginTop: 0 }}>
           <button type="button" className="pill-cta" aria-expanded={open} onClick={() => setOpen((v) => !v)}>

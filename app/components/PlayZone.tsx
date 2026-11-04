@@ -11,7 +11,7 @@ export default function PlayZone() {
           index="07"
           label="Games"
           title={<>Taste-test <span className="c-gold">the kitchen</span></>}
-          subtitle="Two quick games — see if you can spot what's real, then build a plate of projects that fits what you're hiring for."
+          subtitle="Two quick games: see if you can spot what's real, then build a plate of projects that fits what you're hiring for."
         />
         <div className="play-grid">
           <RealOrFake />

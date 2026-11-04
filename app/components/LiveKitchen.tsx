@@ -50,7 +50,7 @@ export default function LiveKitchen() {
         <GlowBlob size={400} color="rgba(200,145,58,0.04)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
           <div style={{ textAlign: "center", marginBottom: "var(--space-4)" }}>
-            <span className="label c-gold" style={{ display: "block", marginBottom: "var(--space-1)" }}>§ 05.5 — The Experiment Lab</span>
+            <span className="label c-gold" style={{ display: "block", marginBottom: "var(--space-1)" }}>The Experiment Lab</span>
             <h2 className="heading-xl c-cream" style={{ marginBottom: "var(--space-1)" }}>
               Cook an <span className="t-grad">AI Model</span>
             </h2>

@@ -69,7 +69,7 @@ export default function DosaIllusion() {
       <div className="dosa-ill__copy" aria-live="polite">
         {phase === "idle" && <>
           <p className="dosa-ill__q">Is this dosa getting bigger… or smaller?</p>
-          <p>Stare at the red dot for {STARE_SECONDS} seconds. Then look at your hand — or the page.</p>
+          <p>Stare at the red dot for {STARE_SECONDS} seconds. Then look at your hand, or the page.</p>
           <div className="dosa-ill__btns">
             <button type="button" className="pill-cta" onClick={start}>Start staring 👀</button>
             <button type="button" className="dosa-ill__ghost" onClick={() => setReverse((r) => !r)}>Flip spin ⟲</button>
@@ -81,7 +81,7 @@ export default function DosaIllusion() {
           <p className="dosa-ill__count">{Math.ceil(left)}s</p>
         </>}
         {phase === "done" && <>
-          <p className="dosa-ill__q">Now look away — or at the frozen dosa.</p>
+          <p className="dosa-ill__q">Now look away, or at the frozen dosa.</p>
           <p>It should seem to <b>breathe the other way</b>. That&apos;s the spiral after-effect: your eyes got tired of the motion.</p>
           <div className="dosa-ill__btns"><button type="button" className="pill-cta" onClick={reset}>Go again ↻</button></div>
         </>}

@@ -5,7 +5,7 @@ import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion
 type Kind = "idli" | "vada" | "dosa";
 
 const KINDS: Record<Kind, { w: number; h: number; rate: number; label: string; emoji: string; tip: string }> = {
-  idli: { w: 92, h: 62, rate: 30, label: "Idli", emoji: "🍚", tip: "Idli drinks sambar slowly — be patient." },
+  idli: { w: 92, h: 62, rate: 30, label: "Idli", emoji: "🍚", tip: "Idli drinks sambar slowly. Be patient." },
   vada: { w: 84, h: 84, rate: 46, label: "Medu Vada", emoji: "🍩", tip: "Vada is porous. It soaks fast!" },
   dosa: { w: 112, h: 46, rate: 62, label: "Crispy Dosa", emoji: "🫓", tip: "Dosa goes soggy in a blink. Quick fingers." },
 };

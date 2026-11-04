@@ -288,9 +288,9 @@ export default function CookAnAI() {
       </div>
 
       {/* Choices */}
-      <SelectRow label="01 — Dataset" options={DATASETS} value={choice.dataset} onSelect={(v) => setChoice(p => ({ ...p, dataset: v }))} />
-      <SelectRow label="02 — Model Architecture" options={MODELS} value={choice.model} onSelect={(v) => setChoice(p => ({ ...p, model: v }))} />
-      <SelectRow label="03 — Deployment" options={DEPLOYS} value={choice.deploy} onSelect={(v) => setChoice(p => ({ ...p, deploy: v }))} />
+      <SelectRow label="01 · Dataset" options={DATASETS} value={choice.dataset} onSelect={(v) => setChoice(p => ({ ...p, dataset: v }))} />
+      <SelectRow label="02 · Model Architecture" options={MODELS} value={choice.model} onSelect={(v) => setChoice(p => ({ ...p, model: v }))} />
+      <SelectRow label="03 · Deployment" options={DEPLOYS} value={choice.deploy} onSelect={(v) => setChoice(p => ({ ...p, deploy: v }))} />
 
       {/* Cook button */}
       <div className="flex-row gap-2 mt-3">

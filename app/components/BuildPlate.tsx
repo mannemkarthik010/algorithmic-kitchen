@@ -15,8 +15,8 @@ const BASES: { id: Base; label: string; emoji: string }[] = [
   { id: "product", label: "Full-stack product", emoji: "🧩" },
 ];
 const SERVES: { id: Serve; label: string; emoji: string }[] = [
-  { id: "live", label: "Live — let me click it", emoji: "🔥" },
-  { id: "code", label: "Source — let me read it", emoji: "📖" },
+  { id: "live", label: "Live: let me click it", emoji: "🔥" },
+  { id: "code", label: "Source: let me read it", emoji: "📖" },
   { id: "any", label: "Surprise me", emoji: "🎲" },
 ];
 
@@ -51,7 +51,7 @@ export default function BuildPlate() {
     <div className="plate">
       <div className="plate__head">
         <span className="sticker sticker--orange" style={{ transform: "rotate(3deg)" }}>BUILD YOUR PLATE</span>
-        <p>Pick a base, pick how you want it served — I&apos;ll plate the projects that fit.</p>
+        <p>Pick a base and how you want it served, and I&apos;ll plate the projects that fit.</p>
       </div>
 
       <p className="plate__step">1 · The base</p>
@@ -82,7 +82,7 @@ export default function BuildPlate() {
             </motion.p>
           ) : (
             <motion.div key={`${base}-${serve}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-              {relaxed && <p className="plate__note">Nothing on the menu matches that serving style exactly — here&apos;s the closest plate.</p>}
+              {relaxed && <p className="plate__note">Nothing on the menu matches that serving style exactly. Here&apos;s the closest plate.</p>}
               <div className="plate__cards">
                 {matches.map((p) => (
                   <button key={p.slug} type="button" className="plate__card" onClick={() => openProject(p.slug)}>

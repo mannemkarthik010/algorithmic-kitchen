@@ -3,15 +3,15 @@ import { useState } from "react";
 import { motion, useMotionValue, useTransform, useReducedMotion } from "framer-motion";
 
 const CLAIMS: { text: string; real: boolean; why: string }[] = [
-  { text: "TaxProof ships with 225 backend tests.", real: true, why: "Real — every figure in it traces back to evidence, and the tests keep that honest." },
-  { text: "PyTorch PR #191439 was merged.", real: false, why: "Fake — it was closed as a duplicate. The site shows the real status of every PR, closed ones included." },
-  { text: "Karthik has a merged pull request in pandera (#2437).", real: true, why: "Real — merged into the open-source data-validation library." },
-  { text: "In Woodlands IMS, the AI edits stock balances directly.", real: false, why: "Fake — the AI only proposes. A person confirms, and balances come from an append-only ledger." },
-  { text: "His M.S. in Computer Science at CSUN finished with a 3.92 GPA.", real: true, why: "Real — graduated May 2026." },
-  { text: "He has 10+ years of professional ML experience.", real: false, why: "Fake — a fresh M.S. grad (May 2026) with Handshake AI analyst work and freelance ML projects before that." },
-  { text: "The Preventive Care agent has a critic loop that checks its own recommendations.", real: true, why: "Real — LangGraph + Chroma RAG with a critic pass." },
-  { text: "This portfolio blasts a beep the second you open it.", real: false, why: "Fake — it used to. Now the sound is a quiet ambient loop with a mute button." },
-  { text: "Right now he's building an AI project for The Woodlands restaurants.", real: true, why: "Real — it's the dish currently On the Line." },
+  { text: "TaxProof ships with 225 backend tests.", real: true, why: "Real: every figure in it traces back to evidence, and the tests keep that honest." },
+  { text: "PyTorch PR #191439 was merged.", real: false, why: "Fake: it was closed as a duplicate. The site shows the real status of every PR, closed ones included." },
+  { text: "Karthik has a merged pull request in pandera (#2437).", real: true, why: "Real: merged into the open-source data-validation library." },
+  { text: "In Woodlands IMS, the AI edits stock balances directly.", real: false, why: "Fake: the AI only proposes. A person confirms, and balances come from an append-only ledger." },
+  { text: "His M.S. in Computer Science at CSUN finished with a 3.92 GPA.", real: true, why: "Real: graduated May 2026." },
+  { text: "He has 10+ years of professional ML experience.", real: false, why: "Fake: a fresh M.S. grad (May 2026) with Handshake AI analyst work and freelance ML projects before that." },
+  { text: "The Preventive Care agent has a critic loop that checks its own recommendations.", real: true, why: "Real: LangGraph + Chroma RAG with a critic pass." },
+  { text: "This portfolio blasts a beep the second you open it.", real: false, why: "Fake: it used to. Now the sound is a quiet ambient loop with a mute button." },
+  { text: "Right now he's building an AI project for The Woodlands restaurants.", real: true, why: "Real: it's the dish currently On the Line." },
 ];
 
 type Phase = "play" | "reveal" | "done";
@@ -64,7 +64,7 @@ export default function RealOrFake() {
       {phase === "done" ? (
         <div className="rof__card rof__card--done">
           <p className="rof__big">{score}/{CLAIMS.length}</p>
-          <p>{score === CLAIMS.length ? "Perfect plate — you read the menu closely." : score >= 6 ? "Solid. You know this kitchen." : "Tricky, right? Every answer is on the menu above."}</p>
+          <p>{score === CLAIMS.length ? "Perfect plate. You read the menu closely." : score >= 6 ? "Solid. You know this kitchen." : "Tricky, right? Every answer is on the menu above."}</p>
           <button type="button" className="pill-cta" onClick={restart}>Play again ↻</button>
         </div>
       ) : (
@@ -92,7 +92,7 @@ export default function RealOrFake() {
             </motion.div>
           ) : (
             <div className={`rof__card rof__reveal ${last?.ok ? "is-ok" : "is-bad"}`} role="status">
-              <p className="rof__verdict">{last?.ok ? "YEP, YOU GOT IT!" : "NOPE — TRICKY ONE!"}</p>
+              <p className="rof__verdict">{last?.ok ? "YEP, YOU GOT IT!" : "NOPE, TRICKY ONE!"}</p>
               <p className="rof__q rof__q--small">{claim.text}</p>
               <p className="rof__why">{last?.why}</p>
               <button type="button" className="pill-cta" onClick={next}>{i + 1 >= CLAIMS.length ? "See my score" : "Next one →"}</button>

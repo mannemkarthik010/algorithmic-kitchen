@@ -13,7 +13,7 @@ export default function Contact() {
   const [sending, setSending]   = useState(false);
   const [sendError, setSendError] = useState("");
   const [chatInput, setChatInput] = useState("");
-  const [msgs, setMsgs]         = useState<Msg[]>([{ role: "assistant", text: "Welcome! I'm ChefGPT — Karthik's AI assistant. Ask me anything about his skills, projects, or experience." }]);
+  const [msgs, setMsgs]         = useState<Msg[]>([{ role: "assistant", text: "Welcome! I'm ChefGPT, Karthik's AI assistant. Ask me anything about his skills, projects, or experience." }]);
   const [loading, setLoading]   = useState(false);
   const bottomRef   = useRef<HTMLDivElement>(null);
   const hasMounted  = useRef(false);
@@ -39,7 +39,7 @@ export default function Contact() {
       setSent(true);
     } catch {
       play("/sounds/error.mp3", 0.3);
-      setSendError("Kitchen is temporarily closed — please email directly at " + resume.email);
+      setSendError("Kitchen is temporarily closed. Please email directly at " + resume.email);
     } finally {
       setSending(false);
     }
@@ -60,13 +60,13 @@ export default function Contact() {
       });
       const data = await res.json();
       const reply = res.ok
-        ? data.reply ?? "Brief kitchen outage — please try again!"
-        : data.error || "Brief kitchen outage — please try again!";
+        ? data.reply ?? "Brief kitchen outage. Please try again!"
+        : data.error || "Brief kitchen outage. Please try again!";
       play(res.ok ? "/sounds/notification.mp3" : "/sounds/error.mp3", 0.25);
       setMsgs((p) => [...p, { role: "assistant", text: reply }]);
     } catch {
       play("/sounds/error.mp3", 0.25);
-      setMsgs((p) => [...p, { role: "assistant", text: "Brief kitchen outage — please try again!" }]);
+      setMsgs((p) => [...p, { role: "assistant", text: "Brief kitchen outage. Please try again!" }]);
     } finally {
       setLoading(false);
     }

@@ -31,7 +31,7 @@ export default function KitchenPass() {
     <div style={{ marginBottom: "var(--space-6)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: "var(--space-3)" }}>
         <span className="mono c-gold" style={{ opacity: 0.55, fontSize: 11 }}>◉</span>
-        <span className="label c-gold">The Pass — tickets up right now</span>
+        <span className="label c-gold">The Pass: tickets up right now</span>
         <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, var(--border), transparent)" }} />
       </div>
 

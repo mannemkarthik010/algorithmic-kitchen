@@ -29,7 +29,7 @@ export default function Footer() {
         <motion.a
           href="#contact"
           className="footer-mega"
-          aria-label="Karthik Mannem — get in touch"
+          aria-label="Karthik Mannem, get in touch"
           initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}
         >
           <span>KARTHIK</span>

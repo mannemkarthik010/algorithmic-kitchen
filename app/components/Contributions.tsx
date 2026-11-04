@@ -18,8 +18,9 @@ export default function Contributions() {
         <SectionHeader
           index="03"
           label="Open Source"
+          align="split"
           title={<>Open-Source <span className="t-grad">Contributions</span></>}
-          subtitle="Pull requests to open-source projects, with their real status — merged, open, or closed — and what each one taught me."
+          subtitle="Pull requests to open-source projects, with their real status (merged, open, or closed) and what each one taught me."
         />
 
         <Stagger style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>

@@ -6,11 +6,11 @@ import { resume } from "../data/resume";
 import { SectionHeader, KitchenCard, Badge, FadeUp, Stagger, TimelineItem } from "./ui";
 
 const TIMELINE = [
-  { year: "2020", title: "The Apprenticeship Begins", desc: "B.Tech CS at Vel Tech, Chennai. First lines of Python — the building blocks of everything.", sym: "◎" },
-  { year: "2022", title: "Community Chef",            desc: "GDSC Content Lead — organized workshops for 200+ students, led a team of 8.", sym: "◈" },
-  { year: "2023", title: "First Production System",   desc: "Freelance ML Engineer — deep learning models, Docker pipelines, production APIs.", sym: "◇" },
+  { year: "2020", title: "The Apprenticeship Begins", desc: "B.Tech CS at Vel Tech, Chennai. First lines of Python: the building blocks of everything.", sym: "◎" },
+  { year: "2022", title: "Community Chef",            desc: "GDSC Content Lead: organized workshops for 200+ students, led a team of 8.", sym: "◈" },
+  { year: "2023", title: "First Production System",   desc: "Freelance ML Engineer: deep learning models, Docker pipelines, production APIs.", sym: "◇" },
   { year: "2024", title: "Crossed the Ocean",         desc: "B.Tech complete (9.21 GPA). Relocated to Los Angeles for M.S. CS at CSUN.", sym: "◆" },
-  { year: "2025", title: "AI Model Evaluation Analyst", desc: "Handshake AI — scored 1,000+ LLM responses against rubrics and catalogued failure modes.", sym: "◉" },
+  { year: "2025", title: "AI Model Evaluation Analyst", desc: "Handshake AI: scored 1,000+ LLM responses against rubrics and catalogued failure modes.", sym: "◉" },
   { year: "2026", title: "Kitchen is Open",           desc: "M.S. complete (3.92 GPA, May 2026). Ready to ship intelligent systems full-time.", sym: "▲" },
 ];
 
