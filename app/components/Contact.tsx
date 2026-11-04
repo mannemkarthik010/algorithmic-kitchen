@@ -85,7 +85,7 @@ export default function Contact() {
       <GlowBlob size={500} color="rgba(200,145,58,0.055)" style={{ top: "50%", left: "50%", transform: "translate(-50%,-50%)" }} />
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="07" label="Contact"
+        <SectionHeader index="08" label="Contact"
           title={<>Let&apos;s <span className="t-grad">Work Together</span></>}
           subtitle="Open to full-time ML/AI engineering roles. Email is the fastest way to reach me."
         />

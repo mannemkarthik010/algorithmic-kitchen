@@ -5,7 +5,7 @@ export const OPEN_PALETTE = "ak:open-palette";
 export const OPEN_PLAYGROUND = "ak:open-playground";
 
 /** Section ids that live inside the collapsed Playground. */
-export const PLAYGROUND_IDS = ["playground", "play", "live", "cook", "reading"];
+export const PLAYGROUND_IDS = ["playground", "play", "live", "cook"];
 
 export function openProject(slug: string) {
   window.dispatchEvent(new CustomEvent(OPEN_PROJECT, { detail: { slug } }));

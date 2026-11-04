@@ -18,7 +18,7 @@ const SECTIONS: [string, string, string][] = [
   ["playground", "Playground", "games fun extras"],
   ["play", "Games — Real or Fake? & build a plate", "game fun quiz"],
   ["live", "Now cooking — current projects", "status tickets woodlands"],
-  ["reading", "Reading room", "books library"],
+  ["library", "Library — reading room", "books reading shelf"],
   ["contact", "Contact", "email hire"],
 ];
 

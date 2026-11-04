@@ -96,6 +96,8 @@ export default function Library() {
     };
     const lift = new Float32Array(TOTAL);
     const hidden = tapes.map(() => true);
+    const spFaces = tapes.map((t) => t.querySelector(".lib-sp") as HTMLElement);
+    const cvFaces = tapes.map((t) => t.querySelector(".lib-cv") as HTMLElement);
 
     const probe = document.createElement("div");
     probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;width:0;height:var(--H)";
@@ -142,6 +144,8 @@ export default function Library() {
         const from = getComputedStyle(o).transform;
         o.animate([{ transform: from === "none" ? "translateY(0)" : from }, { transform: `translateY(${-dir * 105}%)` }], { duration: 650, easing: EASE, fill: "both" })
           .onfinish = () => o.remove();
+        // belt and braces: a throttled tab may never fire onfinish
+        setTimeout(() => o.remove(), 900);
       });
       el.appendChild(span);
       span.animate([{ transform: `translateY(${dir * 105}%)` }, { transform: "translateY(0)" }], { duration: 650, easing: EASE, fill: "both" });
@@ -153,6 +157,23 @@ export default function Library() {
       swap(cY, statusLabel(b.status), dir, instant);
     };
     fillCaption(S.active, 1, true);
+
+    /* Which book is under the pointer? Chrome cannot hit-test a face rotated in 3D (the open cover
+       never receives clicks), so pick from each visible book's projected on-screen box instead. */
+    const pick = (px: number, py: number) => {
+      let best = -1;
+      let bestZ = -Infinity;
+      for (let v = 0; v < TOTAL; v++) {
+        if (hidden[v]) continue;
+        const face = Math.abs(rel(v, S.s)) < 0.5 ? cvFaces[v] : spFaces[v];
+        const r = face.getBoundingClientRect();
+        if (px >= r.left && px <= r.right && py >= r.top && py <= r.bottom) {
+          const z = Number(tapes[v].style.zIndex) || 0;
+          if (z > bestZ) { bestZ = z; best = v; }
+        }
+      }
+      return best;
+    };
 
     /* ── the frame loop ── */
     let raf = 0;
@@ -209,6 +230,10 @@ export default function Library() {
         el.style.setProperty("--ssh", (o * 0.55).toFixed(3));
         el.style.setProperty("--csh", ((1 - o) * 0.5).toFixed(3));
       }
+
+      // hovered book (lifts a spine, shrinks the cursor)
+      if (S.inside && !S.open && !S.dragging) S.hover = pick(S.mx, S.my);
+      else if (!S.inside) S.hover = -1;
 
       // play ring pops in once the shelf settles
       const ps = S.open ? 0 : smooth(Math.max(0, 1 - Math.abs(S.T - S.s) * 3));
@@ -320,16 +345,16 @@ export default function Library() {
       close: closeDetail,
     };
 
-    tapes.forEach((el, v) => {
-      el.addEventListener("pointerenter", () => { S.hover = v; });
-      el.addEventListener("pointerleave", () => { if (S.hover === v) S.hover = -1; });
-      el.addEventListener("click", () => {
-        if (S.didDrag) { S.didDrag = false; return; }
-        const r = rel(v, S.s);
-        if (Math.abs(r) < 0.5) openDetail();
-        else goTo(Math.round(S.T + r));
-      });
-    });
+    const onShelfClick = (e: MouseEvent) => {
+      if (S.open) return;
+      if (S.didDrag) { S.didDrag = false; return; }
+      const v = pick(e.clientX, e.clientY);
+      if (v < 0) return;
+      const r = rel(v, S.s);
+      if (Math.abs(r) < 0.5) openDetail();
+      else goTo(Math.round(S.T + r));
+    };
+    shelf.addEventListener("click", onShelfClick);
 
     const onMove = (e: PointerEvent) => {
       S.mx = e.clientX; S.my = e.clientY;
@@ -339,7 +364,7 @@ export default function Library() {
       S.inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
       if (S.drag) {
         const dx = e.clientX - S.drag.x;
-        if (!S.dragging && Math.abs(dx) > 5) S.dragging = true;
+        if (!S.dragging && Math.abs(dx) > 7) S.dragging = true;
         if (S.dragging) S.T = S.drag.T0 - dx / (g.ws + g.gap);
       }
     };
@@ -400,6 +425,7 @@ export default function Library() {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
       shelf.removeEventListener("pointerdown", onDown);
+      shelf.removeEventListener("click", onShelfClick);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
       root.removeEventListener("wheel", onWheel);
@@ -415,10 +441,10 @@ export default function Library() {
   const long = db.title.length > 34;
 
   return (
-    <section id="reading" ref={rootRef} className="lib" tabIndex={0} aria-label="Reading room: Karthik's bookshelf" data-no-ember>
+    <section id="library" ref={rootRef} className="lib" tabIndex={0} aria-label="Reading room: Karthik's bookshelf" data-no-ember>
       {/* top bar */}
       <div className="lib-bar">
-        <span className="lib-lbl lib-box">The library</span>
+        <span className="lib-lbl lib-box">06 / Library</span>
         <div className="lib-logo">
           <span className="lib-logo__t">The Reading Room</span>
           <span className="lib-logo__s">KARTHIK MANNEM</span>

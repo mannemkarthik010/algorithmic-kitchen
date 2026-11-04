@@ -10,11 +10,12 @@ const NAV = [
   { label: "open source", href: "#contributions"  },
   { label: "skills",      href: "#expertise"      },
   { label: "about",       href: "#about"          },
+  { label: "library",     href: "#library"        },
   { label: "playground",  href: "#playground"     },
   { label: "contact",     href: "#contact"        },
 ];
 
-const SECTIONS = ["projects","experience","contributions","expertise","about","playground","contact"];
+const SECTIONS = ["projects","experience","contributions","expertise","about","library","playground","contact"];
 
 export default function Nav() {
   const [scrolled, setScrolled]   = useState(false);

@@ -9,6 +9,7 @@ const COURSES: [string, string][] = [
   ["contributions", "Open source"],
   ["expertise", "Skills"],
   ["about", "About"],
+  ["library", "Library"],
   ["playground", "Playground"],
   ["contact", "Contact"],
 ];
@@ -28,6 +29,8 @@ export default function CourseRail() {
         if (el && el.getBoundingClientRect().top <= mid) cur = id;
       }
       setActive(cur);
+      // the library is a full-bleed scene; the dots would sit on top of its right-end books
+      if (cur === "library") setShown(false);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

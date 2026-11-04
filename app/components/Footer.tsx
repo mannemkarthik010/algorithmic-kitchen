@@ -9,6 +9,7 @@ const NAV = [
   { l: "open source", h: "#contributions" },
   { l: "skills",      h: "#expertise"     },
   { l: "about",       h: "#about"         },
+  { l: "library",     h: "#library"       },
   { l: "playground",  h: "#playground"    },
   { l: "contact",     h: "#contact"       },
 ];

@@ -8,6 +8,7 @@ import Skills from "./components/Skills";
 import CareerTimeline from "./components/CareerTimeline";
 import Experience from "./components/Experience";
 import Contributions from "./components/Contributions";
+import Library from "./components/Library";
 import Playground from "./components/Playground";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -42,7 +43,7 @@ export default function Home() {
       <SectionDivider />
       <About />
       <CareerTimeline />
-      <SectionDivider />
+      <Library />
       <Playground />
       <SectionDivider />
       <Contact />
