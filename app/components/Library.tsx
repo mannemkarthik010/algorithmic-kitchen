@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
 import { LIB_BOOKS, CATS, START_INDEX } from "../lib/library";
-import { CoverShapes, SpineShapes } from "./LibraryArt";
+import { CoverShapes, SpineShapes, COVER_W } from "./LibraryArt";
 
 /**
  * The Library: a 3D shelf of book spines. One book is pulled out and turned to show its cover.
@@ -20,9 +20,9 @@ const mod = (a: number, n: number) => ((a % n) + n) % n;
 const upper = (s: string) => s.toUpperCase();
 
 const BLOBS = [
-  { cx: 150, cy: 330, delay: 0 }, { cx: 340, cy: 600, delay: 120 }, { cx: 250, cy: 120, delay: 220 },
-  { cx: 90, cy: 760, delay: 300 }, { cx: 400, cy: 250, delay: 360 }, { cx: 260, cy: 860, delay: 420 },
-  { cx: 230, cy: 470, delay: 180 },
+  { cx: 194, cy: 330, delay: 0 }, { cx: 439, cy: 600, delay: 120 }, { cx: 323, cy: 120, delay: 220 },
+  { cx: 116, cy: 760, delay: 300 }, { cx: 516, cy: 250, delay: 360 }, { cx: 335, cy: 860, delay: 420 },
+  { cx: 297, cy: 470, delay: 180 },
 ];
 
 type Api = {
@@ -106,7 +106,7 @@ export default function Library() {
       g.W = r.width; g.rootH = r.height; g.left = r.left; g.top = r.top;
       g.H = probe.offsetHeight;
       g.ws = (g.H * 142) / 840;
-      g.d = (g.H * 474) / 900;
+      g.d = (g.H * COVER_W) / 900;
       g.gap = g.H * 0.03;
       root.style.setProperty("--ws", `${g.ws}px`);
       root.style.setProperty("--d", `${g.d}px`);
@@ -442,7 +442,12 @@ export default function Library() {
             return (
               <div key={v} className="lib-tape" role="button" tabIndex={-1} aria-label={`${b.title} by ${b.author}`}>
                 <div className="lib-face lib-sp"><svg viewBox="0 0 142 840" preserveAspectRatio="none" aria-hidden="true"><SpineShapes book={b} /></svg></div>
-                <div className="lib-face lib-cv"><svg viewBox="0 0 474 900" preserveAspectRatio="none" aria-hidden="true"><CoverShapes book={b} /></svg></div>
+                <div className="lib-face lib-cv"><svg viewBox={`0 0 ${COVER_W} 900`} preserveAspectRatio="none" aria-hidden="true"><CoverShapes book={b} /></svg>
+                  {b.cover && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="lib-cover-img" src={b.cover.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={{ background: b.cover.tint }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  )}
+                </div>
               </div>
             );
           })}
@@ -470,7 +475,10 @@ export default function Library() {
 
       <div className="lib-foot">
         <span className="lib-lbl">BOOKS THAT SHAPED THE WAY I BUILD.</span>
-        <span className="lib-lbl lib-foot__hint">DRAG · ← → · CLICK THE COVER</span>
+        <span className="lib-foot__r">
+          <span className="lib-lbl lib-foot__hint">DRAG · ← → · CLICK THE COVER</span>
+          <a className="lib-lbl lib-credit" href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">COVERS VIA OPEN LIBRARY</a>
+        </span>
       </div>
 
       <div className="lib-grain" aria-hidden="true" />
@@ -498,19 +506,25 @@ export default function Library() {
                 <div className="lib-mask"><button data-line type="button" className="lib-lbl lib-watch" onClick={() => api.current?.close()}>BACK TO THE SHELF</button></div>
               </div>
               <div className="lib-d-poster">
-                <svg viewBox="0 0 474 900" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+                <svg viewBox={`0 0 ${COVER_W} 900`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
                   <defs>
-                    <filter id="lib-inkf" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1074" height="1500">
+                    <filter id="lib-inkf" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1212" height="1500">
                       <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n" />
                       <feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G" />
                     </filter>
-                    <mask id="lib-ink" maskUnits="userSpaceOnUse" x="-200" y="-200" width="874" height="1300">
+                    <mask id="lib-ink" maskUnits="userSpaceOnUse" x="-200" y="-200" width="1012" height="1300">
                       <g filter="url(#lib-inkf)">
                         {BLOBS.map((b, i) => <circle key={i} className="lib-ink-c" cx={b.cx} cy={b.cy} r="0" data-delay={b.delay} fill="#fff" />)}
                       </g>
                     </mask>
                   </defs>
-                  <g mask="url(#lib-ink)"><CoverShapes book={db} /></g>
+                  <g mask="url(#lib-ink)">
+                    <CoverShapes book={db} />
+                    {db.cover && (<>
+                      <rect width={COVER_W} height="900" fill={db.cover.tint} />
+                      <image href={db.cover.src} x="0" y="0" width={COVER_W} height="900" preserveAspectRatio="xMidYMid meet" />
+                    </>)}
+                  </g>
                 </svg>
               </div>
             </div>

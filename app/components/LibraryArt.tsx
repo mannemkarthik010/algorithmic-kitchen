@@ -4,18 +4,22 @@ import type { LibBook } from "../lib/library";
 /** Generated cover and spine art: no image files, no real book covers. Fully deterministic per book. */
 
 const PAL = [
-  { bg: "#F2E6CF", a: "#141414", b: "#1F3FB0", c: "#E2462A" },
-  { bg: "#1F3FB0", a: "#F2E6CF", b: "#E2462A", c: "#141414" },
-  { bg: "#E2462A", a: "#141414", b: "#F2E6CF", c: "#1F3FB0" },
-  { bg: "#141414", a: "#F2E6CF", b: "#1F3FB0", c: "#E2462A" },
-  { bg: "#F2E6CF", a: "#1F3FB0", b: "#E2462A", c: "#141414" },
+  { bg: "#1B1309", a: "#F0E6CE", b: "#C8913A", c: "#D45D20" },
+  { bg: "#C8913A", a: "#140E06", b: "#F0E6CE", c: "#7A2E10" },
+  { bg: "#D45D20", a: "#140A04", b: "#F0E6CE", c: "#E4AD52" },
+  { bg: "#F0E6CE", a: "#1B1309", b: "#C8913A", c: "#D45D20" },
+  { bg: "#3A1C10", a: "#F0E6CE", b: "#E4AD52", c: "#D45D20" },
 ];
 type P = (typeof PAL)[number];
 
-const SERIF = "var(--font-newsreader), Georgia, serif";
-const SANS = "var(--font-inter-tight), system-ui, sans-serif";
+const SERIF = "var(--font-cormorant), Georgia, serif";
+const SANS = "var(--font-dm-mono), 'Courier New', monospace";
+export const COVER_W = 612;
 
-export const palette = (b: LibBook): P => PAL[(b.hash >>> 3) % PAL.length];
+export const palette = (b: LibBook): P => {
+  if (b.cover) return { bg: b.cover.tint, a: b.cover.ink, b: b.cover.accent, c: b.cover.ink };
+  return PAL[(b.hash >>> 3) % PAL.length];
+};
 
 function wrap(text: string, max: number): string[] {
   const words = text.toUpperCase().split(/\s+/);
@@ -86,29 +90,30 @@ function motif(kind: number, x: number, y: number, w: number, h: number, p: P): 
   return <svg x={x} y={y} width={w} height={h} overflow="hidden">{g}</svg>;
 }
 
-/** Front cover, drawn in a 474 x 900 box. */
+/** Front cover, drawn in a 612 x 900 box. */
 export function CoverShapes({ book }: { book: LibBook }) {
   const p = palette(book);
-  const lines = wrap(book.short, 11);
+  const W = COVER_W, cx = W / 2;
+  const lines = wrap(book.short, 12);
   const longest = Math.max(...lines.map((l) => l.length));
-  const size = Math.min(76, 410 / (longest * 0.56));
+  const size = Math.min(86, 520 / (longest * 0.56));
   const titleEnd = 150 + lines.length * size * 1.02;
   const artY = Math.max(titleEnd + 26, 400);
   const artH = 770 - artY;
   return (
     <g>
-      <rect width="474" height="900" fill={p.bg} />
-      <rect x="0" y="0" width="14" height="900" fill="#000" opacity=".12" />
-      <rect x="22" y="22" width="430" height="856" fill="none" stroke={p.a} strokeWidth="2" opacity=".85" />
-      <text x="237" y="68" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="600" fontSize="16" letterSpacing="3.4">READ BY KARTHIK MANNEM</text>
-      <rect x="48" y="86" width="378" height="2" fill={p.a} />
+      <rect width={W} height="900" fill={p.bg} />
+      <rect x="0" y="0" width="16" height="900" fill="#000" opacity=".14" />
+      <rect x="24" y="24" width={W - 48} height="852" fill="none" stroke={p.a} strokeWidth="2" opacity=".85" />
+      <text x={cx} y="68" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="500" fontSize="17" letterSpacing="4">READ BY KARTHIK MANNEM</text>
+      <rect x="56" y="86" width={W - 112} height="2" fill={p.a} />
       {lines.map((l, i) => (
-        <text key={i} x="237" y={150 + size * 0.86 + i * size * 1.02} textAnchor="middle" fill={p.a} fontFamily={SERIF} fontWeight="400" fontSize={size} letterSpacing="-0.5">{l}</text>
+        <text key={i} x={cx} y={150 + size * 0.86 + i * size * 1.02} textAnchor="middle" fill={p.a} fontFamily={SERIF} fontWeight="600" fontSize={size} letterSpacing="-0.5">{l}</text>
       ))}
-      {motif(book.hash % 7, 48, artY, 378, artH, p)}
-      <text x="48" y="822" fill={p.a} fontFamily={SANS} fontWeight="600" fontSize="14" letterSpacing="2.6">{`BY ${book.author.toUpperCase()}`.slice(0, 30)}</text>
-      <rect x="338" y="836" width="88" height="34" fill="none" stroke={p.a} strokeWidth="2" />
-      <text x="382" y="859" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="600" fontSize="15" letterSpacing="3">BOOK</text>
+      {motif(book.hash % 7, 56, artY, W - 112, artH, p)}
+      <text x="56" y="822" fill={p.a} fontFamily={SANS} fontWeight="500" fontSize="15" letterSpacing="3">{`BY ${book.author.toUpperCase()}`.slice(0, 30)}</text>
+      <rect x={W - 150} y="836" width="94" height="34" fill="none" stroke={p.a} strokeWidth="2" />
+      <text x={W - 103} y="859" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="500" fontSize="15" letterSpacing="3">BOOK</text>
     </g>
   );
 }
@@ -128,10 +133,10 @@ export function SpineShapes({ book }: { book: LibBook }) {
       <rect x="0" y="0" width="142" height="4" fill="#000" opacity=".18" />
       {motif((book.hash >>> 5) % 7, 18, 32, 106, 100, p)}
       <rect x="18" y="148" width="106" height="2" fill={p.a} />
-      <text transform="translate(71 424) rotate(90)" textAnchor="middle" dominantBaseline="middle" fill={p.a} fontFamily={SERIF} fontWeight="400" fontSize={size} letterSpacing="2">{title}</text>
-      <text x="71" y="722" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="600" fontSize="17" letterSpacing="3">{last.slice(0, 9)}</text>
+      <text transform="translate(71 424) rotate(90)" textAnchor="middle" dominantBaseline="middle" fill={p.a} fontFamily={SERIF} fontWeight="600" fontSize={size} letterSpacing="2">{title}</text>
+      <text x="71" y="722" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="500" fontSize="17" letterSpacing="3">{last.slice(0, 9)}</text>
       <rect x="30" y="748" width="82" height="38" fill="none" stroke={p.a} strokeWidth="2" />
-      <text x="71" y="773" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="600" fontSize="16" letterSpacing="3">BOOK</text>
+      <text x="71" y="773" textAnchor="middle" fill={p.a} fontFamily={SANS} fontWeight="500" fontSize="16" letterSpacing="3">BOOK</text>
     </g>
   );
 }

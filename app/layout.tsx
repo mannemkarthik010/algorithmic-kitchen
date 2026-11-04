@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans, DM_Mono, Bagel_Fat_One, Newsreader, Inter_Tight } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, DM_Mono, Bagel_Fat_One } from "next/font/google";
 import "./globals.css";
 import { SoundProvider } from "./hooks/SoundContext";
 
@@ -9,8 +9,6 @@ const cormorant = Cormorant_Garamond({
 });
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-dm-sans", display: "swap" });
 const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-dm-mono", display: "swap" });
-const newsreader = Newsreader({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-newsreader", display: "swap" });
-const interTight = Inter_Tight({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-inter-tight", display: "swap" });
 const bagel = Bagel_Fat_One({ subsets: ["latin"], weight: "400", variable: "--font-bagel", display: "swap" });
 
 const SITE_URL = "https://thealgorithmickitchen.vercel.app";
@@ -100,7 +98,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${bagel.variable} ${newsreader.variable} ${interTight.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} ${dmMono.variable} ${bagel.variable}`}>
       <head>
         <script
           type="application/ld+json"
