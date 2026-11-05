@@ -110,7 +110,7 @@ export default function CommandPalette() {
                 value={q}
                 onChange={(e) => { setQ(e.target.value); setIdx(0); }}
                 onKeyDown={onInputKey}
-                placeholder="Jump to a section, open a recipe, grab a link…"
+                placeholder="Jump to a section, open a project, grab a link…"
                 aria-label="Search commands"
                 spellCheck={false}
                 autoComplete="off"
@@ -118,7 +118,7 @@ export default function CommandPalette() {
               <kbd>esc</kbd>
             </div>
             <div className="cmdk__list" ref={listRef} role="listbox">
-              {results.length === 0 && <p className="cmdk__empty">Nothing on the menu matches “{q}”.</p>}
+              {results.length === 0 && <p className="cmdk__empty">Nothing matches “{q}”.</p>}
               {results.map((c, i) => {
                 const header = c.group !== lastGroup ? c.group : null;
                 lastGroup = c.group;

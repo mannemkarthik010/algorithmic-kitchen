@@ -13,7 +13,7 @@ export default function Contact() {
   const [sending, setSending]   = useState(false);
   const [sendError, setSendError] = useState("");
   const [chatInput, setChatInput] = useState("");
-  const [msgs, setMsgs]         = useState<Msg[]>([{ role: "assistant", text: "Welcome! I'm ChefGPT, Karthik's AI assistant. Ask me anything about his skills, projects, or experience." }]);
+  const [msgs, setMsgs]         = useState<Msg[]>([{ role: "assistant", text: "Hi, I'm an AI assistant that has read this portfolio. Ask about Karthik's skills, projects, or experience." }]);
   const [loading, setLoading]   = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const bottomRef   = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export default function Contact() {
       setSent(true);
     } catch {
       play("/sounds/error.mp3", 0.3);
-      setSendError("Kitchen is temporarily closed. Please email directly at " + resume.email);
+      setSendError("The message service is unavailable right now. Please email directly at " + resume.email);
     } finally {
       setSending(false);
     }
@@ -55,19 +55,19 @@ export default function Contact() {
       const res = await fetch("/api/chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system: `You are ChefGPT, the AI assistant on Karthik Mannem's portfolio "The Algorithmic Kitchen". Be warm, professional, subtly witty. Max 3 short paragraphs.\n\nKarthik Mannem — ML Engineer, CSUN M.S. CS (GPA 3.92, May 2026 — graduated), Los Angeles.\nSkills: Python, LangChain, RAG, PyTorch, TensorFlow, HuggingFace, Docker, Flask, AWS, Next.js.\nProjects: Woodlands IMS (in development: inventory + AI kitchen assistant for Woodlands Indian Cuisine, Django, append-only stock ledger, AI only proposes and a person confirms), TaxProof (live prototype: tax workpaper with evidence-backed numbers, FastAPI + Next.js, 230 backend tests), Retail Demand Intelligence Platform (multi-model forecasting + agentic LLM Q&A on AWS), Preventive Care Recommendation Agent (LangGraph + Chroma RAG with a critic loop), SplitWise Pro (open beta), Netflix Recommender, Fake Currency CNN, BERT Product Predictor.\nOpen source: pandera #2437 merged; PyTorch #191687 approved and open; PyTorch #191998 open, changes requested; PyTorch #191439 closed as a duplicate. Currently building an AI project for The Woodlands restaurants.\nExperience: AI Engineer @ SLN Solutions (Oct 2026 – present); AI Model Evaluation Analyst @ Handshake AI (Sep 2025 – Apr 2026), Freelance ML Engineer (Aug 2023 – Jun 2024).\nEmail: ${resume.email} | GitHub: github.com/mannemkarthik010\nOpen to: full-time ML/AI roles — immediately available.`,
+          system: `You are the AI assistant on Karthik Mannem's portfolio website. Be warm, professional, subtly witty. Max 3 short paragraphs.\n\nKarthik Mannem — ML Engineer, CSUN M.S. CS (GPA 3.92, May 2026 — graduated), Los Angeles.\nSkills: Python, LangChain, RAG, PyTorch, TensorFlow, HuggingFace, Docker, Flask, AWS, Next.js.\nProjects: Woodlands IMS (in development: inventory + AI kitchen assistant for Woodlands Indian Cuisine, Django, append-only stock ledger, AI only proposes and a person confirms), TaxProof (live prototype: tax workpaper with evidence-backed numbers, FastAPI + Next.js, 230 backend tests), Retail Demand Intelligence Platform (multi-model forecasting + agentic LLM Q&A on AWS), Preventive Care Recommendation Agent (LangGraph + Chroma RAG with a critic loop), SplitWise Pro (open beta), Netflix Recommender, Fake Currency CNN, BERT Product Predictor.\nOpen source: pandera #2437 merged; PyTorch #191687 approved and open; PyTorch #191998 open, changes requested; PyTorch #191439 closed as a duplicate. Currently building an AI project for The Woodlands restaurants.\nExperience: AI Engineer @ SLN Solutions (Oct 2026 – present); AI Model Evaluation Analyst @ Handshake AI (Sep 2025 – Apr 2026), Freelance ML Engineer (Aug 2023 – Jun 2024).\nEmail: ${resume.email} | GitHub: github.com/mannemkarthik010\nOpen to: full-time ML/AI roles — immediately available.`,
           messages: [...msgs.filter((_,i)=>i>0).map((m)=>({ role: m.role, content: m.text })), { role: "user", content: txt }],
         }),
       });
       const data = await res.json();
       const reply = res.ok
-        ? data.reply ?? "Brief kitchen outage. Please try again!"
-        : data.error || "Brief kitchen outage. Please try again!";
+        ? data.reply ?? "The assistant is unavailable right now. Please try again."
+        : data.error || "The assistant is unavailable right now. Please try again.";
       play(res.ok ? "/sounds/notification.mp3" : "/sounds/error.mp3", 0.25);
       setMsgs((p) => [...p, { role: "assistant", text: reply }]);
     } catch {
       play("/sounds/error.mp3", 0.25);
-      setMsgs((p) => [...p, { role: "assistant", text: "Brief kitchen outage. Please try again!" }]);
+      setMsgs((p) => [...p, { role: "assistant", text: "The assistant is unavailable right now. Please try again." }]);
     } finally {
       setLoading(false);
     }
@@ -152,7 +152,7 @@ export default function Contact() {
 
           </FadeUp>
 
-          {/* ChefGPT */}
+          {/* Portfolio assistant */}
           <FadeUp delay={0.12}>
             <h3 className="heading-lg c-cream" style={{ fontWeight: 400, marginBottom: "0.4rem" }}>Ask about my work</h3>
             <p className="body-sm c-muted" style={{ marginBottom: "var(--space-2)" }}>Optional. An AI assistant that has read this portfolio can answer quick questions about my projects and background.</p>
@@ -165,10 +165,10 @@ export default function Contact() {
               {/* Chat header */}
               <div style={{ padding: "0.85rem var(--space-3)", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
                 <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(216,123,85,0.12)", border: "1px solid var(--border-active)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span className="mono c-gold" style={{ fontSize: 11, opacity: 0.8 }}>CG</span>
+                  <span className="mono c-gold" style={{ fontSize: 11, opacity: 0.8 }}>AI</span>
                 </div>
                 <div>
-                  <p className="body-sm c-cream" style={{ fontWeight: 500 }}>ChefGPT</p>
+                  <p className="body-sm c-cream" style={{ fontWeight: 500 }}>Portfolio assistant</p>
                   <p className="label c-gold" style={{ fontSize: 9 }}>● Online</p>
                 </div>
               </div>

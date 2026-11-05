@@ -139,7 +139,7 @@ export default function Nav() {
           >
             <button type="button" onClick={() => { setOpen(false); openPalette(); }} className="label c-gold"
               style={{ display: "block", padding: "0.7rem 0", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>
-              ⌕ search the menu
+              ⌕ search the site
             </button>
             {NAV.map((n) => (
               <a key={n.label} href={n.href} onClick={() => setOpen(false)}

@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
-import { openProject, scrollToId } from "../lib/events";
+import { scrollToId } from "../lib/events";
 
 /** The pipeline behind the Retail Demand Intelligence Platform, drawn as four layers in depth.
  *  Every figure comes from that project's own results. */
@@ -73,20 +73,27 @@ export default function HeroPipeline() {
   const rotZ = useSpring(useTransform(mx, [-0.5, 0.5], [-38, -22]), { stiffness: 90, damping: 18 });
   const rotX = useSpring(useTransform(my, [-0.5, 0.5], [56, 46]), { stiffness: 90, damping: 18 });
 
+  const scene = useRef<HTMLDivElement>(null);
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (rm) return;
+    if (rm || e.pointerType === "touch") return;
     const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width - 0.5);
-    my.set((e.clientY - r.top) / r.height - 0.5);
+    const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    mx.set(x - 0.5);
+    my.set(y - 0.5);
+    // a light source that follows the pointer across the plates and the floor shadow
+    scene.current?.style.setProperty("--lx", `${Math.round(x * 100)}%`);
+    scene.current?.style.setProperty("--ly", `${Math.round(y * 100)}%`);
   };
+  const onLeave = () => { mx.set(0); my.set(0); scene.current?.style.removeProperty("--lx"); scene.current?.style.removeProperty("--ly"); };
 
-  const openCase = () => { scrollToId("projects"); setTimeout(() => openProject("retail-intel"), 400); };
+  // The four layers belong to the Retail project, so a click goes to its showcase on the page.
+  const openCase = () => scrollToId("work-retail");
 
   return (
     <div className="pipe">
       <p className="pipe__eyebrow">One system, four layers · from the Retail Demand Intelligence Platform</p>
 
-      <div className="pipe__scene" onPointerMove={onMove} onPointerLeave={() => { mx.set(0); my.set(0); }}>
+      <div className="pipe__scene" ref={scene} onPointerMove={onMove} onPointerLeave={onLeave}>
         <motion.div className="pipe__stack" style={rm ? { rotateX: 52, rotateZ: -30 } : { rotateX: rotX, rotateZ: rotZ }}>
           {STEPS.map((s, i) => (
             <div

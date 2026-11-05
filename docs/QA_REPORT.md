@@ -1,6 +1,6 @@
 # QA report
 
-Last updated 2026-11-05 on branch `redesign/phase-2-5-preventive-care`. This lists what was actually run. Anything not listed was not tested.
+Last updated 2026-11-05 (Featured Work redesign) on branch `redesign/phase-2-5-preventive-care`. This lists what was actually run. Anything not listed was not tested.
 
 ## Automated checks (this branch)
 | Check | Result |
@@ -21,7 +21,8 @@ There is no unit or end-to-end test suite in this repository.
 | `/work/preventive-care` | checked: walkthrough, step controls, loop arc, simulator | checked, no overflow | not checked |
 | `/work/retail-demand-intelligence` | checked in an earlier round | checked in an earlier round | not checked |
 | `/lab` | not re-checked this round | not re-checked | not checked |
-| Featured Work section | seen at 1440px and 390px during the audit | | not checked |
+| Selected work (new showcases) | checked: all three compositions, forecast series switching and scrub, disclosure, stage selector | checked, no horizontal overflow | checked, no horizontal overflow |
+| Footer | checked | not re-checked | not checked |
 
 The colour-contrast edits (below) were made after most of these screenshots. I have not re-checked every page by eye since.
 
@@ -29,6 +30,18 @@ The colour-contrast edits (below) were made after most of these screenshots. I h
 - TaxProof: selecting nodes updates the detail panel and the upstream and downstream highlighting; switching traces re-lays out the graph; "show every step" works; the hash chain fails at the edited row, and when the row is re-hashed the break moves to the next row. The browser's SHA-256 matches the Python output for the untouched sample.
 - Preventive Care: sample-patient switching, previous/next, node click, and the loop simulator. All-fail gives 3 drafts, 2 revisions and a final counter of 3. A pass on draft 2 gives 2 drafts and "Self-critique passed."
 - Not tested: autoplay ("Play through") end-to-end, touch input, screen readers, Safari and Firefox.
+
+## Selected work: measured
+| Item | Before | After |
+|---|---|---|
+| Homepage Work section height at 390px | about 5,100px | about 4,440px |
+| Of that, the three projects | | about 3,710px (1,240 / 1,340 / 1,120) |
+| Horizontal overflow at 390, 768, 1440px | none | none |
+
+The mobile reduction is real but modest (about 13%). Most of the height now sits in the preview, the evidence trail and the chart, which are the content. Further cuts would mean hiding evidence.
+
+Interactions run: Retail series switch morphs the lines and the readout updates on pointer move; the TaxProof disclosure opens by button with `aria-expanded` and shows seven sections; the case-study link plays a 340ms exit and then routes, and browser Back returns to the page with normal state; every external link resolves (200, with Streamlit answering through its usual redirect).
+Not run: keyboard-only pass through the whole section, touch on a real device, screen reader, Safari.
 
 ## Accessibility
 - Computed contrast for the palette (see `DESIGN_SYSTEM.md`). Found and fixed small text below 4.5:1: `--muted` (4.1 to 5.4), grey labels on ivory (4.0 to 4.8), copper text on ivory (3.5 to 4.9), green and copper badges.
@@ -44,6 +57,7 @@ The colour-contrast edits (below) were made after most of these screenshots. I h
 - Preventive Care site copy overstated the product. It said every recommendation cites a source and page, and that chunks were 512 tokens. The code lists the five retrieved sources beside the plan, and chunks are 512 characters. Site text corrected.
 
 ## Known issues
-- Featured Work is still three identical cards and very tall on mobile.
-- Footer and some older sections still use kitchen wording.
-- `resume/resume.tex` line 219 describes a Framingham score and a vaccination plan that the code does not have. Awaiting your decision.
+- Older project modals and the "all projects" cards still use kitchen wording.
+- The résumé PDF has not been regenerated. `resume.tex` is corrected, and CI builds the PDF on merge to `main`.
+- The `sw-index` side navigation only appears at 1440px and wider.
+- Dev-server CSS goes stale after edits in the browser pane (HMR socket fails). Restarting with a cleared `.next` fixes it. Production builds are unaffected.

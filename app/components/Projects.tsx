@@ -7,7 +7,7 @@ import ProjectModal from "./ProjectModal";
 import { useSoundFx } from "../hooks/useSoundFx";
 import { StatusChip } from "./StatusChip";
 import MenuBoard from "./MenuBoard";
-import FeaturedWork from "./FeaturedWork";
+import Showcase from "./showcase/Showcase";
 import { OPEN_PROJECT } from "../lib/events";
 import { EASE, DUR } from "../lib/motion";
 
@@ -229,11 +229,12 @@ export default function Projects() {
           <SectionHeader
             index="01"
             label="Work"
-            title={<>Featured <span className="t-grad">Work</span></>}
-            subtitle="Three projects that show how I build: the problem, the approach, and the evidence."
+            align="split"
+            title={<>Selected <span className="t-grad">work</span></>}
+            subtitle="Three systems, each with a way to inspect the evidence behind it."
           />
 
-          <FeaturedWork />
+          <Showcase />
 
           <div className="fw-more">
             <button type="button" className="pill-cta" aria-expanded={showAll} onClick={() => setShowAll((v) => !v)}>
@@ -244,8 +245,8 @@ export default function Projects() {
           {showAll && (
             <div id="all-projects" style={{ marginTop: "var(--space-5)" }}>
               <div className="view-toggle" role="tablist" aria-label="Project view">
-                <button role="tab" aria-selected={view === "cards"} className={view === "cards" ? "is-active" : ""} onClick={() => setView("cards")}>▦ Recipe cards</button>
-                <button role="tab" aria-selected={view === "menu"} className={view === "menu" ? "is-active" : ""} onClick={() => setView("menu")}>☰ The menu</button>
+                <button role="tab" aria-selected={view === "cards"} className={view === "cards" ? "is-active" : ""} onClick={() => setView("cards")}>▦ Cards</button>
+                <button role="tab" aria-selected={view === "menu"} className={view === "menu" ? "is-active" : ""} onClick={() => setView("menu")}>☰ List</button>
               </div>
 
               {view === "cards" ? (
@@ -266,7 +267,7 @@ export default function Projects() {
             style={{ textAlign: "center", marginTop: "var(--space-4)" }}
           >
             <Btn href="https://github.com/mannemkarthik010" variant="secondary" target="_blank" rel="noopener noreferrer">
-              Full Kitchen on GitHub ↗
+              All code on GitHub ↗
             </Btn>
           </motion.div>
         </div>

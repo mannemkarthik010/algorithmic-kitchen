@@ -6,7 +6,7 @@ import { EASE } from "../lib/motion";
 const ITEMS: [string, string][] = [
   ["Reading room", "A 3D bookshelf of the books behind how I build."],
   ["Two small games", "Real or Fake, and a South Indian tiffin dunk."],
-  ["On the stove", "What I am building right now."],
+  ["In progress", "What I am building right now."],
   ["An illusion", "A hypnotic dosa. Stare for fifteen seconds."],
 ];
 

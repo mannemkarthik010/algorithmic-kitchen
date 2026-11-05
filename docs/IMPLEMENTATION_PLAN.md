@@ -14,8 +14,8 @@ Dependencies today: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react
 
 ## Milestone 2: visual storytelling. Partly done
 - [x] Claim-first hero with masked word entrance and four actions
-- [ ] **Featured-project showcase.** Still three identical cards and about 5,100px tall on a phone. Highest remaining impact. Each flagship needs its own composition and a short summary, with the case study carrying the detail
-- [ ] Remove remaining kitchen wording from the footer and older sections (`Footer.tsx`, section labels)
+- [x] **Featured-project showcase.** Three distinct compositions (`app/components/showcase/`): TaxProof screenshot-first with an animated evidence trail, Retail as an asymmetric split with a live forecast instrument, Preventive Care as a stage schematic. Each has expandable technical details and a case-study link. Mobile has its own layout (swipeable trail, metric strip, stage chips)
+- [x] Kitchen wording removed from the footer, contact assistant, email template, palette, nav and Lab teaser. Still present inside the older project write-up modals and the "all projects" cards (`dishName` and similar fields in `resume.ts`)
 - [x] Case-study layouts: Retail, TaxProof, Preventive Care
 
 ## Milestone 3: interactive engineering
@@ -25,7 +25,8 @@ Dependencies today: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react
 - [ ] Open-source "Code Evolution" viewer. Needs GitHub status and diffs fetched and verified for each contribution; not started
 
 ## Milestone 4: immersive features. Not started
-- [ ] Interactive hero. The current CSS 3D visual is a placeholder. Making it respond to hover, click and scroll needs no new dependency. A WebGL version needs `three` and `@react-three/fiber`: see approvals below
+- [~] Hero visual: CSS 3D kept (WebGL deferred by decision). Added a pointer-following light and floor glow; steps now scroll to the Retail showcase. Still to do: scroll-linked separation of the layers
+- [ ] WebGL: deferred. Only if a concept appears that CSS and SVG cannot deliver
 - [ ] Project Atlas (optional map of projects, themes and contributions)
 - [ ] Lab refresh. Existing Lab experiences work and stay
 
@@ -34,8 +35,13 @@ Dependencies today: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react
 - [ ] 768px tablet pass, keyboard walkthrough, screen reader spot check, Safari
 - [ ] Delete dead components (`Ticker.tsx`, `CourseRail.tsx`, others after a reference search)
 
-## Approvals and decisions needed
-1. **WebGL.** Adding `three` + `@react-three/fiber` (+ `@react-three/drei`) would be one dynamically imported chunk, free and open source. I will only do it if you approve. Honest expectation: the instrument is four flat layers, which CSS 3D already renders well. WebGL would add real lighting and depth at the cost of a larger lazy bundle and a static fallback to maintain.
-2. **Résumé wording.** `resume/resume.tex` line 219 says "Framingham risk score" and "vaccination plan". The code computes the 2013 ACC/AHA Pooled Cohort Equations, and the plan has screening, lifestyle, pharmacological and follow-up sections, no vaccinations. Not edited. It is your résumé.
-3. **A recorded live run.** The Preventive Care page shows no generated plan because I will not invent one. If you want a real sample, I can submit a fictional patient to your Streamlit demo and capture the output, labelled as a recording. That spends your model-endpoint credits and submits a form, so I am asking first.
-4. **AWS wording** in the résumé (carried over from earlier).
+## Decisions made
+- WebGL: deferred. No `three` or React Three Fiber.
+- Résumé: corrected in `resume/resume.tex` (Pooled Cohort Equations, no vaccination plan, AWS wording, Preventive Care title and demo link). The PDF is built by `.github/workflows/build-resume.yml` when this reaches `main`; it has not been regenerated yet.
+- Recorded live run of the Preventive Care demo: not now. Improve the corpus and add evaluation tests first.
+
+## Open
+1. Merge to `main`, which also regenerates the résumé PDF. Needs your approval. Deploying is a separate approval.
+2. TaxProof is the first flagship on the site but is not on the résumé, which is one page. Adding it means trimming something. Your call.
+3. The older project write-up modals and the "all projects" cards still use kitchen wording.
+4. AWS wording on LinkedIn (carried over).

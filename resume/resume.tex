@@ -205,18 +205,18 @@
   \resumeItemListStart
     \item {Built a 3-model pipeline (seasonal-naive, Holt-Winters, GBM) over 240 series, rolling-origin backtested, selecting a winner per series (GBM: 7.9\% WAPE, best on 154/240).}
     \item {Shipped 80\% prediction intervals and occlusion-based feature attribution, reporting measured coverage on held-out data (74.2\% vs. 80\% nominal) instead of asserting calibration.}
-    \item {Designed a 6-tool agentic Q\&A layer over a pluggable LLM backend with audit logging, retry/backoff, token-cost tracking, and a 37-case eval harness scoring tool routing in CI.}
-    \item {Closed the MLOps loop: drift detection triggers per-series re-selection with a logged audit trail; deployed to AWS (SageMaker, Lambda, Bedrock) via Terraform, Docker, and CI.}
+    \item {Designed a 6-tool agentic Q\&A layer over a pluggable LLM backend with audit logging, retry/backoff, token-cost tracking, and a 37-case routing eval (mock router) in CI.}
+    \item {Closed the MLOps loop: drift detection re-selects models per series with an audit log; AWS stack (SageMaker, Lambda) in Terraform, tested on mocks; live demo on Vercel.}
   \resumeItemListEnd
 
 \resumeProject
-  {Preventive Care Recommendation Agent -- Agentic RAG for Clinical Decision Support}
-  {Python, LangChain, ChromaDB, Llama-3.1, Streamlit}
+  {Preventive Care Recommendation Agent -- Agentic RAG, Educational Prototype}
+  {Python, LangGraph, LangChain, ChromaDB, Llama-3.1, Streamlit}
   {\href{https://github.com/mannemkarthik010/Preventive-Care-Recommendation}{GitHub}}
-  {}
+  {\href{https://preventive-care-recommendation.streamlit.app/}{Live Demo}}
   \resumeItemListStart
-    \item {Built a LangChain RAG pipeline over a ChromaDB index of cardiovascular and metabolic guideline PDFs, so recommendations cite retrieved text rather than model recall.}
-    \item {Combined a computed Framingham risk score with retrieved guidelines into a structured, risk-specific screening and vaccination plan.}
+    \item {Built a LangGraph agent that retrieves passages from a ChromaDB guideline index, drafts a structured care plan grounded in them, and lists the retrieved sources.}
+    \item {Implemented the ACC/AHA Pooled Cohort Equations in Python for 10-year ASCVD risk, verified on the guideline's worked example, plus a critic loop (max 2 revisions).}
   \resumeItemListEnd
 
 \resumeSubHeadingListEnd
