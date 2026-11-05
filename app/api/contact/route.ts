@@ -66,14 +66,14 @@ export async function POST(req: NextRequest) {
         subject: `[Algorithmic Kitchen] ${safeSubject || "New Reservation from " + name}`,
         html: `
           <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #101317; color: #F2EFE8; padding: 32px; border-radius: 12px;">
-            <h2 style="color: #FF865B; font-size: 22px; margin-bottom: 4px;">🍽️ New Table Reservation</h2>
+            <h2 style="color: #D87B55; font-size: 22px; margin-bottom: 4px;">🍽️ New Table Reservation</h2>
             <p style="color: #6D7882; font-size: 13px; margin-bottom: 24px; border-bottom: 1px solid #2a1f0e; padding-bottom: 16px;">The Algorithmic Kitchen — Contact Form</p>
             <table style="width: 100%; border-collapse: collapse;">
               <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em; width: 90px;">Name</td><td style="color: #F2EFE8; font-size: 15px;">${escapeHtml(name)}</td></tr>
-              <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Email</td><td><a href="mailto:${escapeHtml(email)}" style="color: #FF865B;">${escapeHtml(email)}</a></td></tr>
+              <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Email</td><td><a href="mailto:${escapeHtml(email)}" style="color: #D87B55;">${escapeHtml(email)}</a></td></tr>
               <tr><td style="color: #6D7882; font-size: 12px; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.08em;">Subject</td><td style="color: #F2EFE8;">${escapeHtml(safeSubject) || "—"}</td></tr>
             </table>
-            <div style="margin-top: 24px; padding: 16px 20px; background: rgba(255,134,91,0.08); border-left: 3px solid #FF865B; border-radius: 0 8px 8px 0;">
+            <div style="margin-top: 24px; padding: 16px 20px; background: rgba(216,123,85,0.08); border-left: 3px solid #D87B55; border-radius: 0 8px 8px 0;">
               <p style="color: #6D7882; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Message</p>
               <p style="color: #F2EFE8; font-size: 15px; line-height: 1.7; white-space: pre-wrap;">${escapeHtml(message)}</p>
             </div>

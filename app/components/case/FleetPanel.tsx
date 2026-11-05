@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { MODELS, MODEL_LABEL, retail, type Model } from "./retail-data";
 import { useWidth } from "./useWidth";
 
-const COLOR: Record<Model, string> = { seasonal_naive: "#8C9CA7", holt_winters: "#F2EFE8", global_gbm: "#FF865B" };
+const COLOR: Record<Model, string> = { seasonal_naive: "#8C9CA7", holt_winters: "#F2EFE8", global_gbm: "#D87B55" };
 const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; };
 const FEATURED = new Set(retail.series.map((s) => s.id));
 

@@ -28,8 +28,8 @@ export default function CalibrationPlot() {
               <text x={x(t)} y={H - 16} textAnchor="middle" className="cs-ax cs-ax--light">{Math.round(t * 100)}%</text>
             </g>
           ))}
-          <rect x={x(c.overall)} y={m.t} width={x(c.nominal) - x(c.overall)} height={H - m.t - m.b} fill="rgba(255,134,91,0.14)" />
-          <line x1={x(c.nominal)} x2={x(c.nominal)} y1={m.t - 8} y2={H - m.b} stroke="#FF865B" strokeDasharray="5 4" strokeWidth={1.6} />
+          <rect x={x(c.overall)} y={m.t} width={x(c.nominal) - x(c.overall)} height={H - m.t - m.b} fill="rgba(216,123,85,0.14)" />
+          <line x1={x(c.nominal)} x2={x(c.nominal)} y1={m.t - 8} y2={H - m.b} stroke="#D87B55" strokeDasharray="5 4" strokeWidth={1.6} />
           <text x={x(c.nominal)} y={m.t - 12} textAnchor="middle" className="cs-note cs-note--copper">nominal target 80%</text>
           {rowsData.map((r, i) => {
             const yy = m.t + 22 + i * ((H - m.t - m.b - 30) / (rowsData.length - 1));

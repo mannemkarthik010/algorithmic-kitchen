@@ -117,7 +117,7 @@ export default function ContributionModal({ contribution, onClose }: {
                 </div>
                 <button
                   onClick={handleClose} aria-label="Close modal"
-                  style={{ background: "rgba(255,134,91,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--muted)", width: 34, height: 34, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.18s" }}
+                  style={{ background: "rgba(216,123,85,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--muted)", width: 34, height: 34, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.18s" }}
                   onMouseEnter={(e) => { e.currentTarget.style.color = "var(--cream)"; e.currentTarget.style.borderColor = "var(--border-active)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.color = "var(--muted)"; e.currentTarget.style.borderColor = "var(--border)"; }}
                 >✕</button>

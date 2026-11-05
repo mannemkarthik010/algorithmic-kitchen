@@ -144,7 +144,7 @@ export default function Contact() {
               </form>
             ) : (
               <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
-                style={{ padding: "var(--space-5) var(--space-4)", background: "rgba(255,134,91,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", textAlign: "center" }}>
+                style={{ padding: "var(--space-5) var(--space-4)", background: "rgba(216,123,85,0.07)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", textAlign: "center" }}>
                 <p className="heading-xl t-grad" style={{ marginBottom: "var(--space-1)" }}>Message received ✓</p>
                 <p className="body-md c-muted">Thanks for reaching out. Karthik will reply shortly.</p>
               </motion.div>
@@ -164,7 +164,7 @@ export default function Contact() {
             {chatOpen && <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
               {/* Chat header */}
               <div style={{ padding: "0.85rem var(--space-3)", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(255,134,91,0.12)", border: "1px solid var(--border-active)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(216,123,85,0.12)", border: "1px solid var(--border-active)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <span className="mono c-gold" style={{ fontSize: 11, opacity: 0.8 }}>CG</span>
                 </div>
                 <div>
@@ -181,7 +181,7 @@ export default function Contact() {
                     style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
                     <div style={{ maxWidth: "82%", padding: "9px 13px",
                       borderRadius: m.role === "user" ? "12px 12px 3px 12px" : "12px 12px 12px 3px",
-                      background: m.role === "user" ? "var(--gold)" : "rgba(255,134,91,0.09)",
+                      background: m.role === "user" ? "var(--gold)" : "rgba(216,123,85,0.09)",
                       color: m.role === "user" ? "var(--bg-base)" : "var(--cream)",
                       border: m.role === "assistant" ? "1px solid var(--border)" : "none" }}>
                       <p className="body-sm" style={{ lineHeight: 1.6, color: "inherit" }}>{m.text}</p>
@@ -190,7 +190,7 @@ export default function Contact() {
                 ))}
                 {loading && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: "flex", justifyContent: "flex-start" }}>
-                    <div style={{ padding: "9px 13px", borderRadius: "12px 12px 12px 3px", background: "rgba(255,134,91,0.09)", border: "1px solid var(--border)" }}>
+                    <div style={{ padding: "9px 13px", borderRadius: "12px 12px 12px 3px", background: "rgba(216,123,85,0.09)", border: "1px solid var(--border)" }}>
                       <motion.p className="body-sm c-muted" animate={{ opacity: [1,0.4,1] }} transition={{ duration: 1, repeat: Infinity }}>Chef is thinking…</motion.p>
                     </div>
                   </motion.div>
@@ -203,7 +203,7 @@ export default function Contact() {
                 <input value={chatInput} onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendChat()}
                   placeholder="Ask about skills, projects, availability..."
-                  style={{ flex: 1, padding: "8px 11px", background: "rgba(255,134,91,0.05)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--cream)", fontFamily: "var(--f-body)", fontSize: 13, outline: "none" }}
+                  style={{ flex: 1, padding: "8px 11px", background: "rgba(216,123,85,0.05)", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--cream)", fontFamily: "var(--f-body)", fontSize: 13, outline: "none" }}
                 />
                 <Btn onClick={sendChat} variant="primary" disabled={loading} style={{ padding: "8px 16px", fontSize: 11, flexShrink: 0 }}>Send</Btn>
               </div>

@@ -54,14 +54,14 @@ function RagAnimation({ rm }: { rm: boolean }) {
     <div style={{ position: "relative", width: 120, height: 100, margin: "0 auto" }}>
       {/* Bowl */}
       <svg viewBox="0 0 120 100" width="120" height="100">
-        <ellipse cx="60" cy="75" rx="48" ry="14" fill="rgba(255,134,91,0.15)" stroke="rgba(255,134,91,0.4)" strokeWidth="1.5"/>
-        <path d="M12 60 Q20 88 60 92 Q100 88 108 60 Z" fill="rgba(22,27,32,0.9)" stroke="rgba(255,134,91,0.3)" strokeWidth="1.5"/>
-        <ellipse cx="60" cy="60" rx="48" ry="10" fill="rgba(255,134,91,0.22)"/>
+        <ellipse cx="60" cy="75" rx="48" ry="14" fill="rgba(216,123,85,0.15)" stroke="rgba(216,123,85,0.4)" strokeWidth="1.5"/>
+        <path d="M12 60 Q20 88 60 92 Q100 88 108 60 Z" fill="rgba(22,27,32,0.9)" stroke="rgba(216,123,85,0.3)" strokeWidth="1.5"/>
+        <ellipse cx="60" cy="60" rx="48" ry="10" fill="rgba(216,123,85,0.22)"/>
       </svg>
       {/* Bubbles */}
       {[0,1,2,3].map((i) => (
         <motion.div key={i}
-          style={{ position: "absolute", bottom: 30, left: 30 + i * 16, width: 6, height: 6, borderRadius: "50%", background: "rgba(255,134,91,0.7)" }}
+          style={{ position: "absolute", bottom: 30, left: 30 + i * 16, width: 6, height: 6, borderRadius: "50%", background: "rgba(216,123,85,0.7)" }}
           animate={rm ? {} : { y: [0, -28, -28], opacity: [0, 0.9, 0], scale: [0.5, 1, 0.3] }}
           transition={{ duration: 1.4, delay: i * 0.35, repeat: Infinity, ease: "easeOut" }}
         />
@@ -84,10 +84,10 @@ function CnnAnimation({ rm }: { rm: boolean }) {
     <div style={{ position: "relative", width: 140, height: 100, margin: "0 auto" }}>
       <svg viewBox="0 0 140 100" width="140" height="100">
         {/* Handle */}
-        <rect x="5" y="52" width="40" height="8" rx="4" fill="rgba(60,40,15,0.9)" stroke="rgba(255,134,91,0.2)" strokeWidth="1"/>
+        <rect x="5" y="52" width="40" height="8" rx="4" fill="rgba(60,40,15,0.9)" stroke="rgba(216,123,85,0.2)" strokeWidth="1"/>
         {/* Pan */}
-        <ellipse cx="90" cy="68" rx="44" ry="12" fill="rgba(20,14,6,0.95)" stroke="rgba(255,134,91,0.4)" strokeWidth="1.5"/>
-        <path d="M46 56 Q60 72 90 74 Q120 72 134 56 L134 62 Q120 78 90 80 Q60 78 46 62 Z" fill="rgba(15,10,4,0.95)" stroke="rgba(255,134,91,0.25)" strokeWidth="1"/>
+        <ellipse cx="90" cy="68" rx="44" ry="12" fill="rgba(20,14,6,0.95)" stroke="rgba(216,123,85,0.4)" strokeWidth="1.5"/>
+        <path d="M46 56 Q60 72 90 74 Q120 72 134 56 L134 62 Q120 78 90 80 Q60 78 46 62 Z" fill="rgba(15,10,4,0.95)" stroke="rgba(216,123,85,0.25)" strokeWidth="1"/>
         <ellipse cx="90" cy="56" rx="44" ry="10" fill="rgba(200,93,20,0.35)"/>
         {/* Flame */}
         <motion.ellipse cx="90" cy="82" rx="16" ry="5" fill="rgba(255,120,20,0.4)"
@@ -128,7 +128,7 @@ function TransformerAnimation({ rm }: { rm: boolean }) {
       </div>
       {/* Top cream */}
       <motion.div
-        style={{ position: "absolute", top: 4, left: "50%", transform: "translateX(-50%)", width: 68, height: 8, borderRadius: 4, background: "rgba(255,134,91,0.7)" }}
+        style={{ position: "absolute", top: 4, left: "50%", transform: "translateX(-50%)", width: 68, height: 8, borderRadius: 4, background: "rgba(216,123,85,0.7)" }}
         animate={rm ? {} : { opacity: [0, 1, 1, 0], scaleX: [0, 1, 1, 1] }}
         transition={{ duration: 0.4, delay: 1.3, repeat: Infinity, repeatDelay: 1.8 }}
       />
@@ -139,7 +139,7 @@ function TransformerAnimation({ rm }: { rm: boolean }) {
 // Recommender: bento boxes sliding in
 function RecommenderAnimation({ rm }: { rm: boolean }) {
   const boxes = [
-    { color: "rgba(255,134,91,0.7)", label: "User" },
+    { color: "rgba(216,123,85,0.7)", label: "User" },
     { color: "rgba(100,180,255,0.6)", label: "Item" },
     { color: "rgba(120,220,120,0.6)", label: "Score" },
     { color: "rgba(255,140,80,0.6)",  label: "Top-K" },
@@ -189,7 +189,7 @@ function LstmAnimation({ rm }: { rm: boolean }) {
       {/* Gate dots */}
       {[28, 70, 112].map((x, gi) => (
         <motion.div key={gi}
-          style={{ position: "absolute", top: "50%", left: x, width: 10, height: 10, borderRadius: "50%", background: "rgba(255,134,91,0.9)", transform: "translate(-50%,-50%)", border: "1px solid rgba(255,255,255,0.2)" }}
+          style={{ position: "absolute", top: "50%", left: x, width: 10, height: 10, borderRadius: "50%", background: "rgba(216,123,85,0.9)", transform: "translate(-50%,-50%)", border: "1px solid rgba(255,255,255,0.2)" }}
           animate={rm ? {} : { scale: [1, 1.5, 1], opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 1.8, delay: gi * 0.6, repeat: Infinity }}
         />
@@ -278,7 +278,7 @@ export default function CookAnAI() {
     >
       {/* Header */}
       <div className="flex-row gap-2 mb-3">
-        <div style={{ width: 36, height: 36, borderRadius: "var(--radius-md)", background: "rgba(255,134,91,0.1)", border: "1px solid var(--border-hover)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div style={{ width: 36, height: 36, borderRadius: "var(--radius-md)", background: "rgba(216,123,85,0.1)", border: "1px solid var(--border-hover)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <span className="mono c-gold" style={{ fontSize: 16 }}>◈</span>
         </div>
         <div>
@@ -317,7 +317,7 @@ export default function CookAnAI() {
       <AnimatePresence>
         {cooking && (
           <motion.div key="cooking-anim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            style={{ marginTop: "var(--space-2)", padding: "var(--space-2)", background: "rgba(255,134,91,0.04)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+            style={{ marginTop: "var(--space-2)", padding: "var(--space-2)", background: "rgba(216,123,85,0.04)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
             <CookingVisual model={choice.model} rm={rm} />
           </motion.div>
         )}
@@ -334,8 +334,8 @@ export default function CookAnAI() {
             style={{
               marginTop: "var(--space-3)",
               padding: "var(--space-3)",
-              background: "rgba(255,134,91,0.07)",
-              border: "1px solid rgba(255,134,91,0.28)",
+              background: "rgba(216,123,85,0.07)",
+              border: "1px solid rgba(216,123,85,0.28)",
               borderRadius: "var(--radius-md)",
             }}
           >

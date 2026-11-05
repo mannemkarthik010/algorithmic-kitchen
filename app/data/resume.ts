@@ -621,7 +621,7 @@ export const expertiseLab = [
     tools: ["LangChain", "OpenAI", "FAISS", "Pinecone", "ChromaDB", "Prompt Eng."],
     proof: "Preventive Care Agent: LangGraph + Chroma RAG with a critic loop; every recommendation cites its source and page",
     color: "#20272F",
-    accent: "#FF865B",
+    accent: "#D87B55",
   },
   {
     id: "ml",
@@ -645,7 +645,7 @@ export const expertiseLab = [
     tools: ["PyTorch", "OpenCV", "Albumentations", "ONNX", "TorchVision"],
     proof: "Fake Currency CNN: 97.3% accuracy on custom banknote dataset with 5-layer custom architecture",
     color: "#20272F",
-    accent: "#FF9B76",
+    accent: "#E6946F",
   },
   {
     id: "rec",

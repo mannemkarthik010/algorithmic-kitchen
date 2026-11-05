@@ -49,8 +49,8 @@ export default function Nav() {
         background: scrolled ? "rgba(10,13,16,0.92)" : "transparent",
         backdropFilter: scrolled ? "blur(28px) saturate(1.6)" : "none",
         WebkitBackdropFilter: scrolled ? "blur(28px) saturate(1.6)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,134,91,0.14)" : "none",
-        boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,134,91,0.08)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(216,123,85,0.14)" : "none",
+        boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(216,123,85,0.08)" : "none",
         transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
       }}
     >

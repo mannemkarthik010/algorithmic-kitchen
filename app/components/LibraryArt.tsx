@@ -4,11 +4,11 @@ import type { LibBook } from "../lib/library";
 /** Generated cover and spine art: no image files, no real book covers. Fully deterministic per book. */
 
 const PAL = [
-  { bg: "#1A2027", a: "#F2EFE8", b: "#FF865B", c: "#E56B43" },
-  { bg: "#FF865B", a: "#140E06", b: "#F2EFE8", c: "#7A2E10" },
-  { bg: "#E56B43", a: "#140A04", b: "#F2EFE8", c: "#FF9B76" },
-  { bg: "#F2EFE8", a: "#1A2027", b: "#FF865B", c: "#E56B43" },
-  { bg: "#26201F", a: "#F2EFE8", b: "#FF9B76", c: "#E56B43" },
+  { bg: "#1A2027", a: "#F2EFE8", b: "#D87B55", c: "#E56B43" },
+  { bg: "#D87B55", a: "#140E06", b: "#F2EFE8", c: "#7A2E10" },
+  { bg: "#E56B43", a: "#140A04", b: "#F2EFE8", c: "#E6946F" },
+  { bg: "#F2EFE8", a: "#1A2027", b: "#D87B55", c: "#E56B43" },
+  { bg: "#26201F", a: "#F2EFE8", b: "#E6946F", c: "#E56B43" },
 ];
 type P = (typeof PAL)[number];
 

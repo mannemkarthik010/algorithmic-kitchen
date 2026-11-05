@@ -121,7 +121,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar — branded kitchen closing */}
-      <div style={{ borderTop: "1px solid rgba(255,134,91,0.08)", padding: "var(--space-3) 0" }}>
+      <div style={{ borderTop: "1px solid rgba(216,123,85,0.08)", padding: "var(--space-3) 0" }}>
         <div className="container" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
           {/* Steam curls above the closing line */}
           <div aria-hidden="true" style={{ display: "flex", gap: 20, alignItems: "flex-end", height: 28, opacity: 0.35 }}>
@@ -137,7 +137,7 @@ export default function Footer() {
 
           {/* AK mark centered */}
           <motion.div whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }}
-            style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(255,134,91,0.06)", border: "1px solid rgba(255,134,91,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(216,123,85,0.06)", border: "1px solid rgba(216,123,85,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontFamily: "var(--f-mono)", fontSize: 10, color: "var(--gold)", letterSpacing: "0.05em" }}>AK</span>
           </motion.div>
 
@@ -149,7 +149,7 @@ export default function Footer() {
             <p className="label c-muted" style={{ opacity: 0.35, fontSize: 9 }}>
               © {new Date().getFullYear()} {resume.name}
             </p>
-            <p className="label" style={{ color: "rgba(255,134,91,0.18)", fontSize: 9 }}>
+            <p className="label" style={{ color: "rgba(216,123,85,0.18)", fontSize: 9 }}>
               PRESS ⌃` FOR DEVELOPER MODE
             </p>
           </div>

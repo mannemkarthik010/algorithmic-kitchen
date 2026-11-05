@@ -20,7 +20,7 @@ function PlateArt({ i }: { i: number }) {
       <svg viewBox="0 0 120 70" aria-hidden="true">
         {Array.from({ length: 40 }).map((_, k) => {
           const c = k % 10, r = Math.floor(k / 10);
-          return <rect key={k} x={6 + c * 11} y={8 + r * 15} width="8" height="10" rx="1.5" fill={(k * 7) % 5 === 0 ? "#FF9B76" : "rgba(242,239,232,.22)"} />;
+          return <rect key={k} x={6 + c * 11} y={8 + r * 15} width="8" height="10" rx="1.5" fill={(k * 7) % 5 === 0 ? "#E6946F" : "rgba(242,239,232,.22)"} />;
         })}
       </svg>
     );
@@ -30,7 +30,7 @@ function PlateArt({ i }: { i: number }) {
       <svg viewBox="0 0 120 70" aria-hidden="true">
         <rect x="16" y="38" width="22" height="24" fill="rgba(242,239,232,.25)" />
         <rect x="49" y="30" width="22" height="32" fill="rgba(242,239,232,.25)" />
-        <rect x="82" y="14" width="22" height="48" fill="#FF9B76" />
+        <rect x="82" y="14" width="22" height="48" fill="#E6946F" />
         <rect x="6" y="62" width="108" height="1.5" fill="rgba(242,239,232,.4)" />
       </svg>
     );
@@ -39,10 +39,10 @@ function PlateArt({ i }: { i: number }) {
     return (
       <svg viewBox="0 0 120 70" aria-hidden="true">
         <rect x="8" y="18" width="104" height="12" fill="none" stroke="rgba(242,239,232,.45)" strokeDasharray="3 3" />
-        <rect x="8" y="18" width="77" height="12" fill="#FF9B76" />
+        <rect x="8" y="18" width="77" height="12" fill="#E6946F" />
         <rect x="8" y="44" width="104" height="12" fill="none" stroke="rgba(242,239,232,.45)" strokeDasharray="3 3" />
         <rect x="8" y="44" width="38" height="12" fill="rgba(242,239,232,.5)" />
-        <line x1="90" y1="10" x2="90" y2="64" stroke="#FF9B76" strokeWidth="1.2" />
+        <line x1="90" y1="10" x2="90" y2="64" stroke="#E6946F" strokeWidth="1.2" />
       </svg>
     );
   }
@@ -50,7 +50,7 @@ function PlateArt({ i }: { i: number }) {
     <svg viewBox="0 0 120 70" aria-hidden="true">
       <path d="M18 35 H50 M50 35 L72 18 H102 M50 35 L72 52 H102" stroke="rgba(242,239,232,.45)" strokeWidth="1.5" fill="none" />
       {[[18, 35], [50, 35], [72, 18], [102, 18], [72, 52], [102, 52]].map(([x, y], k) => (
-        <circle key={k} cx={x} cy={y} r="5" fill={k === 0 || k === 3 ? "#FF9B76" : "rgba(242,239,232,.35)"} />
+        <circle key={k} cx={x} cy={y} r="5" fill={k === 0 || k === 3 ? "#E6946F" : "rgba(242,239,232,.35)"} />
       ))}
     </svg>
   );
