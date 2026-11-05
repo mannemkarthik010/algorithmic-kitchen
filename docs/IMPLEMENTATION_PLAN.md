@@ -22,12 +22,12 @@ Dependencies today: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react
 - [x] Retail forecasting explorer, on verified repository data (hand-built SVG)
 - [x] TaxProof evidence-graph explorer, plus a hash-chain demo
 - [x] Preventive Care workflow explorer and revision-loop simulator
-- [ ] Open-source "Code Evolution" viewer. Needs GitHub status and diffs fetched and verified for each contribution; not started
+- [x] Open-source "Code Evolution" viewer on live GitHub data (status, reviews and diff hunks via `scripts/build-contributions-data.py`)
 
 ## Milestone 4: immersive features. Not started
 - [~] Hero visual: CSS 3D kept (WebGL deferred by decision). Added a pointer-following light and floor glow; steps now scroll to the Retail showcase. Still to do: scroll-linked separation of the layers
 - [ ] WebGL: deferred. Only if a concept appears that CSS and SVG cannot deliver
-- [ ] Project Atlas (optional map of projects, themes and contributions)
+- [x] Project Atlas in the expertise section (graph on wide screens, list on phones)
 - [ ] Lab refresh. Existing Lab experiences work and stay
 
 ## Milestone 5: production polish. Not started
@@ -45,3 +45,7 @@ Dependencies today: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react
 2. TaxProof is the first flagship on the site but is not on the résumé, which is one page. Adding it means trimming something. Your call.
 3. The older project write-up modals and the "all projects" cards still use kitchen wording.
 4. AWS wording on LinkedIn (carried over).
+
+## Library round (2026-11-05)
+Done: motion migration, Bklit forecasting studio, shadcn nav, palette, tabs, sliders, Anime.js evidence sequencing, Kokonut agent lanes, scroll index and slide-text CTA, phone project selector, code evolution, atlas, scroll-linked hero, README and status vocabulary cleanup, accessibility fixes, production measurements. See `COMPONENT_INTEGRATION.md`.
+Not done: React Three Fiber prototype, `/lab` creative experiments, TaxProof on the résumé (cannot verify one-page fit without a LaTeX compiler), reduced-motion and Safari checks.

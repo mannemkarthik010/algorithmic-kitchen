@@ -1,6 +1,8 @@
 "use client";
 import { Fragment } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import MagneticSlideButton from "./MagneticSlideButton";
 import { resume } from "../data/resume";
 import { AKMark, Btn } from "./ui";
 import { EASE } from "../lib/motion";
@@ -46,6 +48,12 @@ function Headline() {
 
 export default function Hero() {
   const rm = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  // 0 at the top of the page, 1 when the hero has scrolled away. The visualization drifts and its layers separate with it.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const copyY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const visY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const visOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.9, 0.35]);
   const fade = (delay: number) => ({
     initial: rm ? false : { opacity: 0, y: 14 },
     animate: { opacity: 1, y: 0 },
@@ -53,9 +61,9 @@ export default function Hero() {
   } as const);
 
   return (
-    <section id="hero" className="hero2">
+    <section id="hero" className="hero2" ref={ref}>
       <div className="hero2__inner container">
-        <div className="hero2__copy">
+        <motion.div className="hero2__copy" style={rm ? undefined : { y: copyY }}>
           <motion.div className="hero2__id" {...fade(0)}>
             <AKMark size="sm" />
             <div>
@@ -66,12 +74,12 @@ export default function Hero() {
 
           <Headline />
 
-          <motion.p className="hero2__lede" {...fade(0.85)}>
+          <p className="hero2__lede">
             I work on applied machine learning, LLM systems, evaluation, and the engineering that gets them into production. Each project below links to its code, and to a live demo where one exists.
-          </motion.p>
+          </p>
 
           <motion.div className="hero2__cta" {...fade(0.95)}>
-            <Btn href="#projects" variant="primary">Explore work</Btn>
+            <MagneticSlideButton href="#projects" text="Explore work" hoverText="See the evidence" />
             <Btn href="/Karthik_Mannem_Resume.pdf" variant="secondary" target="_blank" rel="noopener noreferrer">Résumé ↗</Btn>
             <Btn href={resume.github} variant="secondary" target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
             <Btn href={resume.linkedin} variant="secondary" target="_blank" rel="noopener noreferrer">LinkedIn ↗</Btn>
@@ -81,10 +89,12 @@ export default function Hero() {
             <span className="status-dot status-dot--pulse" style={{ background: STATUS.live.color }} aria-hidden="true" />
             Open to full-time roles
           </motion.p>
-        </div>
+        </motion.div>
 
-        {/* Temporary CSS-3D pipeline. Replaced by the interactive data → model → evaluation → deployment scene in Phase 4. */}
-        <HeroPipeline />
+        {/* CSS 3D instrument: four layers (data, model, evaluation, deployment). WebGL deferred by decision. */}
+        <motion.div style={rm ? undefined : { y: visY, opacity: visOpacity }}>
+          <HeroPipeline progress={scrollYProgress} />
+        </motion.div>
       </div>
     </section>
   );

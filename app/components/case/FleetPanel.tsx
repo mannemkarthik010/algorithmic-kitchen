@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { MODELS, MODEL_LABEL, retail, type Model } from "./retail-data";
 import { useWidth } from "./useWidth";
 

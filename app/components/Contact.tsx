@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { resume } from "../data/resume";
 import { SectionHeader, Btn, FadeUp } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";
@@ -110,8 +110,8 @@ export default function Contact() {
                   { id: "subject", label: "Subject",    placeholder: "Role or topic",                type: "text"  },
                 ].map(({ id, label, placeholder, type }) => (
                   <div key={id}>
-                    <label className="label" style={{ display: "block", marginBottom: 6 }}>{label}</label>
-                    <input type={type} placeholder={placeholder}
+                    <label className="label" htmlFor={`contact-${id}`} style={{ display: "block", marginBottom: 6 }}>{label}</label>
+                    <input id={`contact-${id}`} name={id} autoComplete={id === "name" ? "name" : id === "email" ? "email" : "off"} type={type} placeholder={placeholder}
                       value={form[id as keyof typeof form]}
                       onChange={(e) => setForm({ ...form, [id]: e.target.value })}
                       required style={fieldStyle}
@@ -121,8 +121,8 @@ export default function Contact() {
                   </div>
                 ))}
                 <div>
-                  <label className="label" style={{ display: "block", marginBottom: 6 }}>Message</label>
-                  <textarea placeholder="Tell me about the opportunity..."
+                  <label className="label" htmlFor="contact-message" style={{ display: "block", marginBottom: 6 }}>Message</label>
+                  <textarea id="contact-message" name="message" placeholder="Tell me about the opportunity..."
                     value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })}
                     required rows={4}
                     style={{ ...fieldStyle, resize: "vertical" }}

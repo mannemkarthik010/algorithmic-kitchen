@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Contribution, ContentBlock } from "../data/contributions";
 import { Badge, Btn } from "./ui";
 import { useSoundFx } from "../hooks/useSoundFx";

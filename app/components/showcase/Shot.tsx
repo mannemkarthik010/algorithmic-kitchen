@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useScroll, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useScroll, useSpring, useTransform, useReducedMotion } from "motion/react";
 
 export type ShotData = { src: string; width: number; height: number; alt: string; host: string };
 

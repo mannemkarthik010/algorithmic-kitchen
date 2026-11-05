@@ -1,6 +1,6 @@
 "use client";
 /**
- * ui.tsx — Shared component library for The Algorithmic Kitchen.
+ * ui.tsx — Shared UI primitives for karthikmannem.com.
  *
  * Components:
  *   AKMark          — brand monogram (sizes: sm | md | lg)
@@ -17,7 +17,7 @@
  */
 
 import { ReactNode } from "react";
-import { motion, Variants, useReducedMotion } from "framer-motion";
+import { motion, Variants, useReducedMotion } from "motion/react";
 import { EASE, DUR } from "../lib/motion";
 
 // EASE imported from ../lib/motion

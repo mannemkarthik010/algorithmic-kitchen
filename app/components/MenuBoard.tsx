@@ -1,17 +1,17 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { resume, Project } from "../data/resume";
 import { STATUS, Status } from "../lib/status";
 import { EASE } from "../lib/motion";
 
 const COURSES: { status: Status; title: string; note: string }[] = [
-  { status: "cooking", title: "On the Line",       note: "in the kitchen right now" },
-  { status: "live",    title: "Served",            note: "ready to taste today" },
-  { status: "beta",    title: "Chef's Tasting",    note: "open beta — tell me what's off" },
-  { status: "plated",  title: "From the Archive",  note: "plated and put away" },
+  { status: "cooking", title: "In progress",       note: "being built now" },
+  { status: "live",    title: "Live",              note: "running today" },
+  { status: "beta",    title: "Open beta",         note: "tell me what is off" },
+  { status: "plated",  title: "Archive",           note: "finished, no longer worked on" },
 ];
 
-/** Projects as a printed restaurant menu: dish ........ cuisine, tasting note beneath. */
+/** Projects as a plain list: name ........ category, one line beneath. */
 export default function MenuBoard({ onOpen }: { onOpen: (p: Project) => void }) {
   const rm = useReducedMotion();
   const order = COURSES.flatMap((c) => resume.projects.filter((p) => p.status === c.status).map((p) => p.slug));
@@ -19,8 +19,8 @@ export default function MenuBoard({ onOpen }: { onOpen: (p: Project) => void }) 
   return (
     <div className="menu-board">
       <div className="menu-board__frame">
-        <p className="menu-board__crest">✦ &nbsp;MENU DU JOUR&nbsp; ✦</p>
-        <p className="menu-board__sub">Chef Karthik Mannem · Los Angeles</p>
+        <p className="menu-board__crest">ALL PROJECTS</p>
+        <p className="menu-board__sub">Karthik Mannem · Los Angeles</p>
 
         {COURSES.map((course) => {
           const items = resume.projects.filter((p) => p.status === course.status);
@@ -63,7 +63,7 @@ export default function MenuBoard({ onOpen }: { onOpen: (p: Project) => void }) 
         })}
 
         <p className="menu-board__foot">
-          {resume.projects.length} dishes · every plate links to its recipe · allergens: none, but bugs may occur
+          {resume.projects.length} projects · each opens its write-up
         </p>
       </div>
     </div>

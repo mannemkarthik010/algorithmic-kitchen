@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, useMotionValue, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useTransform, useReducedMotion } from "motion/react";
 
 const CLAIMS: { text: string; real: boolean; why: string }[] = [
   { text: "TaxProof ships with 230 backend tests.", real: true, why: "Real: every figure in it traces back to evidence, and the tests keep that honest." },

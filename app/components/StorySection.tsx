@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 
 /**
  * StorySection — wraps each major section with a cinematic scroll reveal.

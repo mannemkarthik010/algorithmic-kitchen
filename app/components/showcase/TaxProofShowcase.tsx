@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { StatusChip } from "../StatusChip";
 import Shot from "./Shot";
 import Disclosure from "./Disclosure";

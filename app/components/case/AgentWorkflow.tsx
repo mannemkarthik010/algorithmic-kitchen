@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { preventive, BOUNDS, type Patient } from "./preventive-data";
 
 type Prov = "run" | "template" | "source" | "absent";

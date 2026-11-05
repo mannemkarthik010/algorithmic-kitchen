@@ -1,6 +1,6 @@
 "use client";
 import { useId, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { EASE } from "../../lib/motion";
 
 /** Expandable technical details. A real button with aria-expanded; the panel animates height unless motion is reduced. */

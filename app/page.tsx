@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import CommandPalette from "./components/CommandPalette";
 import { SectionDivider } from "./components/ui";
+import ScrollIndex from "@/components/kokonutui/scroll-index";
 
 export default function Home() {
   return (
@@ -21,6 +22,8 @@ export default function Home() {
       <Nav />
       <Hero />
       <KitchenStats />
+      <div className="dark">
+        <ScrollIndex scroller="window" selector=".section-header h2" className="home-index">
       <Projects />
       <SectionDivider />
       <Contributions />
@@ -32,6 +35,8 @@ export default function Home() {
       <About />
       <LabTeaser />
       <Contact />
+        </ScrollIndex>
+      </div>
       <Footer />
       <CommandPalette />
     </main>

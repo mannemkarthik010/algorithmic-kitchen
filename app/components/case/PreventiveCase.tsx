@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Nav from "../Nav";
 import Footer from "../Footer";
 import CommandPalette from "../CommandPalette";
 import AgentWorkflow from "./AgentWorkflow";
+import PreventiveLanes from "./PreventiveLanes";
 import LoopSim from "./LoopSim";
 import { preventive, SOURCE_URL } from "./preventive-data";
 import { EASE } from "../../lib/motion";
@@ -88,10 +89,21 @@ export default function PreventiveCase() {
         </div>
       </section>
 
+      <section className="cs-band cs-band--soft">
+        <div className="container">
+          <motion.div {...reveal} className="cs-band__head">
+            <p className="cs-eyebrow">02 · The same run as lanes</p>
+            <h2 className="cs-h2">Who does what, and in which order.</h2>
+            <p className="cs-p cs-p--light">Each component gets a lane. Select a lane to read what a stage takes in, what it hands on, and where it is limited. Drag the marker to move through the stages.</p>
+          </motion.div>
+          <PreventiveLanes />
+        </div>
+      </section>
+
       <section className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
-            <p className="cs-eyebrow">02 · What I could verify</p>
+            <p className="cs-eyebrow">03 · What I could verify</p>
             <h2 className="cs-h2">The one thing with a ground truth.</h2>
             <p className="cs-p cs-p--light">The risk function has a published answer to check against. I ran the repository&apos;s <code>utils.py</code> on the guideline&apos;s worked example (55 years, total cholesterol 213, HDL 50, systolic 120, untreated, non-smoker, no diabetes).</p>
           </motion.div>
@@ -109,7 +121,7 @@ export default function PreventiveCase() {
 
       <section className="cs-sec">
         <div className="container cs-split">
-          <div className="cs-rail"><span>03</span><h2>What the knowledge base really is</h2></div>
+          <div className="cs-rail"><span>04</span><h2>What the knowledge base really is</h2></div>
           <div>
             <p className="cs-lead">{preventive.stats.boilerplateDocs} of the {preventive.stats.documents} documents say exactly the same thing.</p>
             <p className="cs-p cs-p--wide">The index holds mock guideline PDFs created to test the pipeline. Each is one page. This is the sentence in ten of them, under ten different titles:</p>
@@ -125,7 +137,7 @@ export default function PreventiveCase() {
       <section className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
-            <p className="cs-eyebrow">04 · The revision loop</p>
+            <p className="cs-eyebrow">05 · The revision loop</p>
             <h2 className="cs-h2">Choose the critic&apos;s verdicts. Watch the router.</h2>
             <p className="cs-p cs-p--light">The router is ordinary code, so it can be explored exactly. Pick pass or fail for each draft and see when the loop stops.</p>
           </motion.div>
@@ -136,14 +148,14 @@ export default function PreventiveCase() {
       <section className="cs-sec">
         <div className="container cs-two">
           <motion.div {...reveal}>
-            <p className="cs-eyebrow">05 · Decisions</p>
+            <p className="cs-eyebrow">06 · Decisions</p>
             <h2 className="cs-h2">Trade-offs I would defend.</h2>
             <ol className="cs-dec">
               {DECISIONS.map(([t, d], i) => (<li key={t}><span>{String(i + 1).padStart(2, "0")}</span><div><b>{t}</b><p>{d}</p></div></li>))}
             </ol>
           </motion.div>
           <motion.div {...reveal}>
-            <p className="cs-eyebrow">06 · Limitations</p>
+            <p className="cs-eyebrow">07 · Limitations</p>
             <h2 className="cs-h2">What this is not.</h2>
             <ul className="cs-lim">
               {LIMITS.map((l) => (<li key={l}>{l}</li>))}

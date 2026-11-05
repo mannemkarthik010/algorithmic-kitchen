@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Project } from "../data/resume";
 import Image from "next/image";
 import { Badge, Btn } from "./ui";
@@ -168,7 +168,7 @@ export default function ProjectModal({ project, onClose }: {
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
                     <Badge>{project.category}</Badge>
                     <StatusChip status={project.status} />
-                    <span className="mono c-muted" style={{ fontSize: 11, alignSelf: "center" }}>{project.dishName}</span>
+                    <span className="mono c-muted" style={{ fontSize: 11, alignSelf: "center" }}>{project.category}</span>
                   </div>
                   <h2 className="heading-lg c-cream" style={{ marginBottom: 8, lineHeight: 1.2 }}>{project.title}</h2>
                   <ComplexityMeter value={project.complexity} />
@@ -311,7 +311,7 @@ export default function ProjectModal({ project, onClose }: {
                 {project.github && (
                   <Btn href={project.github} variant={project.demo ? "secondary" : "primary"} target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
                 )}
-                <Btn onClick={handleClose} variant="secondary">Back to Menu</Btn>
+                <Btn onClick={handleClose} variant="secondary">Back to projects</Btn>
               </div>
 
             </div>

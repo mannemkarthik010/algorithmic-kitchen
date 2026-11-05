@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Nav from "../Nav";
 import Footer from "../Footer";
 import CommandPalette from "../CommandPalette";

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import { StatusChip } from "../StatusChip";
 import Disclosure from "./Disclosure";
 import CaseLink from "./CaseLink";

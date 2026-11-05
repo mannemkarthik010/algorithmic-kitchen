@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "motion/react";
 
 /**
  * Link to a case study. A plain click plays a short exit (the showcase fades and its preview scales up)

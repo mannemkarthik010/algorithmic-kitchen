@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { resume } from "../data/resume";
 import { SectionHeader, Stagger, Item } from "./ui";
 import CookAnAI from "./CookAnAI";

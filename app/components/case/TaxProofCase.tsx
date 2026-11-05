@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Nav from "../Nav";
 import Footer from "../Footer";
 import CommandPalette from "../CommandPalette";

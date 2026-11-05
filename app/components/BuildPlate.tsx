@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { resume } from "../data/resume";
 import { StatusChip } from "./StatusChip";
 import { openProject } from "../lib/events";

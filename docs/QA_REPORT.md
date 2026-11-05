@@ -1,6 +1,6 @@
 # QA report
 
-Last updated 2026-11-05 (Featured Work redesign) on branch `redesign/phase-2-5-preventive-care`. This lists what was actually run. Anything not listed was not tested.
+Last updated 2026-11-05 (library integration round) on branch `redesign/phase-2-5-preventive-care`. This lists what was actually run. Anything not listed was not tested.
 
 ## Automated checks (this branch)
 | Check | Result |
@@ -61,3 +61,32 @@ Not run: keyboard-only pass through the whole section, touch on a real device, s
 - The résumé PDF has not been regenerated. `resume.tex` is corrected, and CI builds the PDF on merge to `main`.
 - The `sw-index` side navigation only appears at 1440px and wider.
 - Dev-server CSS goes stale after edits in the browser pane (HMR socket fails). Restarting with a cleared `.next` fixes it. Production builds are unaffected.
+
+
+## Library integration round
+
+### Production measurements
+Run against `next build` served by `next start` on localhost, in the browser pane, unthrottled. These are not Lighthouse scores and do not include network conditions.
+
+| Metric | 1440px | 390px |
+|---|---|---|
+| LCP | 276 ms (headline) | 64 ms (after fix) |
+| CLS | 0.013 | 0 |
+| TTFB | 18 ms | 12 ms |
+| JavaScript transferred | about 560 KB across 17 files | same |
+| INP | not measured: scripted events do not register as real input |
+
+Finding fixed: on a phone the largest element was the hero paragraph, which I had fading in with a delay. LCP was 1.66 s until it rendered immediately.
+
+### Accessibility audit (scripted, in the page)
+Found and fixed: contact-form inputs had no accessible name (labels were not tied to fields) and footer links were 21 px tall. After the fixes there are no unnamed controls, no images without alt, no duplicate ids, one h1.
+Not done: axe or Lighthouse, a real screen-reader pass, full keyboard-only walkthrough, reduced-motion behaviour in a browser.
+
+### Layout
+Phone selector had been widened to 950 px by a grid track growing to fit its content. Fixed. No element wider than the viewport at 390 px afterwards. Work section on a phone: 1,740 to 2,320 px depending on the project, from about 5,100 px at the start of the redesign.
+
+### Screenshots
+`docs/screenshots/`: hero at 1440, 768 and 390 px; the TaxProof and Preventive Care case-study tops at 1440 px. Headless captures cannot scroll, so section-level before and after images were not produced. I could not capture a faithful "before" because the old build's entrance animations do not settle in headless mode. Comparisons were made by eye in the browser pane.
+
+### Checks
+Typecheck, lint (vendored shadcn, Bklit and Kokonut sources excluded), production build and résumé sync all pass. There is still no unit or end-to-end test suite.

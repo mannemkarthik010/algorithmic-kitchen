@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { resume, Project } from "../data/resume";
 import { SectionHeader, Badge, Btn } from "./ui";
 import ProjectModal from "./ProjectModal";
@@ -120,7 +120,7 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
 
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 22, marginBottom: "var(--space-1)", zIndex: 1 }}>
             <Badge>{project.category}</Badge>
-            <span className="label c-muted" style={{ fontSize: 8, opacity: 0.45, paddingRight: 2 }}>{project.dishName}</span>
+            <span className="label c-muted" style={{ fontSize: 8, opacity: 0.45, paddingRight: 2 }}>{project.category}</span>
           </div>
           <h3 className="heading-lg c-cream" style={{ marginBottom: "var(--space-1)", lineHeight: 1.2 }}>{project.title}</h3>
           <div><MiniPipeline steps={project.architecture} /></div>
@@ -135,8 +135,8 @@ function RecipeCard({ project, onClick }: { project: Project; onClick: () => voi
 
           {/* CTA row */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto" }}>
-            <span className="label c-muted" style={{ fontSize: 9, opacity: 0.45 }}>{project.ingredients.length} ingredients</span>
-            <span className="label c-gold" style={{ fontSize: 10 }}>Open Recipe →</span>
+            <span className="label c-muted" style={{ fontSize: 9, opacity: 0.45 }}>{project.ingredients.length} technologies</span>
+            <span className="label c-gold" style={{ fontSize: 10 }}>Open write-up →</span>
           </div>
         </div>
 
@@ -210,7 +210,7 @@ export default function Projects() {
   const [view, setView] = useState<"cards" | "menu">("cards");
   const [showAll, setShowAll] = useState(false);
 
-  // Other parts of the site (hero menu, command palette) can open a recipe by slug.
+  // Other parts of the site (command palette, hero) can open a project write-up by slug.
   useEffect(() => {
     const h = (e: Event) => {
       const slug = (e as CustomEvent<{ slug: string }>).detail?.slug;

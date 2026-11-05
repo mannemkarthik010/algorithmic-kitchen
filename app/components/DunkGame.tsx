@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
+import { animate, motion, useMotionValue, useReducedMotion } from "motion/react";
 
 type Kind = "idli" | "vada" | "dosa";
 

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "motion/react";
 import { scrollToId } from "../lib/events";
 
 /** The pipeline behind the Retail Demand Intelligence Platform, drawn as four layers in depth.
@@ -56,7 +56,19 @@ function PlateArt({ i }: { i: number }) {
   );
 }
 
-export default function HeroPipeline() {
+/** One layer. As the hero scrolls away the layers move apart in depth, from the whole system toward its parts. */
+function Plate({ i, on, progress, rm }: { i: number; on: boolean; progress?: MotionValue<number>; rm: boolean | null }) {
+  const fallback = useMotionValue(0);
+  const z = useTransform(progress ?? fallback, [0, 1], [i * GAP, i * GAP * 1.9]);
+  return (
+    <motion.div className={`pipe__plate${on ? " is-on" : ""}`} style={rm || !progress ? { transform: `translateZ(${i * GAP}px)` } : { z }} aria-hidden="true">
+      <span className="pipe__no">0{i + 1}</span>
+      <PlateArt i={i} />
+    </motion.div>
+  );
+}
+
+export default function HeroPipeline({ progress }: { progress?: MotionValue<number> }) {
   const rm = useReducedMotion();
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
@@ -95,17 +107,7 @@ export default function HeroPipeline() {
 
       <div className="pipe__scene" ref={scene} onPointerMove={onMove} onPointerLeave={onLeave}>
         <motion.div className="pipe__stack" style={rm ? { rotateX: 52, rotateZ: -30 } : { rotateX: rotX, rotateZ: rotZ }}>
-          {STEPS.map((s, i) => (
-            <div
-              key={s.key}
-              className={`pipe__plate${active === i ? " is-on" : ""}`}
-              style={{ transform: `translateZ(${i * GAP}px)` }}
-              aria-hidden="true"
-            >
-              <span className="pipe__no">0{i + 1}</span>
-              <PlateArt i={i} />
-            </div>
-          ))}
+          {STEPS.map((s, i) => (<Plate key={s.key} i={i} on={active === i} progress={progress} rm={rm} />))}
           {!rm && (
             <motion.span
               className="pipe__pulse"

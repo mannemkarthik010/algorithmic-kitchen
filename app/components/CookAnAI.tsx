@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useSoundFx } from "../hooks/useSoundFx";
 
 type Dataset  = "Healthcare" | "E-Commerce" | "Finance" | "Vision" | "NLP";

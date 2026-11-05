@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored third-party source installed through the shadcn registry (Bklit charts, MIT). Not linted here.
+    "components/charts/**",
+    // Same for Kokonut UI components installed from its public registry (MIT) and customised.
+    "components/kokonutui/**",
+    "app/components/ui/**",
   ]),
 ]);
 

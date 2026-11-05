@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { resume, bookArchive } from "../data/resume";
 
 type Line = { text: string; type: "output" | "input" | "system" | "gold" };

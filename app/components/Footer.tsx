@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { resume } from "../data/resume";
 import { AKMark } from "./ui";
 
@@ -63,7 +63,7 @@ export default function Footer() {
             {NAV.map((n) => (
               <motion.a key={n.l} href={n.h}
                 className="body-sm c-muted"
-                style={{ textDecoration: "none", transition: "color 0.2s" }}
+                style={{ textDecoration: "none", transition: "color 0.2s", display: "inline-flex", alignItems: "center", minHeight: 32 }}
                 whileHover={{ color: "var(--gold)" } as Parameters<typeof motion.a>[0]["whileHover"]}
               >
                 {n.l}
@@ -81,7 +81,7 @@ export default function Footer() {
                 target={external ? "_blank" : undefined}
                 rel={external ? "noopener noreferrer" : undefined}
                 className="body-sm c-muted"
-                style={{ textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: 5 }}
+                style={{ textDecoration: "none", transition: "color 0.2s", display: "flex", alignItems: "center", gap: 5, minHeight: 32 }}
                 whileHover={{ color: "var(--gold)" } as Parameters<typeof motion.a>[0]["whileHover"]}
               >
                 {l}

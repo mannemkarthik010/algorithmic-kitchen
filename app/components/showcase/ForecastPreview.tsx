@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { useWidth, niceStep, moneyFull, money, dateLabel } from "../case/useWidth";
 import { retail, MODELS, MODEL_LABEL } from "../case/retail-data";
 import { EASE } from "../../lib/motion";

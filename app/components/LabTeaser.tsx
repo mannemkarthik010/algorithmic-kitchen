@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { EASE } from "../lib/motion";
 
 const ITEMS: [string, string][] = [

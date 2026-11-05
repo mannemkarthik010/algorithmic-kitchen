@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { expertiseLab } from "../data/resume";
 import { SectionHeader, FadeUp } from "./ui";
 import { StackSheet } from "./Skills";
+import ProjectAtlas from "./ProjectAtlas";
 import { EASE, DUR } from "../lib/motion";
 
 const LEVEL = {
@@ -26,6 +27,8 @@ export default function ExpertiseLab() {
           title={<>What I <span className="t-grad">actually build</span></>}
           subtitle="Six specialisations. Each one proven by shipped work, not just listed skills."
         />
+
+        <ProjectAtlas />
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(340px,1fr))", gap: "var(--space-3)" }}>
           {expertiseLab.map((area, i) => {

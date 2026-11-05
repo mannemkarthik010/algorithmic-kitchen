@@ -2,7 +2,12 @@
 import { StatusChip } from "../StatusChip";
 import Disclosure from "./Disclosure";
 import CaseLink from "./CaseLink";
+import dynamic from "next/dynamic";
 import ForecastPreview from "./ForecastPreview";
+import { StudioBoundary } from "./StudioBoundary";
+
+// Bklit-based studio is loaded on demand; the original SVG chart stays as the fallback if it fails.
+const ForecastStudio = dynamic(() => import("./ForecastStudio"), { ssr: false, loading: () => <div className="fs fs--loading" role="status">Loading the forecasting studio…</div> });
 import { Details, getProject } from "./shared";
 import { retail } from "../case/retail-data";
 
@@ -55,13 +60,9 @@ export default function RetailShowcase() {
       </div>
 
       <div className="sw-retail__main">
-        <div className="sw-fp-panel">
-          <div className="sw-fp-panel__head">
-            <h4>Forecasting laboratory</h4>
-            <span>Real repository data, synthetic sales</span>
-          </div>
-          <ForecastPreview />
-        </div>
+        <StudioBoundary fallback={<div className="sw-fp-panel"><div className="sw-fp-panel__head"><h4>Forecasting laboratory</h4><span>Real repository data, synthetic sales</span></div><ForecastPreview /></div>}>
+          <ForecastStudio />
+        </StudioBoundary>
         <Disclosure label="Technical details">
           <Details slug="retail-intel" limits={LIMITS} />
         </Disclosure>
