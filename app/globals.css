@@ -2892,7 +2892,9 @@ button.tp-ref:focus-visible { outline: 2px solid #D9532B; outline-offset: 2px; }
 .atlas__links button, .atlas__links a { min-height: 36px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: none; border: 1px solid var(--border-hover); color: var(--cream-2); font-family: var(--f-body); font-size: 12.5px; text-decoration: none; cursor: pointer; } .atlas__links a { border-color: var(--copper); color: var(--copper); }
 .atlas__links button:hover { border-color: var(--cream); color: var(--cream); } .atlas__links button:focus-visible, .atlas__links a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
 @media (max-width: 900px) { .atlas { grid-template-columns: minmax(0, 1fr); } .atlas__map { display: none; } .atlas__list { display: block; } .atlas__detail { min-height: 0; } }
-.home-index { gap: 0 !important; }
+.home-index { display: block !important; }
+/* The rail floats over the page on its own dark backing, so full-bleed sections (the ivory band) run edge to edge and the ticks stay legible on both surfaces. */
+.home-index > nav { position: fixed !important; right: 12px; top: calc(50vh - 150px) !important; width: 2.5rem !important; padding: 16px 0 16px 8px; z-index: 30; background: rgba(16,19,23,.78); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(242,239,232,.14); border-radius: 999px; }
 @media (max-width: 1100px) { .home-index { grid-template-columns: minmax(0, 1fr) !important; } .home-index > nav { display: none !important; } }
 .mag { display: inline-block; }
 .mag__btn { height: 48px !important; min-width: 190px; padding: 0 28px !important; border-radius: 999px !important; background: var(--copper) !important; color: #101317 !important; font-family: var(--f-body); font-weight: 600; letter-spacing: -0.01em; font-size: 15px; box-shadow: 0 10px 30px -10px rgba(216,123,85,.6); }
@@ -2944,3 +2946,24 @@ button.tp-ref:focus-visible { outline: 2px solid #D9532B; outline-offset: 2px; }
   .hero-now__links { flex-basis: 100%; margin-left: 0; padding-left: 0; border-left: 0; }
   .hero-now__links a { white-space: nowrap; }
 }
+
+/* ── Hero: stage-aware "where it shows up" panel ─────────────────────────────────────────────── */
+.pipe__work { margin-top: var(--space-2); min-height: 232px; }
+.pipe__work-h { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-hi); margin: 0 0 8px; }
+.pipe__work-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+.pipe__work-list li { border-bottom: 1px solid var(--border); }
+.pipe__work-list a { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 2px 14px; padding: 10px 0; color: inherit; text-decoration: none; transition: background .2s; }
+.pipe__work-list a:hover, .pipe__work-list a:focus-visible { background: rgba(216,123,85,.06); }
+.pipe__work-list a:focus-visible { outline: 2px solid var(--copper); outline-offset: -2px; }
+.pipe__work-p { grid-row: 1 / span 2; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold-hi); padding-top: 3px; }
+.pipe__work-list b { font-weight: 600; font-size: 14.5px; color: var(--cream); }
+.pipe__work-list a:hover b, .pipe__work-list a:focus-visible b { color: var(--gold-hi); }
+.pipe__work-w { font-size: 13px; line-height: 1.5; color: var(--muted-hi); }
+@media (max-width: 560px) { .pipe__work { min-height: 0; } .pipe__work-list a { grid-template-columns: minmax(0, 1fr); } .pipe__work-p { grid-row: auto; padding: 0; } }
+.cs-sec[id], .cs-band[id] { scroll-margin-top: 72px; }
+/* tighter scene so the stage panel is part of the first screen at 900px */
+.pipe__scene { height: clamp(250px, 26vw, 330px); }
+.pipe__stack { margin-top: 64px; }
+.pipe__work { min-height: 214px; }
+.pipe__scene { height: clamp(270px, 27vw, 345px); }
+.pipe__stack { margin-top: 88px; }

@@ -440,13 +440,13 @@ export const resume = {
   kitchenPass: [
     {
       no: "041", table: "The Woodlands restaurants", dish: "Woodlands IMS", status: "cooking" as const,
-      items: ["Append-only stock ledger", "Run-out watch for the must-never-run-out items", "AI kitchen assistant: it proposes, a person confirms"],
-      cta: "Peek into the kitchen", href: "https://github.com/mannemkarthik010/woodlands-ims",
+      items: ["Append-only stock ledger", "Run-out watch for the must-never-run-out items", "AI assistant: it proposes, a person confirms"],
+      cta: "See the repository", href: "https://github.com/mannemkarthik010/woodlands-ims",
     },
     {
       no: "040", table: "Anyone with a browser", dish: "TaxProof", status: "live" as const,
       items: ["Every number linked to its evidence", "Hash-chained audit log, server-side roles", "230 backend tests, 10 iterations"],
-      cta: "Taste it live", href: "https://taxproof-web.vercel.app",
+      cta: "Open the live demo", href: "https://taxproof-web.vercel.app",
     },
     {
       no: "039", table: "Beta testers", dish: "SplitWise Pro", status: "beta" as const,

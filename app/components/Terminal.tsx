@@ -40,7 +40,7 @@ const CMD: Record<string, () => Line[]> = {
   "inspect woodlands": () => {
     const p = proj("woodlands-ims");
     return [
-      { text: `◈  ${p.title}  [ON THE LINE]`, type: "gold" },
+      { text: `◈  ${p.title}  [IN PROGRESS]`, type: "gold" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Core idea  : stock is an append-only ledger — balances are derived, never edited`, type: "output" },
       { text: `   AI         : the assistant proposes records; a person taps Confirm`, type: "output" },

@@ -1,16 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "motion/react";
-import Link from "next/link";
-
-/** The pipeline behind the Retail Demand Intelligence Platform, drawn as four layers in depth.
- *  Every figure comes from that project's own results. */
-const STEPS = [
-  { key: "Data", head: "240 synthetic store and department series", body: "Five years of weekly sales generated to mirror a retail chain, backtested with a rolling origin." },
-  { key: "Model", head: "A winner chosen per series", body: "Seasonal-naive, Holt-Winters and gradient boosting compete; no single model wins everywhere." },
-  { key: "Evaluation", head: "7.9% WAPE, and an honest gap", body: "The 80% prediction intervals covered 74.2% on held-out data. Reported, not hidden." },
-  { key: "Deployment", head: "Live demo, honest scope", body: "Runs on Vercel with passing CI. The AWS Terraform is written and mock-tested, not yet applied to an account." },
-] as const;
+import { STEPS } from "../lib/pipeline-stages";
+import StagePanel from "./StagePanel";
 
 const GAP = 66; // px between layers in depth
 
@@ -107,7 +99,7 @@ export default function HeroPipeline({ progress }: { progress?: MotionValue<numb
 
   return (
     <div className="pipe">
-      <p className="pipe__eyebrow">One system, four layers · from the Retail Demand Intelligence Platform</p>
+      <p className="pipe__eyebrow">Four stages, one discipline</p>
 
       <div className="pipe__scene" ref={scene} onPointerMove={onMove} onPointerLeave={onLeave}>
         <motion.div className="pipe__stack" style={rm ? { rotateX: 52, rotateZ: -30 } : { rotateX: rotX, rotateZ: rotZ }}>
@@ -123,29 +115,7 @@ export default function HeroPipeline({ progress }: { progress?: MotionValue<numb
         </motion.div>
       </div>
 
-      <ol className="pipe__steps">
-        {STEPS.map((s, i) => (
-          <li key={s.key}>
-            <button
-              type="button"
-              className={`pipe__step${active === i ? " is-on" : ""}`}
-              aria-pressed={active === i}
-              onMouseEnter={() => pick(i)}
-              onFocus={() => pick(i)}
-              onClick={() => pick(i)}
-            >
-              <span className="pipe__k">0{i + 1} / {s.key}</span>
-              <span className="pipe__h">{s.head}</span>
-              <span className="pipe__b">{s.body}</span>
-            </button>
-          </li>
-        ))}
-      </ol>
-
-      <p className="pipe__open">
-        <span>Layer 0{active + 1} is read from a real project.</span>
-        <Link href="/work/retail-demand-intelligence">Open the Retail case study <span aria-hidden="true">→</span></Link>
-      </p>
+      <StagePanel active={active} onPick={pick} rm={rm} />
     </div>
   );
 }

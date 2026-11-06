@@ -31,7 +31,7 @@ export default function KitchenPass() {
     <div style={{ marginBottom: "var(--space-6)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: "var(--space-3)" }}>
         <span className="mono c-gold" style={{ opacity: 0.55, fontSize: 11 }}>◉</span>
-        <span className="label c-gold">The Pass: tickets up right now</span>
+        <span className="label c-gold">In progress right now</span>
         <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, var(--border), transparent)" }} />
       </div>
 
@@ -56,8 +56,8 @@ export default function KitchenPass() {
               <div className="ticket" style={{ clipPath: TORN }}>
                 <span className="ticket__stamp" style={{ color: st.color }}>{st.stamp}</span>
 
-                <p className="ticket__meta">TICKET No. {t.no}</p>
-                <p className="ticket__meta" style={{ opacity: 0.55 }}>TABLE · {t.table}</p>
+                <p className="ticket__meta">No. {t.no}</p>
+                <p className="ticket__meta" style={{ opacity: 0.55 }}>FOR · {t.table}</p>
                 <div className="ticket__rule" />
 
                 <p className="ticket__dish">{t.dish}</p>

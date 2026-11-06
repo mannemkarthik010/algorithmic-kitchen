@@ -77,7 +77,7 @@ export default function RetailCase() {
       </header>
 
       {/* PROBLEM: sticky rail */}
-      <section className="cs-sec">
+      <section id="problem" className="cs-sec">
         <div className="container cs-split">
           <div className="cs-rail"><span>01</span><h2>The problem</h2></div>
           <div>
@@ -95,7 +95,7 @@ export default function RetailCase() {
       </section>
 
       {/* FLEET: darker band */}
-      <section className="cs-band">
+      <section id="model-selection" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">02 · Model selection</p>
@@ -107,7 +107,7 @@ export default function RetailCase() {
       </section>
 
       {/* CALIBRATION: what went wrong */}
-      <section className="cs-sec">
+      <section id="evaluation" className="cs-sec">
         <div className="container cs-split">
           <div className="cs-rail"><span>03</span><h2>What the model got wrong</h2></div>
           <div>
@@ -122,7 +122,7 @@ export default function RetailCase() {
       </section>
 
       {/* SYSTEM */}
-      <section className="cs-band cs-band--soft">
+      <section id="system-design" className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">04 · System design</p>

@@ -89,7 +89,7 @@ export default function PreventiveCase() {
         </div>
       </section>
 
-      <section className="cs-band cs-band--soft">
+      <section id="lanes" className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">02 · The same run as lanes</p>
@@ -100,7 +100,7 @@ export default function PreventiveCase() {
         </div>
       </section>
 
-      <section className="cs-band">
+      <section id="verified" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">03 · What I could verify</p>

@@ -10,7 +10,7 @@ export default function PlayZone() {
         <SectionHeader
           index="LAB"
           label="Games"
-          title={<>Taste-test <span className="c-gold">the kitchen</span></>}
+          title={<>Two quick <span className="c-gold">games</span></>}
           subtitle="Two quick games: see if you can spot what's real, then build a plate of projects that fits what you're hiring for."
         />
         <div className="play-grid">

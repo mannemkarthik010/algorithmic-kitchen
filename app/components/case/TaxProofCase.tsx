@@ -129,7 +129,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band">
+      <section id="challenge" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">02 · What the engine got confidently wrong</p>
@@ -168,7 +168,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band cs-band--soft">
+      <section id="source" className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">04 · System design</p>
@@ -205,7 +205,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band">
+      <section id="permissions" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">06 · Access and identity</p>

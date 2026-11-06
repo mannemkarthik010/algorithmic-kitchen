@@ -11,7 +11,7 @@ const CLAIMS: { text: string; real: boolean; why: string }[] = [
   { text: "He has 10+ years of professional ML experience.", real: false, why: "Fake: a fresh M.S. grad (May 2026) with Handshake AI analyst work and freelance ML projects before that." },
   { text: "The Preventive Care agent has a critic loop that checks its own recommendations.", real: true, why: "Real: LangGraph + Chroma RAG with a critic pass." },
   { text: "This portfolio blasts a beep the second you open it.", real: false, why: "Fake: it used to. Now the sound is a quiet ambient loop with a mute button." },
-  { text: "Right now he's building an AI project for The Woodlands restaurants.", real: true, why: "Real: it's the dish currently On the Line." },
+  { text: "Right now he's building an AI project for The Woodlands restaurants.", real: true, why: "Real: it's the project currently in progress." },
 ];
 
 type Phase = "play" | "reveal" | "done";
@@ -64,7 +64,7 @@ export default function RealOrFake() {
       {phase === "done" ? (
         <div className="rof__card rof__card--done">
           <p className="rof__big">{score}/{CLAIMS.length}</p>
-          <p>{score === CLAIMS.length ? "Perfect plate. You read the menu closely." : score >= 6 ? "Solid. You know this kitchen." : "Tricky, right? Every answer is on the menu above."}</p>
+          <p>{score === CLAIMS.length ? "Perfect score. You read closely." : score >= 6 ? "Solid. You know my work." : "Tricky, right? Every answer is somewhere on this site."}</p>
           <button type="button" className="pill-cta" onClick={restart}>Play again ↻</button>
         </div>
       ) : (
