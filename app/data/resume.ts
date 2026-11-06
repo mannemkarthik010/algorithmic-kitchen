@@ -364,7 +364,8 @@ export const resume = {
       icon: "◈",
       bullets: [
         "Scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following.",
-        "Catalogued recurring failure modes and hallucination patterns into reusable categories that fed prompt-refinement workflows and tightened rubrics where graders disagreed.",
+        "Catalogued recurring failure and hallucination patterns into reusable categories that fed prompt refinement.",
+        "Tightened rubrics where graders disagreed, feeding prompt-refinement workflows.",
         "Sustained high inter-annotator agreement and escalated ambiguous rubric cases, improving benchmark reliability.",
       ],
     },
@@ -376,7 +377,7 @@ export const resume = {
       period: "Aug 2023 – Jun 2024",
       icon: "◇",
       bullets: [
-        "Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, feature engineering, cross-validated training, and the deployed inference endpoint.",
+        "Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, cross-validated training, and a Dockerized Flask inference API.",
         "Containerized ML services with Docker behind Flask REST APIs for reproducible deployment and real-time prediction.",
         "Cut training time by roughly 25% through pipeline profiling, batched preprocessing, and training-config tuning.",
       ],
