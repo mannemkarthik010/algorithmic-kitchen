@@ -1,38 +1,37 @@
 "use client";
-import Nav from "./components/Nav";
-import Hero from "./components/Hero";
-import ProofOfEngineering from "./components/ProofOfEngineering";
-import Projects from "./components/Projects";
+import "./exhibit/exhibit.css";
+import Link from "next/link";
+import ExNav from "./exhibit/ExNav";
+import Opening from "./exhibit/Opening";
+import Gallery from "./exhibit/Gallery";
+import ExAbout from "./exhibit/ExAbout";
+import ExContact from "./exhibit/ExContact";
 import Contributions from "./components/Contributions";
-import Experience from "./components/Experience";
-import About from "./components/About";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import CommandPalette from "./components/CommandPalette";
-import { SectionDivider } from "./components/ui";
-import ScrollIndex from "@/components/kokonutui/scroll-index";
+import { resume } from "./data/resume";
 
+/** The homepage as an exhibition: opening installation (ink), live exhibits (paper), code gallery (ink), about (paper), contact (ink). */
 export default function Home() {
   return (
-    <main>
+    <main className="ex">
       <ScrollToTop />
-      <Nav />
-      <Hero />
-      <div className="dark">
-        <ScrollIndex scroller="window" selector=".section-header h2" className="home-index">
-      <Projects />
-      <ProofOfEngineering />
-      <SectionDivider />
-      <Contributions />
-      <SectionDivider />
-      <Experience />
-      <SectionDivider />
-      <About />
-      <Contact />
-        </ScrollIndex>
-      </div>
-      <Footer />
+      <ExNav />
+      <Opening />
+      <Gallery />
+      <div className="ex-code"><Contributions /></div>
+      <ExAbout />
+      <ExContact />
+      <footer className="ex-foot">
+        <span>© {new Date().getFullYear()} Karthik Mannem</span>
+        <nav aria-label="Footer">
+          <a href="/Karthik_Mannem_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé</a>
+          <a href={resume.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href={resume.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <Link href="/lab">Lab</Link>
+          <Link href="/play">Play ECHO//SHIFT</Link>
+        </nav>
+      </footer>
       <CommandPalette />
     </main>
   );

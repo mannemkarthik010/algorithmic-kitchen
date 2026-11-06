@@ -8,14 +8,10 @@ import { STATUS } from "../lib/status";
 import { OPEN_PALETTE, openProject, scrollToId } from "../lib/events";
 
 const SECTIONS: [string, string, string][] = [
-  ["projects", "Selected work", "work portfolio featured projects"],
-  ["contributions", "Open-source contributions", "pytorch pandera pr code evolution"],
-  ["experience", "Experience", "jobs handshake sln"],
-  ["proof", "Proof of engineering, the project map and the full stack", "metrics evidence results atlas skills stack expertise tools"],
-  ["about", "About me", "bio story education timeline"],
+  ["work", "The three live exhibits", "work portfolio featured projects taxproof retail preventive"],
+  ["contributions", "Code gallery: open-source contributions", "pytorch pandera pr code evolution diff"],
+  ["about", "About me", "bio portrait facts philosophy"],
   ["contact", "Contact", "email hire message"],
-  ["lab", "The Lab", "games experiments extras"],
-  ["library", "Lab: the library", "books reading shelf"],
 ];
 
 /** Cmd/Ctrl+K or "/" opens a searchable index of sections, projects, case studies and links. shadcn/ui Command on cmdk. */
@@ -65,6 +61,11 @@ export default function CommandPalette() {
               <CommandShortcut>#{id}</CommandShortcut>
             </CommandItem>
           ))}
+        </CommandGroup>
+
+        <CommandGroup heading="Pages">
+          <CommandItem value="lab library bookshelf reading experiments" onSelect={run(() => router.push("/lab"))}><span>The Lab</span><CommandShortcut>/lab</CommandShortcut></CommandItem>
+          <CommandItem value="play game echo shift puzzle time loop" onSelect={run(() => router.push("/play"))}><span>Play ECHO//SHIFT</span><CommandShortcut>/play</CommandShortcut></CommandItem>
         </CommandGroup>
 
         <CommandGroup heading="All projects">
