@@ -2907,3 +2907,40 @@ button.tp-ref:focus-visible { outline: 2px solid #D9532B; outline-offset: 2px; }
 @layer base {
   [role="tab"], .pl__lanes button, .dark button { background-color: transparent; border: 0; font-family: inherit; color: inherit; }
 }
+
+/* ── Proof of engineering: an ivory band between two dark sections ───────────────────────────── */
+.poe { background: var(--ivory); color: var(--graphite); padding: var(--space-6) 0 var(--space-5); }
+.poe .sh-label { color: #9A4524; }
+.poe__h { font-family: var(--f-body); font-weight: 600; font-size: clamp(30px, 4.6vw, 56px); line-height: 1.04; letter-spacing: -.035em; max-width: 17ch; margin: 0 0 var(--space-5); color: var(--graphite); }
+.poe__h em { font-family: var(--f-display); font-style: italic; font-weight: 400; color: #9A4524; letter-spacing: -.02em; }
+.poe__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid rgba(16,19,23,.85); }
+.poe__row { display: grid; grid-template-columns: minmax(180px, 280px) minmax(0, 1fr) auto; gap: var(--space-4); align-items: start; padding: var(--space-4) 0; border-bottom: 1px solid rgba(16,19,23,.18); }
+.poe__fig { display: grid; gap: 6px; }
+.poe__n { font-family: var(--f-body); font-weight: 600; font-size: clamp(44px, 6.4vw, 84px); line-height: .95; letter-spacing: -.045em; font-variant-numeric: tabular-nums; color: var(--graphite); }
+.poe__unit { font-family: var(--f-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #4F5B64; }
+.poe__txt h3 { font-family: var(--f-body); font-weight: 600; font-size: 21px; letter-spacing: -.015em; margin: 4px 0 8px; color: var(--graphite); }
+.poe__txt p { font-size: 15.5px; line-height: 1.6; color: #2B343B; max-width: 62ch; margin: 0; }
+.poe__go { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; color: var(--graphite); text-decoration: none; border-bottom: 1px solid #9A4524; padding: 6px 0; margin-top: 4px; white-space: nowrap; min-height: 32px; display: inline-flex; align-items: center; gap: 6px; }
+.poe__go:hover, .poe__go:focus-visible { color: #9A4524; }
+.poe__go:focus-visible { outline: 2px solid #9A4524; outline-offset: 4px; }
+.poe__os { margin: var(--space-3) 0 0; font-family: var(--f-mono); font-size: 12px; letter-spacing: .04em; color: #4F5B64; }
+.poe-map { padding: var(--space-6) 0 var(--space-5); }
+.poe__map { display: grid; gap: var(--space-3); }
+@media (max-width: 860px) {
+  .poe__row { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+  .poe__go { margin-top: 0; }
+}
+
+/* ── Hero: quiet secondary links and the layer's case-study link ─────────────────────────────── */
+.hero-now__links { display: inline-flex; gap: var(--space-2); margin-left: var(--space-2); padding-left: var(--space-2); border-left: 1px solid var(--border-hover); }
+.hero-now__links a { color: var(--muted-hi); text-decoration: none; border-bottom: 1px solid transparent; padding: 4px 0; min-height: 28px; display: inline-flex; align-items: center; }
+.hero-now__links a:hover, .hero-now__links a:focus-visible { color: var(--cream); border-bottom-color: var(--copper); }
+.pipe__plate { cursor: pointer; }
+.pipe__open { display: flex; flex-wrap: wrap; gap: 6px var(--space-2); align-items: baseline; margin: var(--space-2) 0 0; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .04em; color: var(--muted-hi); }
+.pipe__open a { color: var(--cream); text-decoration: none; border-bottom: 1px solid var(--copper); padding: 4px 0; }
+.pipe__open a:hover, .pipe__open a:focus-visible { color: var(--gold-hi); }
+@media (max-width: 560px) {
+  .hero-now { flex-wrap: wrap; row-gap: 4px; }
+  .hero-now__links { flex-basis: 100%; margin-left: 0; padding-left: 0; border-left: 0; }
+  .hero-now__links a { white-space: nowrap; }
+}

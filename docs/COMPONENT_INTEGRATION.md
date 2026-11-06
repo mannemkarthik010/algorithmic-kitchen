@@ -20,6 +20,7 @@ What was actually installed and used, what was only studied, and what was not do
 | Kokonut UI (MIT, public registry) | AI Agent Lanes (customised) | `/work/preventive-care` | The pipeline as lanes with inputs, outputs and limits per stage | shadcn CLI (`@kokonutui/ai-agent-lanes`) | Verified: lane select shows In / Out / Limit text. Seconds replaced by stages and no streamed output |
 | Kokonut UI | Scroll Index | `/` | Section rail with ticks per heading | shadcn CLI | Rail present with 5 ticks at 1440px; hidden under 1100px |
 | Kokonut UI | Slide Text Button | `/` hero | Primary call to action, wrapped in my own Motion magnet | shadcn CLI | Renders; magnet is mouse-only |
+| (no new library) | Proof of engineering band | `/` | Figures imported from the pinned retail, TaxProof, Preventive and GitHub JSON; project map and stack moved here | none | Values match the data files; 0 unnamed controls; reads at 390, 768, 1440 px |
 
 Also added: `class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css`, Radix primitives, `cmdk`, `vaul`, d3 scale/shape/array, `@number-flow/react` (Bklit tooltips), and `@types/d3-*`. Tailwind v4 utilities are now generated (previously the stylesheet's `@tailwind` lines produced nothing), without Tailwind's preflight, so the handwritten CSS is unchanged.
 

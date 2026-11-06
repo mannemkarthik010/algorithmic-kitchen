@@ -21,8 +21,8 @@ export default function LiveKitchen() {
       {/* ── Live Kitchen §05 ── */}
       <section id="live" className="s-deep" style={{ position: "relative" }}>
         <div className="container" style={{ position: "relative", zIndex: 2 }}>
-          <SectionHeader index="LAB" label="Now cooking"
-            title={<>What&apos;s <span className="t-grad">Cooking</span></>}
+          <SectionHeader index="LAB" label="In progress"
+            title={<>What I&apos;m <span className="t-grad">working on</span></>}
           />
           <KitchenPass />
 

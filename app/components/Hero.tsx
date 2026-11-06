@@ -79,15 +79,17 @@ export default function Hero() {
           </p>
 
           <motion.div className="hero2__cta" {...fade(0.95)}>
-            <MagneticSlideButton href="#projects" text="Explore work" hoverText="See the evidence" />
+            <MagneticSlideButton href="#projects" text="Selected work" hoverText="See the evidence" />
             <Btn href="/Karthik_Mannem_Resume.pdf" variant="secondary" target="_blank" rel="noopener noreferrer">Résumé ↗</Btn>
-            <Btn href={resume.github} variant="secondary" target="_blank" rel="noopener noreferrer">GitHub ↗</Btn>
-            <Btn href={resume.linkedin} variant="secondary" target="_blank" rel="noopener noreferrer">LinkedIn ↗</Btn>
           </motion.div>
 
           <motion.p className="hero-now" {...fade(1.05)}>
             <span className="status-dot status-dot--pulse" style={{ background: STATUS.live.color }} aria-hidden="true" />
             Open to full-time roles
+            <span className="hero-now__links">
+              <a href={resume.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a href={resume.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            </span>
           </motion.p>
         </motion.div>
 

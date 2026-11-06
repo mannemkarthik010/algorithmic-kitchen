@@ -1,13 +1,11 @@
 "use client";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
-import KitchenStats from "./components/KitchenStats";
+import ProofOfEngineering from "./components/ProofOfEngineering";
 import Projects from "./components/Projects";
 import Contributions from "./components/Contributions";
 import Experience from "./components/Experience";
-import ExpertiseLab from "./components/ExpertiseLab";
 import About from "./components/About";
-import LabTeaser from "./components/LabTeaser";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
@@ -21,19 +19,16 @@ export default function Home() {
       <ScrollToTop />
       <Nav />
       <Hero />
-      <KitchenStats />
       <div className="dark">
         <ScrollIndex scroller="window" selector=".section-header h2" className="home-index">
       <Projects />
+      <ProofOfEngineering />
       <SectionDivider />
       <Contributions />
       <SectionDivider />
       <Experience />
       <SectionDivider />
-      <ExpertiseLab />
-      <SectionDivider />
       <About />
-      <LabTeaser />
       <Contact />
         </ScrollIndex>
       </div>

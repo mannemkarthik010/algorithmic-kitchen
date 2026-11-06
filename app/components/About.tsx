@@ -73,7 +73,9 @@ export default function About() {
             {FACTS.map(([k, v]) => (<div key={k}><dt>{k}</dt><dd>{v}</dd></div>))}
           </dl>
 
-          <div className="about-cols">
+          <details className="fw-eval stack-toggle about-more">
+            <summary>Education, certifications and timeline</summary>
+          <div className="about-cols" style={{ padding: "var(--space-3) 16px 0" }}>
             <div>
               <p className="sh-label">Education</p>
               {resume.education.map((e) => (
@@ -92,12 +94,13 @@ export default function About() {
             </div>
           </div>
 
-          <p className="sh-label" style={{ marginTop: "var(--space-4)" }}>Timeline</p>
-          <ol className="about-time">
+          <p className="sh-label" style={{ margin: "var(--space-4) 16px 0" }}>Timeline</p>
+          <ol className="about-time" style={{ padding: "0 16px var(--space-2)" }}>
             {TIMELINE.map(([y, t, d]) => (
               <li key={y}><span className="about-time__y">{y}</span><span className="about-time__t">{t}</span><span className="about-time__d">{d}</span></li>
             ))}
           </ol>
+          </details>
         </motion.div>
       </div>
     </section>

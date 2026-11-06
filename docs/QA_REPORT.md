@@ -86,7 +86,37 @@ Not done: axe or Lighthouse, a real screen-reader pass, full keyboard-only walkt
 Phone selector had been widened to 950 px by a grid track growing to fit its content. Fixed. No element wider than the viewport at 390 px afterwards. Work section on a phone: 1,740 to 2,320 px depending on the project, from about 5,100 px at the start of the redesign.
 
 ### Screenshots
-`docs/screenshots/`: hero at 1440, 768 and 390 px; the TaxProof and Preventive Care case-study tops at 1440 px. Headless captures cannot scroll, so section-level before and after images were not produced. I could not capture a faithful "before" because the old build's entrance animations do not settle in headless mode. Comparisons were made by eye in the browser pane.
+`docs/screenshots/`: hero at 1440, 768 and 390 px; the TaxProof and Preventive Care case-study tops at 1440 px. `--screenshot` in headless Chrome fires before Motion's entrance animations finish, so a first batch showed a blank headline and was discarded. The final images were taken over the DevTools protocol (real-time wait, then `Page.captureScreenshot`), which also allows scrolling to a section. A section-level "before" image still does not exist. I could not capture a faithful "before" because the old build's entrance animations do not settle in headless mode. Comparisons were made by eye in the browser pane.
 
 ### Checks
 Typecheck, lint (vendored shadcn, Bklit and Kokonut sources excluded), production build and résumé sync all pass. There is still no unit or end-to-end test suite.
+
+## Homepage hierarchy and brand round
+
+What changed: the homepage now runs Hero, Selected work, Proof of engineering, Code evolution, Experience, About, Contact. The old expertise grid (six repeated cards with "mastery flame bars") and the Lab teaser were removed from the page; the Lab stays in the nav and footer. The project map and the full tech stack moved into the proof section. About keeps portrait, statement, summary and facts; education, certifications and timeline sit in a collapsible. Hero: two primary actions (Selected work, Résumé) instead of four; the pulse now walks the four layers once and rests; layers can be chosen by click, hover or focus; the chosen layer links to the Retail case study.
+
+Proof of engineering reads every figure from the same pinned JSON the case studies use (7.9% WAPE, 154 of 240, 74.2% of 1,920, 3,012 values, 74 documents, 627 lines, the four published risks, PR states from `contributions-live.json`). Wording was tightened where it could imply more coverage than the explorer has.
+
+Brand findings fixed (these only reach the live site after a deploy):
+- `metadataBase`, `og:url`, author URL and JSON-LD still pointed at `thealgorithmickitchen.vercel.app`.
+- The OpenGraph image was the old kitchen card ("THE ALGORITHMIC KITCHEN", gold, "Cooking intelligent systems"). Replaced with a 1200 by 630 card in the current identity.
+- OpenGraph and Twitter descriptions said "Cooking intelligent systems / AI systems".
+- Lab terminal: `contact chef`, "HEAD CHEF", a pointer to a non-existent "§ 07 to reserve a table", and an `ls` listing sections that do not exist. Lab section "What's Cooking" renamed.
+Served HTML of `/` now contains no "kitchen".
+
+Left as is, deliberately: the Lab games ("Cook an AI Model", Real or Fake, the dunk game) and `cookingProcess`/`dishName`-style field names in `resume.ts` data. They are not shown as brand copy on the main page.
+
+### Measurements (production build, localhost, unthrottled, this round)
+| Metric | 1440px | 390px |
+|---|---|---|
+| LCP | 160 ms | 92 ms |
+| CLS | 0.019 | 0 |
+| JavaScript transferred | about 615 KB | same |
+| Horizontal overflow | none | none |
+| Controls without accessible name / tap targets under 24 px | 0 / n/a | 0 / 0 |
+
+Phone section heights (px): Work 1,941 · Proof 1,637 · Open source 1,412 · Experience 2,101 · About 1,361 (was 2,474) · Contact 1,195. Whole page 13,318 (was 14,427).
+
+Interaction checks run in the page: the pulse stops on layer 4 and stays there after five more seconds; clicking a step selects it (`aria-pressed`) and the link text follows; clicking a plate selects it; Cmd/Ctrl+K opens the palette and lists "Proof of engineering".
+
+Reduced motion: with the browser's reduced-motion flag, every hero element ends in its final state (`opacity: 1`, `transform: none`, all headline words visible), read from the rendered DOM. Not tested: Safari, a screen reader, full keyboard-only pass, INP.

@@ -8,7 +8,7 @@ export default function Experience() {
     <section id="experience" className="s-deep" style={{ position: "relative" }}>
 
       <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <SectionHeader index="03" label="Experience" align="split"
+        <SectionHeader index="04" label="Experience" align="split"
           title={<>Work <span className="t-grad">Experience</span></>}
           subtitle="Where I have worked, newest first."
         />

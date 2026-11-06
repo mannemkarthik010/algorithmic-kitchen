@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from "motion/react";
-import { scrollToId } from "../lib/events";
+import Link from "next/link";
 
 /** The pipeline behind the Retail Demand Intelligence Platform, drawn as four layers in depth.
  *  Every figure comes from that project's own results. */
@@ -57,11 +57,11 @@ function PlateArt({ i }: { i: number }) {
 }
 
 /** One layer. As the hero scrolls away the layers move apart in depth, from the whole system toward its parts. */
-function Plate({ i, on, progress, rm }: { i: number; on: boolean; progress?: MotionValue<number>; rm: boolean | null }) {
+function Plate({ i, on, progress, rm, onPick }: { i: number; on: boolean; progress?: MotionValue<number>; rm: boolean | null; onPick: () => void }) {
   const fallback = useMotionValue(0);
   const z = useTransform(progress ?? fallback, [0, 1], [i * GAP, i * GAP * 1.9]);
   return (
-    <motion.div className={`pipe__plate${on ? " is-on" : ""}`} style={rm || !progress ? { transform: `translateZ(${i * GAP}px)` } : { z }} aria-hidden="true">
+    <motion.div className={`pipe__plate${on ? " is-on" : ""}`} style={rm || !progress ? { transform: `translateZ(${i * GAP}px)` } : { z }} aria-hidden="true" onClick={onPick}>
       <span className="pipe__no">0{i + 1}</span>
       <PlateArt i={i} />
     </motion.div>
@@ -71,14 +71,21 @@ function Plate({ i, on, progress, rm }: { i: number; on: boolean; progress?: Mot
 export default function HeroPipeline({ progress }: { progress?: MotionValue<number> }) {
   const rm = useReducedMotion();
   const [active, setActive] = useState(0);
-  const [held, setHeld] = useState(false);
+  const [touched, setTouched] = useState(false);
 
-  // a pulse walks up through the layers; hovering or focusing a step holds it there
+  // One pass of the pulse through the four layers on load, then it rests. It is an introduction, not a loop,
+  // and the first hover, focus or click hands control to the visitor for good.
   useEffect(() => {
-    if (rm || held) return;
-    const t = setInterval(() => setActive((a) => (a + 1) % STEPS.length), 2200);
+    if (rm || touched) return;
+    let n = 0;
+    const t = setInterval(() => {
+      n += 1;
+      setActive(n);
+      if (n >= STEPS.length - 1) clearInterval(t);
+    }, 2200);
     return () => clearInterval(t);
-  }, [rm, held]);
+  }, [rm, touched]);
+  const pick = (i: number) => { setActive(i); setTouched(true); };
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -98,16 +105,13 @@ export default function HeroPipeline({ progress }: { progress?: MotionValue<numb
   };
   const onLeave = () => { mx.set(0); my.set(0); scene.current?.style.removeProperty("--lx"); scene.current?.style.removeProperty("--ly"); };
 
-  // The four layers belong to the Retail project, so a click goes to its showcase on the page.
-  const openCase = () => scrollToId("work-retail");
-
   return (
     <div className="pipe">
       <p className="pipe__eyebrow">One system, four layers · from the Retail Demand Intelligence Platform</p>
 
       <div className="pipe__scene" ref={scene} onPointerMove={onMove} onPointerLeave={onLeave}>
         <motion.div className="pipe__stack" style={rm ? { rotateX: 52, rotateZ: -30 } : { rotateX: rotX, rotateZ: rotZ }}>
-          {STEPS.map((s, i) => (<Plate key={s.key} i={i} on={active === i} progress={progress} rm={rm} />))}
+          {STEPS.map((s, i) => (<Plate key={s.key} i={i} on={active === i} progress={progress} rm={rm} onPick={() => pick(i)} />))}
           {!rm && (
             <motion.span
               className="pipe__pulse"
@@ -125,11 +129,10 @@ export default function HeroPipeline({ progress }: { progress?: MotionValue<numb
             <button
               type="button"
               className={`pipe__step${active === i ? " is-on" : ""}`}
-              onMouseEnter={() => { setActive(i); setHeld(true); }}
-              onMouseLeave={() => setHeld(false)}
-              onFocus={() => { setActive(i); setHeld(true); }}
-              onBlur={() => setHeld(false)}
-              onClick={openCase}
+              aria-pressed={active === i}
+              onMouseEnter={() => pick(i)}
+              onFocus={() => pick(i)}
+              onClick={() => pick(i)}
             >
               <span className="pipe__k">0{i + 1} / {s.key}</span>
               <span className="pipe__h">{s.head}</span>
@@ -138,6 +141,11 @@ export default function HeroPipeline({ progress }: { progress?: MotionValue<numb
           </li>
         ))}
       </ol>
+
+      <p className="pipe__open">
+        <span>Layer 0{active + 1} is read from a real project.</span>
+        <Link href="/work/retail-demand-intelligence">Open the Retail case study <span aria-hidden="true">→</span></Link>
+      </p>
     </div>
   );
 }

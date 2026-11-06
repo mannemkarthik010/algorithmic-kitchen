@@ -11,7 +11,7 @@ const SECTIONS: [string, string, string][] = [
   ["projects", "Selected work", "work portfolio featured projects"],
   ["contributions", "Open-source contributions", "pytorch pandera pr code evolution"],
   ["experience", "Experience", "jobs handshake sln"],
-  ["expertise", "What I build, and the full stack", "skills stack expertise tools"],
+  ["proof", "Proof of engineering, the project map and the full stack", "metrics evidence results atlas skills stack expertise tools"],
   ["about", "About me", "bio story education timeline"],
   ["contact", "Contact", "email hire message"],
   ["lab", "The Lab", "games experiments extras"],

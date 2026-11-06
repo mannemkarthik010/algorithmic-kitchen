@@ -7,7 +7,7 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "sw
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", display: "swap" });
 
-const SITE_URL = "https://thealgorithmickitchen.vercel.app";
+const SITE_URL = "https://karthikmannem.com";
 
 export const metadata: Metadata = {
   icons: {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     title: "Karthik Mannem — Machine Learning & AI Engineer",
     description:
-      "Cooking intelligent systems from raw data, creativity, and machine learning. ML Engineer portfolio by Karthik Mannem.",
+      "AI systems you can inspect, test, and trust. Case studies with the evidence behind them: a tax workpaper where every number carries its proof, honest demand forecasts, and a grounded RAG agent.",
     siteName: "Karthik Mannem",
     images: [
       {
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Karthik Mannem — Machine Learning & AI Engineer",
-    description: "ML Engineer portfolio. Cooking AI systems with LangChain, RAG, and PyTorch.",
+    description: "AI systems you can inspect, test, and trust. Case studies with the evidence behind them.",
     images: ["/og-image.png"],
   },
   robots: {

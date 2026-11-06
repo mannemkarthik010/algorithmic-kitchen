@@ -11,12 +11,13 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "./ui/sheet";
 
 const LINKS = [
+  { label: "Proof", href: "/#proof", id: "proof" },
   { label: "Open source", href: "/#contributions", id: "contributions" },
   { label: "About", href: "/#about", id: "about" },
   { label: "Lab", href: "/lab", id: "lab" },
   { label: "Contact", href: "/#contact", id: "contact" },
 ];
-const SECTIONS = ["projects", "contributions", "about", "contact"];
+const SECTIONS = ["projects", "proof", "contributions", "about", "contact"];
 
 const flagship = featuredWork.map((f) => {
   const p = resume.projects.find((x) => x.slug === f.slug)!;
