@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "./ui/command";
 import { DialogDescription, DialogTitle } from "./ui/dialog";
 import { resume, featuredWork } from "../data/resume";
-import { STATUS } from "../lib/status";
-import { OPEN_PALETTE, openProject, scrollToId } from "../lib/events";
+import { OPEN_PALETTE, scrollToId } from "../lib/events";
 
 const SECTIONS: [string, string, string][] = [
   ["work", "The three live exhibits", "work portfolio featured projects taxproof retail preventive"],
@@ -67,16 +66,6 @@ export default function CommandPalette() {
           <CommandItem value="lab library bookshelf reading experiments" onSelect={run(() => router.push("/lab"))}><span>The Lab</span><CommandShortcut>/lab</CommandShortcut></CommandItem>
           <CommandItem value="play game echo shift puzzle time loop" onSelect={run(() => router.push("/play"))}><span>Play ECHO//SHIFT</span><CommandShortcut>/play</CommandShortcut></CommandItem>
         </CommandGroup>
-
-        <CommandGroup heading="All projects">
-          {resume.projects.map((p) => (
-            <CommandItem key={p.slug} value={`project ${p.title} ${p.category} ${p.slug}`} onSelect={run(() => { scrollToId("projects"); setTimeout(() => openProject(p.slug), 350); })}>
-              <span>{p.title.split(" — ")[0]}</span>
-              <CommandShortcut>{STATUS[p.status].label}</CommandShortcut>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-
         <CommandGroup heading="Links">
           <CommandItem value="resume pdf cv download" onSelect={run(() => window.open("/Karthik_Mannem_Resume.pdf", "_blank", "noopener"))}><span>Résumé (PDF)</span><CommandShortcut>↓</CommandShortcut></CommandItem>
           <CommandItem value="github code repos" onSelect={run(() => window.open(resume.github, "_blank", "noopener"))}><span>GitHub</span><CommandShortcut>↗</CommandShortcut></CommandItem>
