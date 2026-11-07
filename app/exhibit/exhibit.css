@@ -612,7 +612,6 @@
 .cs .cs-links a { display: inline-flex; align-items: center; min-height: 36px; }
 .cs .cs-check { min-height: 32px; } .cs .cs-check input { width: 20px; height: 20px; }
 .cs summary { display: flex; align-items: center; min-height: 36px; cursor: pointer; }
-.lib-tab { height: 32px; min-width: 44px; }
 .cs-seg button, .cs-chip { min-height: 32px; }
 
 /* ── narrow TaxProof chain: rows size to their content so the stamp never lands on the next label ── */
@@ -626,7 +625,6 @@
   .gx-over__bar { padding-top: max(10px, env(safe-area-inset-top)); }
   .gx-over__close, .gx-over__case { font-size: 10.5px; letter-spacing: .05em; gap: 6px; }
 }
-.lib-credit { display: inline-flex; align-items: center; min-height: 32px; }
 .cs .cs-check input { width: 24px; height: 24px; }
 .cs .cs-src a, .cs-small a { display: inline-block; padding: 4px 0; }
 .cs button { min-height: 28px; }
@@ -662,3 +660,96 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
 .exnav__skip { position: absolute; left: 14px; top: 8px; z-index: 5; transform: translateY(-300%); background: var(--paper); color: var(--ink); padding: 12px 18px; font: 700 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; text-decoration: none; pointer-events: auto; }
 .exnav__skip:focus { transform: none; outline: 3px solid var(--orange); outline-offset: 2px; }
 #main-content:focus { outline: none; }
+
+/* ═══ The Reading Room (/lab) ═══════════════════════════════════════════════════════════════════
+   A clean paper scene with ink type. The dimensional books are the exhibit; the only orange is the section number, the reading-now
+   dot and the one action. The overlay reuses the exhibit overlay classes (.gx-over*), so it opens, closes and returns focus the same way. */
+.lib { --H: min(40svh, 30vw); --gut: clamp(14px, 2.4vw, 34px); position: relative; background: var(--paper); color: var(--ink); padding: clamp(80px, 9vw, 130px) 0 clamp(36px, 4vw, 60px); overflow: hidden; user-select: none; -webkit-user-select: none; outline: none; }
+.lib:focus-visible { outline: 2px solid var(--orange-ink); outline-offset: -6px; }
+.lib-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.lib-head { padding: 0 var(--gut); margin-bottom: clamp(20px, 3vw, 40px); }
+.lib-head__row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.lib-head .ex-mono { margin: 0; color: rgba(18,18,18,.65); }
+.lib-head__n span { color: var(--orange-ink); }
+.lib-head__h { font: 800 clamp(1.8rem, 4.4vw, 3.8rem)/.98 var(--f-body); letter-spacing: -.05em; margin: 0; max-width: 18ch; color: var(--ink); }
+.lib-head__h { text-wrap: balance; }
+.lib-head__h em { color: var(--orange-ink); white-space: nowrap; }
+
+.lib-tabs { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 var(--gut); }
+.lib-tab { min-height: 44px; padding: 0 16px; border: 1px solid var(--ink); border-radius: 999px; background: transparent; color: var(--ink); font: 500 11px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: background .2s, color .2s; }
+.lib-tab:hover { background: rgba(18,18,18,.08); }
+.lib-tab.is-on { background: var(--ink); color: var(--paper); }
+
+.lib-shelf { position: relative; height: calc(var(--H) + 120px); perspective: 2200px; perspective-origin: 50% 50%; touch-action: pan-y; }
+.lib-stage { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+.lib-tape { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; visibility: hidden; cursor: pointer; }
+.lib-face { position: absolute; top: calc(var(--H) / -2); height: var(--H); backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 2px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(18,18,18,.16); }
+.lib-face svg { display: block; width: 100%; height: 100%; }
+.lib-face::after { content: ""; position: absolute; inset: 0; background: var(--ink); pointer-events: none; }
+.lib-sp { width: var(--ws); left: calc(var(--ws) / -2); transform: translateZ(calc(var(--d) / 2)); }
+.lib-sp::after { opacity: var(--ssh, 0); }
+.lib-cv { width: var(--d); left: calc(var(--d) / -2); transform: rotateY(90deg) translateZ(calc(var(--ws) / 2)); box-shadow: inset 0 0 0 1px rgba(18,18,18,.16), 0 22px 36px -28px rgba(18,18,18,.5); }
+.lib-cv::after { opacity: var(--csh, .5); }
+.lib-cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
+
+/* the selected book: status and author, title, note, then one action row */
+.lib-cap { width: min(100%, 820px); margin: clamp(4px, 1.5vw, 18px) auto 0; padding: 0 var(--gut); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; box-sizing: border-box; }
+.lib-meta { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 18px; }
+.lib-mask { position: relative; overflow: hidden; max-width: 100%; }
+.lib-cap-status { display: flex; align-items: center; gap: 8px; color: var(--ink); }
+.lib-cap-status::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--ink); }
+.lib-cap-status[data-reading="1"]::before { background: var(--orange); border-color: var(--orange); }
+.lib-cap-sub { color: rgba(18,18,18,.7); }
+.lib-cap-title { width: 100%; font: 800 clamp(2rem, 4.4vw, 3.6rem)/1 var(--f-body); letter-spacing: -.05em; padding-bottom: .06em; }
+.lib-cap-note { width: 100%; max-width: 44ch; font-family: var(--f-display); font-size: clamp(1.15rem, 1.7vw, 1.4rem); line-height: 1.4; color: rgba(18,18,18,.82); min-height: calc(1.4em * 3); }
+.lib-span { display: block; }
+.lib-span.is-abs { position: absolute; left: 0; top: 0; width: 100%; }
+.lib-ctl { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 10px; }
+.lib-arrow { flex: none; width: 52px; height: 52px; padding: 0; border: 1px solid var(--ink); border-radius: 50%; background: transparent; color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s; }
+.lib-arrow:hover { background: var(--ink); color: var(--paper); }
+.lib .ex-cta--orange:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.lib-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; margin: clamp(32px, 5vw, 72px) var(--gut) 0; padding-top: 18px; border-top: 1px solid rgba(18,18,18,.25); }
+.lib-foot__hint { color: rgba(18,18,18,.65); }
+.lib-credit { display: inline-flex; align-items: center; min-height: 36px; color: var(--ink); text-decoration: none; border-bottom: 1px solid currentColor; }
+.lib-credit:hover { color: var(--orange-ink); }
+
+/* the reading-note overlay (portalled to <body>, so it carries its own type and focus ring) */
+.gx-over--lib { --gut: clamp(14px, 2.4vw, 34px); top: 0; left: 0; width: 100vw; height: 100dvh; z-index: 320; visibility: hidden; font-family: var(--f-body); -webkit-font-smoothing: antialiased; }
+.gx-over--lib a:focus-visible, .gx-over--lib button:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+.lib-over__n { color: var(--muted-hi); }
+.lib-over__body { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 80px); align-items: center; max-width: 1300px; margin: 0 auto; padding: clamp(24px, 4vw, 56px) var(--gut) 80px; min-height: calc(100dvh - 72px); box-sizing: border-box; }
+.lib-over__poster { justify-self: center; height: min(72dvh, 660px); aspect-ratio: 612 / 900; max-width: 100%; box-shadow: 0 30px 60px -40px rgba(0,0,0,.8); }
+.lib-over__poster svg { display: block; width: 100%; height: 100%; }
+.lib-over__text { display: flex; flex-direction: column; gap: 18px; max-width: 560px; }
+.lib-over__text > * { margin: 0; }
+.lib-over__eyebrow { color: var(--orange); }
+.lib-over__title { font: 800 clamp(2.2rem, 5vw, 4.6rem)/.96 var(--f-body); letter-spacing: -.05em; }
+.lib-over__title.is-long { font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1; }
+.lib-over__status { display: flex; align-items: center; gap: 8px; color: var(--muted-hi); }
+.lib-over__status::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--muted-hi); }
+.lib-over__status[data-reading="1"]::before { background: var(--orange); border-color: var(--orange); }
+.lib-over__lesson { font-family: var(--f-display); font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.4; max-width: 38ch; }
+.lib-over__story { font-family: var(--f-display); font-style: italic; font-size: clamp(1.05rem, 1.5vw, 1.25rem); line-height: 1.5; color: var(--muted-hi); max-width: 46ch; }
+.lib-over__ideas { color: var(--muted-hi); line-height: 1.6; text-transform: none; letter-spacing: .06em; }
+.lib-over__ideas span { display: block; color: var(--paper); text-transform: uppercase; letter-spacing: .14em; margin-bottom: 4px; }
+
+@media (max-width: 767px) {
+  .lib { --H: min(54vw, 34svh); padding-top: 72px; }
+  .lib-head__h { font-size: 2rem; }
+  .lib-tabs { gap: 6px; } .lib-tab { padding: 0 11px; font-size: 10.5px; letter-spacing: .07em; }
+  .lib-shelf { height: calc(var(--H) + 80px); }
+  .lib-cap { gap: 12px; }
+  /* on a phone the action row sits straight under the books, ahead of the text, so it never moves whatever the note's length */
+  .lib-ctl { order: -1; margin: 4px 0 6px; }
+  .lib-cap-title { font-size: 2rem; }
+  .lib-cap-note { font-size: 1.12rem; min-height: 0; }
+  .lib-ctl { gap: 10px; } .lib-arrow { width: 48px; height: 48px; } .lib .lib-open { padding: 0 18px; height: 48px; }
+  .lib-foot__hint { display: none; }
+  .lib-over__body { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 20px 20px 64px; min-height: 0; }
+  .lib-over__poster { height: min(46dvh, 420px); }
+  .lib-over__text { max-width: none; }
+  .lib-over__title { font-size: 2.4rem; } .lib-over__title.is-long { font-size: 1.9rem; }
+}
+@media (prefers-reduced-motion: reduce) { .lib-tab, .lib-arrow { transition: none; } }

@@ -1,4 +1,4 @@
-// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y> [base]
+// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y|reading-room> [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 const [mode, base = "http://localhost:3300"] = process.argv.slice(2);
@@ -343,5 +343,177 @@ if (mode === "case-a11y") {
   await check("Retail pipeline stages (unchanged)", ".cs-pipe .cs-node", () => s.ev(`document.querySelector('.cs-pipe__detail').innerText`));
   rec("no console errors on the Retail case study during keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
   s.done();
+}
+if (mode === "reading-room") {
+  // The Reading Room on /lab, in headless Chrome: desktop with a real keyboard and mouse, a phone with real touch, and reduced motion.
+  const keyEv = (s) => async (k, mod = 0) => {
+    const d = { Tab: [9, "Tab", ""], " ": [32, "Space", " "], Enter: [13, "Enter", "\r"], Escape: [27, "Escape", ""], ArrowRight: [39, "ArrowRight", ""], ArrowLeft: [37, "ArrowLeft", ""] }[k];
+    await s.send("Input.dispatchKeyEvent", { type: d[2] ? "keyDown" : "rawKeyDown", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod, ...(d[2] ? { text: d[2] } : {}) });
+    await sleep(25); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod }); await sleep(900);
+  };
+  const click = (s) => async (x, y) => { await s.send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y }); await s.send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 }); await sleep(40); await s.send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 }); await sleep(900); };
+  const tap = (s) => async (x, y) => { await s.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] }); await sleep(60); await s.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] }); await sleep(900); };
+  const centre = (s, sel) => s.ev(`(()=>{const r=document.querySelector(${JSON.stringify(sel)}).getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2,w:r.width,h:r.height}})()`);
+  const readCap = (s) => s.ev(`(()=>{const t=(q)=>(document.querySelector(q)?.innerText||'').trim(); return {title:t('.lib-cap-title'), sub:t('.lib-cap-sub'), status:t('.lib-cap-status'), note:t('.lib-cap-note'), sr:t('.lib-sr'), leaving:document.querySelectorAll('.lib-cap .is-abs').length}})()`);
+  const over = (s) => s.ev(`(()=>{const d=document.querySelector('.lib-over'); const r=d.getBoundingClientRect(); const cs=getComputedStyle(d); return {vis:cs.visibility, w:Math.round(r.width), h:Math.round(r.height), top:Math.round(r.top), label:d.getAttribute('aria-label'), modal:d.getAttribute('aria-modal'), role:d.getAttribute('role'), hidden:d.getAttribute('aria-hidden'), overflow:document.documentElement.style.overflow, lesson:(d.querySelector('.lib-over__lesson')?.innerText||'').trim(), eyebrow:(d.querySelector('.lib-over__eyebrow')?.innerText||'').trim(), status:(d.querySelector('.lib-over__status')?.innerText||'').trim(), title:(d.querySelector('.lib-over__title')?.innerText||'').trim(), poster:!!d.querySelector('.lib-over__poster svg'), textLeft:Math.round(d.querySelector('.lib-over__text').getBoundingClientRect().left)}})()`);
+  const active = (s) => s.ev(`(()=>{const a=document.activeElement; return {cls:String(a.className||a.tagName), label:(a.getAttribute('aria-label')||a.innerText||'').trim().slice(0,30), inOver:!!a.closest('.lib-over'), inLib:!!a.closest('#library')}})()`);
+  const toLib = async (s, path = "/lab") => { await s.go(path, 6500); await s.ev(`document.getElementById('library').scrollIntoView()`); await sleep(2200); };
+
+  // ── desktop ──
+  let s = await session();
+  await toLib(s);
+  const k = keyEv(s), mouse = click(s);
+  const gone = await s.ev(`['.lib-cursor','.lib-play','.lib-grain','.lib-logo','.lib-bar','.lib-ind'].filter((q)=>document.querySelector(q)).concat(getComputedStyle(document.querySelector('#library')).cursor==='none'?['cursor:none']:[])`);
+  rec("1440px: the custom cursor, play ring, grain, separate logo, top bar and shelf indicator are gone", gone.length === 0, gone.join(", "));
+  const look = await s.ev(`(()=>{const q=(x)=>document.querySelector(x); const cs=(x)=>getComputedStyle(q(x)); return {bg:cs('#library').backgroundColor, h2:q('.lib-head h2')?.innerText, label:q('.lib-head__n')?.innerText, open:[...document.querySelectorAll('button')].filter(b=>/open reading note/i.test(b.innerText)).length, title:parseFloat(cs('.lib-cap-title').fontSize), note:parseFloat(cs('.lib-cap-note').fontSize), status:parseFloat(cs('.lib-cap-status').fontSize), titleW:cs('.lib-cap-title').fontWeight, noteFont:cs('.lib-cap-note').fontFamily}})()`);
+  rec("1440px: paper scene, exhibition numbered label, display heading, and exactly one 'Open reading note' action", look.bg === "rgb(237, 235, 228)" && /^\(01\)/.test(look.label ?? "") && /Books that shaped the way I build\./.test(look.h2 ?? "") && look.open === 1, `bg ${look.bg}; label "${look.label}"; h2 "${look.h2}"; actions ${look.open}`);
+  const cap0 = await readCap(s);
+  rec("1440px: the selected book shows reading status, author, title and note in a descending hierarchy", !!cap0.title && !!cap0.sub && !!cap0.status && cap0.note.length > 40 && look.title >= 2 * look.note && look.note > look.status && String(look.titleW) === "800" && /Instrument/i.test(look.noteFont), `title ${look.title}px/${look.titleW}, note ${look.note}px, status ${look.status}px; "${cap0.title}" · ${cap0.sub} · ${cap0.status}`);
+
+  // keyboard browsing: the section takes focus (programmatic setup), then real arrow keys step through all 14 books and wrap
+  await s.ev(`document.getElementById('library').focus()`);
+  const titles = [cap0.title];
+  for (let i = 0; i < 14; i++) { await k("ArrowRight"); titles.push((await readCap(s)).title); }
+  rec("1440px keyboard: ArrowRight steps through 14 distinct books and wraps to the first", new Set(titles.slice(0, 14)).size === 14 && titles[14] === titles[0], titles.slice(0, 4).join(" | ") + " …");
+  await k("ArrowLeft"); const back = (await readCap(s)).title;
+  rec("1440px keyboard: ArrowLeft steps back", back === titles[13], `"${back}" (wanted "${titles[13]}")`);
+  const live = await readCap(s);
+  rec("1440px keyboard: the screen-reader line follows the selection (title, author, status)", /\bby\b/.test(live.sr) && /(Reading now|Read)\.$/.test(live.sr), live.sr);
+
+  // every book: the caption never moves the controls, and no line overflows
+  const ys = [], overflow = [];
+  for (let i = 0; i < 14; i++) {
+    await k("ArrowRight");
+    const m = await s.ev(`(()=>{const r=document.getElementById('library').getBoundingClientRect(); const o=document.querySelector('.lib-open').getBoundingClientRect(); const bad=[...document.querySelectorAll('.lib-cap-title,.lib-cap-note,.lib-cap-sub')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.className); return {y:Math.round(o.top-r.top), bad}})()`);
+    ys.push(m.y); overflow.push(...m.bad);
+  }
+  rec("1440px: across all 14 books the 'Open reading note' row never moves and no caption line overflows", Math.max(...ys) - Math.min(...ys) <= 1 && overflow.length === 0, `row offset ${Math.min(...ys)}..${Math.max(...ys)}px; overflow ${overflow.join(",") || "none"}`);
+
+  // tab order: the four shelves, previous, open, next, the credit link
+  await s.ev(`document.activeElement.blur(); const b=document.getElementById('library'); b.focus()`);
+  const order = [];
+  for (let i = 0; i < 8; i++) { await k("Tab"); order.push((await active(s)).label); }
+  rec("1440px keyboard: Tab reaches All, Engineering, Thinking, Philosophy, Previous book, Open reading note, Next book, then the credit link, in that order",
+    JSON.stringify(order.map((x) => x.toLowerCase())) === JSON.stringify(["all", "engineering", "thinking", "philosophy", "previous book", "open reading note", "next book", "covers via open library"]), order.join(" > "));
+  const before = (await readCap(s)).title;
+  await s.ev(`[...document.querySelectorAll('.lib-tab')].find(b=>/engineering/i.test(b.innerText)).focus()`);
+  await k("Enter"); await sleep(1200);
+  const eng = await s.ev(`document.querySelectorAll('.lib-tab[aria-pressed="true"]').length===1 && /engineering/i.test(document.querySelector('.lib-tab[aria-pressed="true"]').innerText)`);
+  rec("1440px keyboard: Enter on a shelf tab moves the shelf and the tab reports pressed", eng && (await readCap(s)).title !== before, `title now "${(await readCap(s)).title}"`);
+
+  // the other browsing interactions, with real mouse input: drag the shelf, scroll it sideways with the wheel, click a neighbouring spine
+  await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(900);
+  const shelfC = await centre(s, ".lib-shelf");
+  const srTitle = async () => ((await readCap(s)).sr.split(" by ")[0] || "").trim();
+  let t0b = await srTitle();
+  await s.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 1100, y: shelfC.y });
+  await s.send("Input.dispatchMouseEvent", { type: "mousePressed", x: 1100, y: shelfC.y, button: "left", buttons: 1, clickCount: 1 });
+  for (let i = 1; i <= 12; i++) { await s.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 1100 - i * 30, y: shelfC.y, buttons: 1 }); await sleep(30); }
+  await s.send("Input.dispatchMouseEvent", { type: "mouseReleased", x: 740, y: shelfC.y, button: "left", buttons: 0, clickCount: 1 }); await sleep(1500);
+  let t1b = await srTitle();
+  rec("1440px mouse: dragging the shelf sideways changes the book, without opening the overlay", t1b !== t0b && (await over(s)).vis === "hidden", `"${t0b}" to "${t1b}"`);
+  await s.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: shelfC.x, y: shelfC.y, deltaX: 260, deltaY: 0 }); await sleep(1800);
+  let t2b = await srTitle();
+  rec("1440px mouse: a sideways wheel gesture over the shelf changes the book", t2b !== t1b, `"${t1b}" to "${t2b}"`);
+  const y0w = await s.ev(`scrollY`);
+  await s.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: shelfC.x, y: shelfC.y, deltaX: 0, deltaY: 240 }); await sleep(1200);
+  const y1w = await s.ev(`scrollY`);
+  rec("1440px mouse: a plain vertical wheel over the shelf scrolls the page and leaves the book alone", y1w > y0w + 100 && (await srTitle()) === t2b, `scrollY ${y0w} to ${y1w}; still "${await srTitle()}"`);
+  await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(700);
+  const spine = await s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-sp').getBoundingClientRect(); const cx=r.x+r.width/2; if(r.width<20||cx<innerWidth/2+260||cx>innerWidth-40) continue; const d=cx-innerWidth/2; if(!best||d<best.d) best={d,x:cx,y:r.y+r.height/2,name:t.getAttribute('aria-label').split(' by ')[0]}; } return best})()`);
+  await mouse(spine.x, spine.y); await sleep(1500);
+  rec("1440px mouse: clicking a neighbouring spine brings that book forward (and does not open the overlay)", (await srTitle()) === spine.name && (await over(s)).vis === "hidden", `clicked "${spine.name}"; selected "${await srTitle()}"`);
+  await s.ev(`document.activeElement.blur(); document.getElementById('library').focus()`);
+  await k("Enter"); await sleep(900);
+  const enterOpened = (await over(s)).vis === "visible";
+  await k("Escape"); await sleep(900);
+  const enterClosed = (await over(s)).vis === "hidden", focusId = await s.ev(`document.activeElement.id`);
+  rec("1440px keyboard: Enter on the focused Reading Room opens the overlay, and Escape closes it and returns focus to the section", enterOpened && enterClosed && focusId === "library", `opened ${enterOpened}; closed ${enterClosed}; focus on #${focusId}`);
+
+  // overlay from the action, by keyboard: opens, takes focus, traps it, Escape closes and focus returns to the action
+  await s.ev(`document.querySelector('.lib-open').focus()`);
+  const sr = (await readCap(s)).sr, capNote = (await readCap(s)).note;
+  await k("Enter"); await sleep(900);
+  let o = await over(s), a = await active(s);
+  rec("1440px overlay: Enter on 'Open reading note' opens a full-screen modal dialog named for the book, and the page behind is locked",
+    o.vis === "visible" && o.w === 1440 && o.h === 900 && o.top === 0 && o.role === "dialog" && o.modal === "true" && o.hidden === "false" && o.overflow === "hidden" && sr.startsWith(o.label), `${o.w}x${o.h}; label "${o.label}"; scroll lock "${o.overflow}"`);
+  rec("1440px overlay: focus moves to the close button", a.inOver && /gx-over__close/.test(a.cls), a.cls);
+  rec("1440px overlay: it shows the same note as the caption, plus author, status, title and the cover", o.lesson === capNote && o.status.length > 0 && o.eyebrow.length > 0 && o.title === o.label && o.poster, `note match ${o.lesson === capNote}; "${o.eyebrow}" / "${o.status}"`);
+  let stayed = true; for (let i = 0; i < 3; i++) { await k("Tab"); stayed = stayed && (await active(s)).inOver; } await k("Tab", 8); stayed = stayed && (await active(s)).inOver;
+  rec("1440px overlay: Tab and Shift+Tab never leave the dialog", stayed);
+  await k("Escape"); await sleep(900);
+  o = await over(s); a = await active(s);
+  rec("1440px overlay: Escape closes it, unlocks the page, and returns focus to 'Open reading note'", o.vis === "hidden" && o.overflow === "" && /lib-open/.test(a.cls), `visibility ${o.vis}; scroll lock "${o.overflow}"; focus ${a.label}`);
+
+  // overlay from the cover, by mouse: click the front cover, close with the close button
+  const cover = await s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-cv').getBoundingClientRect(); const cx=r.x+r.width/2; const d=Math.abs(cx-innerWidth/2); if(!best||d<best.d) best={d,x:cx,y:r.y+r.height/2}; } return best})()`);
+  await mouse(cover.x, cover.y); await sleep(900);
+  o = await over(s);
+  rec("1440px overlay: clicking the front cover opens it too", o.vis === "visible" && o.w === 1440, `visibility ${o.vis}`);
+  const cl = await centre(s, ".gx-over__close"); await mouse(cl.x, cl.y); await sleep(900);
+  o = await over(s); a = await active(s);
+  rec("1440px overlay: the close button closes it and focus returns inside the Reading Room", o.vis === "hidden" && a.inLib, `visibility ${o.vis}; focus ${a.cls.slice(0, 30)}`);
+  rec("1440px: no console errors", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+  s.done();
+
+  // ── reduced motion ──
+  s = await session({ reduced: true });
+  await toLib(s);
+  const kr = keyEv(s);
+  await s.ev(`document.getElementById('library').focus()`);
+  const t0 = (await readCap(s)).title;
+  await kr("ArrowRight");
+  const c1 = await readCap(s);
+  rec("reduced motion: the shelf and the caption change at once, with no sliding lines left behind", c1.title !== t0 && c1.leaving === 0, `"${t0}" to "${c1.title}"; leaving lines ${c1.leaving}`);
+  await s.ev(`document.querySelector('.lib-open').focus()`);
+  await s.send("Input.dispatchKeyEvent", { type: "keyDown", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13, text: "\r" }); await sleep(25); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Enter", code: "Enter", windowsVirtualKeyCode: 13 }); await sleep(250);
+  o = await over(s);
+  rec("reduced motion: the overlay is open and full screen within 250 ms", o.vis === "visible" && o.w === 1440 && o.h === 900, `${o.w}x${o.h} ${o.vis}`);
+  await s.send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 }); await sleep(25); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 }); await sleep(250);
+  o = await over(s); a = await active(s);
+  rec("reduced motion: Escape closes it within 250 ms and focus returns to the action", o.vis === "hidden" && /lib-open/.test(a.cls), `visibility ${o.vis}; focus ${a.label}`);
+  s.done();
+
+  // ── phone ──
+  for (const [w, h] of [[390, 844], [768, 1024]]) {
+    s = await session({ w, h, mobile: true, touch: true });
+    await toLib(s);
+    const tp = tap(s);
+    const L = `${w}px`;
+    const lay = await s.ev(`(()=>{const q=(x)=>[...document.querySelectorAll(x)]; const vis=(e)=>{const r=e.getBoundingClientRect(); return r.left>=0&&r.right<=innerWidth+0.5&&r.width>0}; return {over:document.documentElement.scrollWidth-innerWidth, tabs:q('.lib-tab').map(e=>({ok:vis(e),h:Math.round(e.getBoundingClientRect().height)})), ctl:q('.lib-ctl button').map(e=>({n:e.getAttribute('aria-label')||e.innerText,ok:vis(e),h:Math.round(e.getBoundingClientRect().height),w:Math.round(e.getBoundingClientRect().width)}))}})()`);
+    rec(`${L}: no sideways overflow; the four shelves, Previous, Open reading note and Next are all on screen and at least 44px tall`, lay.over <= 0 && lay.tabs.length === 4 && lay.tabs.every((t) => t.ok && t.h >= 44) && lay.ctl.length === 3 && lay.ctl.every((c) => c.ok && c.h >= 44 && c.w >= 44), `overflow ${lay.over}; tabs ${lay.tabs.map((t) => t.h).join(",")}; controls ${lay.ctl.map((c) => `${c.n} ${c.w}x${c.h}`).join("; ")}`);
+    await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(800);
+    const hits = await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-ctl button, .lib-tab')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2, y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,20), ok:hit===e||e.contains(hit), by: (hit===e||e.contains(hit))?'':(f&&f!==document.body?(f.className||f.tagName).toString().slice(0,20)+' (fixed)':String(hit?.className||hit?.tagName).slice(0,20))})} return out})()`);
+    rec(`${L}: with the action row in the middle of the screen, a touch at the centre of each visible control reaches that control`, hits.length >= 3 && hits.every((x) => x.ok), `${hits.length} checked; ${hits.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
+    // information only: the page's own fixed Sound and Terminal buttons can sit over the action row when it is scrolled to the bottom of the screen
+    const zones = [];
+    for (const frac of [0.2, 0.5, 0.85]) {
+      await s.ev(`(()=>{const r=document.querySelector('.lib-ctl').getBoundingClientRect(); scrollBy(0, r.top + r.height/2 - innerHeight*${frac})})()`); await sleep(500);
+      const z = await s.ev(`(()=>{const bad=[]; for(const e of document.querySelectorAll('.lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2); if(!(hit===e||e.contains(hit))) bad.push((e.getAttribute('aria-label')||e.innerText).trim().slice(0,14)+' covered by '+String(hit?.closest('button')?.innerText||hit?.className||hit?.tagName).trim().slice(0,14))} return bad})()`);
+      zones.push(`${Math.round(frac * 100)}%: ${z.length ? z.join("; ") : "clear"}`);
+    }
+    out.push(`INFO  ${L}: action row at 20% / 50% / 85% of the screen height: ${zones.join(" | ")}`);
+    await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(600);
+    const t1 = (await readCap(s)).title;
+    const nx = await centre(s, '.lib-arrow[aria-label="Next book"]'); await tp(nx.x, nx.y);
+    const t2 = (await readCap(s)).title;
+    const pv = await centre(s, '.lib-arrow[aria-label="Previous book"]'); await tp(pv.x, pv.y);
+    rec(`${L}: touching Next and Previous changes the book and back`, t2 !== t1 && (await readCap(s)).title === t1, `"${t1}" > "${t2}" > "${(await readCap(s)).title}"`);
+    const ys2 = [], wide = [];
+    for (let i = 0; i < 14; i++) {
+      const n2 = await centre(s, '.lib-arrow[aria-label="Next book"]'); await tp(n2.x, n2.y);
+      const m = await s.ev(`(()=>{const r=document.getElementById('library').getBoundingClientRect(); const o=document.querySelector('.lib-open').getBoundingClientRect(); const bad=[...document.querySelectorAll('.lib-cap-title,.lib-cap-note,.lib-cap-sub')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.className); return {y:Math.round(o.top-r.top), bad}})()`);
+      ys2.push(m.y); wide.push(...m.bad);
+    }
+    rec(`${L}: across all 14 books the action row never moves and no caption line overflows`, Math.max(...ys2) - Math.min(...ys2) <= 1 && wide.length === 0, `row offset ${Math.min(...ys2)}..${Math.max(...ys2)}px; overflow ${wide.join(",") || "none"}`);
+    const op = await centre(s, ".lib-open"); await tp(op.x, op.y); await sleep(600);
+    o = await over(s);
+    rec(`${L}: touching 'Open reading note' opens a full-screen overlay with the cover, and the text clears the screen edge`, o.vis === "visible" && o.w === w && o.h === h && o.poster && o.textLeft >= 14, `${o.w}x${o.h}; text starts ${o.textLeft}px from the left`);
+    const cc = await centre(s, ".gx-over__close"); await tp(cc.x, cc.y); await sleep(600);
+    o = await over(s); a = await active(s);
+    rec(`${L}: touching Back to the shelf closes it, unlocks the page and returns focus to the action`, o.vis === "hidden" && o.overflow === "" && /lib-open/.test(a.cls), `visibility ${o.vis}; focus ${a.label}`);
+    rec(`${L}: no console errors`, s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+    s.done();
+  }
 }
 console.log(out.join("\n")); process.exit(0);

@@ -36,6 +36,7 @@ if (suitesFile) {
     ["finish", ["qa/fqa.mjs", "finish", base]],
     ["retail-a11y", ["qa/fqa.mjs", "retail-a11y", base]],
     ["case-a11y", ["qa/fqa.mjs", "case-a11y", base]],
+    ["reading-room", ["qa/fqa.mjs", "reading-room", base]],
     ["nav", ["qa/navobs.mjs", base]],
     ["hash", ["qa/hash.mjs", base]],
     ["structure", ["qa/axaudit.mjs", base]],
