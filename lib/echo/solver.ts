@@ -1,4 +1,4 @@
-import { Dir, DX, DY, Level, Pos, Run, doorOpenAt, ghostsAt, hazardActive, posAt, pressedIds } from "./sim";
+import { Dir, DX, DY, Level, Pos, Run, ghostsAt, hazardActive, posAt, pressedIds } from "./sim";
 
 /**
  * Breadth-first solver over (x, y, tick). It exists to PROVE levels solvable and to compute par, not to play for the
