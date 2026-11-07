@@ -4,6 +4,7 @@ import Link from "next/link";
 import ExNav from "./exhibit/ExNav";
 import Opening from "./exhibit/Opening";
 import Gallery from "./exhibit/Gallery";
+import Screens from "./exhibit/Screens";
 import ExAbout from "./exhibit/ExAbout";
 import ExContact from "./exhibit/ExContact";
 import Contributions from "./components/Contributions";
@@ -19,6 +20,7 @@ export default function Home() {
       <ExNav />
       <Opening />
       <Gallery />
+      <Screens />
       <div className="ex-code"><Contributions /></div>
       <ExAbout />
       <ExContact />

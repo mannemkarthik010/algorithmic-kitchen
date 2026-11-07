@@ -49,6 +49,13 @@ interface AIDiffReviewProps {
   /** Called when a file is accepted, rejected or put back to pending. */
   onDecision?: (path: string, decision: FileDecision) => void;
   className?: string;
+  /**
+   * Local adaptation: show the changes only. Removes every accept, reject, undo and bulk control, for displaying a
+   * real, already-decided history (for example a pull request) without implying anything can be written back.
+   */
+  readOnly?: boolean;
+  /** Local adaptation: start with the file diffs open (for a short, read-only list). */
+  defaultOpen?: boolean;
 }
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
@@ -347,7 +354,9 @@ function FileRow({
   writing,
   onToggle,
   onDecide,
+  readOnly = false,
 }: {
+  readOnly?: boolean;
   file: FileChange;
   decision: FileDecision;
   open: boolean;
@@ -453,7 +462,7 @@ function FileRow({
               </span>
               <ChangeBar added={added} removed={removed} />
               {/* Kept in the layout while writing so the counts never jump. */}
-              <span
+              {!readOnly && (<span
                 className={cn(
                   "flex items-center gap-0.5 transition-opacity duration-200",
                   writing && "opacity-0"
@@ -477,7 +486,7 @@ function FileRow({
                 >
                   <Check aria-hidden="true" className="size-3.5" />
                 </button>
-              </span>
+              </span>)}
             </motion.div>
           ) : (
             <motion.div
@@ -529,6 +538,8 @@ export default function AIDiffReview({
   files: filesProp,
   onDecision,
   className,
+  readOnly = false,
+  defaultOpen = false,
 }: AIDiffReviewProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const demo = useDemoStream(filesProp === undefined, rootRef);
@@ -565,7 +576,7 @@ export default function AIDiffReview({
   const restingPath = filesProp === undefined ? files.at(-1)?.path : undefined;
   const isOpen = (path: string) =>
     writingPath === undefined
-      ? (opened[path] ?? path === restingPath)
+      ? (opened[path] ?? (defaultOpen || path === restingPath))
       : path === writingPath;
   const decideAll = (decision: FileDecision) => {
     bulkFocus.current = Boolean(
@@ -586,7 +597,9 @@ export default function AIDiffReview({
     )?.focus();
   }, [allDecided]);
   let actions: "review" | "replay" | null = null;
-  if (allDecided && filesProp === undefined) {
+  if (readOnly) {
+    actions = null;
+  } else if (allDecided && filesProp === undefined) {
     actions = "replay";
   } else if (!(writing || allDecided)) {
     actions = "review";
@@ -709,6 +722,7 @@ export default function AIDiffReview({
                   file={file}
                   key={`${demo.run}:${file.path}`}
                   onDecide={(decision) => decide(file.path, decision)}
+                  readOnly={readOnly}
                   onToggle={() =>
                     setOpened((current) => ({
                       ...current,

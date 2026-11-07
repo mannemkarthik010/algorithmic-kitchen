@@ -403,3 +403,13 @@
 .th__lim { border-top: 2px solid var(--paper); padding-top: 18px; } .th__lim .ex-mono { margin: 0 0 10px; } .th__lim ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; max-width: 90ch; }
 @media (max-width: 960px) { .th__mods { grid-template-columns: repeat(5, minmax(150px, 1fr)); overflow-x: auto; padding-bottom: 6px; } .th__detail { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .pm__node.is-live, .th__mod.is-live { animation: none; } .th__mod { transition: none; } }
+
+/* ── The real screens (Lightbox Grid) ─────────────────────────────────────────────────────── */
+.ex-screens { background: var(--paper); color: var(--ink); padding: clamp(60px, 8vw, 110px) clamp(14px, 2.4vw, 34px); }
+.ex-screens__head { margin-bottom: 28px; } .ex-screens__head .ex-mono { color: rgba(18,18,18,.65); margin: 0 0 12px; }
+.ex-screens__head h2 { font: 800 clamp(1.8rem, 4.4vw, 3.8rem)/.98 var(--f-body); letter-spacing: -.05em; margin: 0; max-width: 22ch; } .ex-screens__head h2 em { color: var(--orange-ink); }
+.ex-screens__grid { max-width: 1040px !important; width: 100% !important; }
+.ex-screens .ex-link { color: var(--ink); }
+
+/* diff review inside the code gallery */
+.ce-dr { margin-top: 8px; } .ce-dr .ce-diff__note { margin: 10px 0 0; }

@@ -4,6 +4,7 @@ import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/r
 import { contributions, type Contribution } from "../data/contributions";
 import live from "../data/contributions-live.json";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import AIDiffReview, { type DiffLine, type FileChange } from "@/components/kokonutui/ai-diff-review";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "./ui/dialog";
 import { EASE } from "../lib/motion";
 
@@ -39,37 +40,24 @@ function status(pr: LivePR) {
   return { key: "open", label: "Open", line: "Open, no decision recorded. Not merged." };
 }
 
-function lineNos(hunk: Line[]) {
-  let n = Number(/\+(\d+)/.exec(hunk[0]?.s ?? "")?.[1] ?? 1);
-  return hunk.map((l) => (l.t === "meta" ? "" : l.t === "del" ? "" : String(n++)));
+/** The real GitHub hunks, in the shape Kokonut's diff review component reads. Read-only: nothing can be accepted or rejected. */
+function toChanges(files: LiveFile[]): FileChange[] {
+  return files.map((f) => {
+    const start = Number(/\+(\d+)/.exec(f.hunk[0]?.s ?? "")?.[1] ?? 1);
+    return {
+      path: f.path,
+      created: f.status === "added",
+      hunks: [{ start, lines: f.hunk.filter((l) => l.t !== "meta").map((l): DiffLine => ({ type: l.t === "add" ? "add" : l.t === "del" ? "remove" : "context", text: l.s })) }],
+    };
+  });
 }
 
-function Diff({ file, animateIn }: { file: LiveFile; animateIn: boolean }) {
-  const rm = useReducedMotion();
-  const nos = lineNos(file.hunk);
+function Diffs({ files }: { files: LiveFile[] }) {
   return (
-    <figure className="ce-diff">
-      <figcaption>
-        <code>{file.path}</code>
-        <span><b className="is-add">+{file.additions}</b> <b className="is-del">−{file.deletions}</b></span>
-      </figcaption>
-      <pre aria-label={`Diff of ${file.path}`}>
-        {file.hunk.map((l, i) => (
-          <motion.span
-            key={i}
-            className={`ce-line ce-line--${l.t}`}
-            initial={animateIn && !rm ? { opacity: 0, x: -8 } : false}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25, ease: EASE, delay: animateIn && !rm ? Math.min(i * 0.03, 0.7) : 0 }}
-          >
-            <i aria-hidden="true">{nos[i]}</i>
-            <u aria-hidden="true">{l.t === "add" ? "+" : l.t === "del" ? "−" : " "}</u>
-            <code>{l.s || " "}</code>
-          </motion.span>
-        ))}
-      </pre>
-      <p className="ce-diff__note">First hunk of the file, as shown on GitHub. The pull request has the rest.</p>
-    </figure>
+    <div className="dark ce-dr">
+      <AIDiffReview readOnly defaultOpen={files.length <= 2} className="max-w-none" files={toChanges(files)} />
+      <p className="ce-diff__note">First hunk of each file, as shown on GitHub. The pull request has the rest.</p>
+    </div>
   );
 }
 
@@ -129,13 +117,13 @@ export default function CodeEvolution({ onOpenWriteup }: { onOpenWriteup: (c: Co
               )}
               {stage === "change" && (
                 <div>
-                  {src.slice(0, 1).map((f) => (<Diff key={f.path} file={f} animateIn />))}
+                  <Diffs files={src} />
                   <p className="ce__meta"><span>{pr.changedFiles} files · +{pr.additions} / −{pr.deletions}</span><button type="button" className="ce__link" onClick={() => setExpanded(true)}>Expand diff ⤢</button></p>
                 </div>
               )}
               {stage === "validation" && (
                 <div>
-                  {tst.length ? tst.slice(0, 1).map((f) => (<Diff key={f.path} file={f} animateIn />)) : <p className="ce__prose">No test file in this pull request.</p>}
+                  {tst.length ? <Diffs files={tst} /> : <p className="ce__prose">No test file in this pull request.</p>}
                   <p className="ce__meta"><span>{tst.reduce((a, f) => a + f.additions, 0)} lines of tests added</span><span>CI results are on the pull request, not recorded here</span></p>
                 </div>
               )}
@@ -169,7 +157,7 @@ export default function CodeEvolution({ onOpenWriteup }: { onOpenWriteup: (c: Co
         <DialogContent className="ce__dialog">
           <DialogTitle className="ce__dialog-t">PR #{pr.number}: {pr.title}</DialogTitle>
           <DialogDescription className="ce__dialog-d">{st.label} · {pr.changedFiles} files · +{pr.additions} / −{pr.deletions}</DialogDescription>
-          {pr.files.map((f) => (<Diff key={f.path} file={f} animateIn={false} />))}
+          <Diffs files={pr.files} />
         </DialogContent>
       </Dialog>
     </div>
