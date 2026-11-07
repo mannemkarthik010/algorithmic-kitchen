@@ -173,3 +173,20 @@
 .ex-foot nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
 
 @media (prefers-reduced-motion: reduce) { .ex-art__cap { transition: none; } .exnav__name { transition: none; } }
+
+/* ── Lab ──────────────────────────────────────────────────────────────────────────────────── */
+.lab-hero { padding: clamp(120px, 16vw, 200px) clamp(14px, 2.4vw, 34px) clamp(40px, 6vw, 80px); }
+.lab-hero .ex-mono { color: var(--muted-hi); margin: 0 0 22px; }
+.lab-hero h1 { font: 800 clamp(3.4rem, 12vw, 11rem)/.86 var(--f-body); letter-spacing: -.06em; margin: 0 0 26px; }
+.lab-hero h1 em { color: var(--orange); }
+.lab-hero__p { color: var(--muted-hi); max-width: 40ch; font-size: 1.1rem; margin: 0; }
+.lab-play { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 40px; align-items: center; margin: 0 clamp(14px, 2.4vw, 34px) clamp(60px, 8vw, 110px); padding: clamp(24px, 5vw, 56px); background: #06060b; border: 1px solid rgba(237,235,228,.3); }
+.lab-play h2 { font: 800 clamp(2.6rem, 8vw, 6.4rem)/.9 var(--f-body); letter-spacing: -.055em; margin: 10px 0 18px; }
+.lab-play h2 span:first-child { -webkit-text-stroke: 2px #38bdf8; color: transparent; }
+.lab-play__p { max-width: 46ch; color: #c9c7c0; line-height: 1.55; margin: 0 0 26px; }
+.lab-play__art { position: relative; height: 220px; background: repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,.05) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, rgba(255,255,255,.05) 39px 40px); }
+.lab-play__art i { position: absolute; width: 26px; height: 26px; border-radius: 50%; }
+.lab-play__art i:nth-child(1) { left: 14%; top: 62%; background: #38bdf8; box-shadow: 0 0 26px #38bdf8; opacity: .6; }
+.lab-play__art i:nth-child(2) { left: 46%; top: 36%; background: #c084fc; box-shadow: 0 0 26px #c084fc; opacity: .8; }
+.lab-play__art i:nth-child(3) { left: 76%; top: 14%; background: #fff; box-shadow: 0 0 30px #fff; }
+@media (max-width: 860px) { .lab-play { grid-template-columns: minmax(0, 1fr); } .lab-play__art { height: 120px; } }
