@@ -10,7 +10,7 @@ This file separates what was **observed in this milestone** from what earlier do
 | `tsc --noEmit` | clean |
 | `eslint` | 0 errors, 1 warning (an unused variable in `EvidenceGraph.tsx`, present before this milestone) |
 | `vitest` | 38 of 38 pass (the ECHO//SHIFT engine; there are no tests for the portfolio pages) |
-| `next build` | succeeds; 11 routes, `/work/archive`, `/play`, `/lab` and the three case studies are static |
+| `next build` | succeeds; 10 routes, `/work/archive`, `/play`, `/lab` and the three case studies are static |
 | `sync:check` | résumé and site agree |
 
 ### Real-input browser suites, headless Chrome on this Mac, against `next start`

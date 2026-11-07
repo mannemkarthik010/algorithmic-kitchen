@@ -128,3 +128,9 @@ Desktop, unthrottled: LCP 100 ms, CLS 0.015. The overlay code (Bklit, the dossie
 - Case-study pages still use their original layouts (all dark).
 - Not tested: Safari, a physical touch device, a screen reader. The homepage was driven by keyboard in the gallery and overlays only, not end to end.
 - The coverflow blurs and transforms are CSS and Motion; no frame-rate measurement was made on a real mid-range phone.
+
+---
+
+## Superseded by the consistency milestone
+
+`docs/QA_FINAL.md` is the current record. Statements above that it changes: the case studies **no longer** keep their original layouts (new openings, sticky section bar, paper sections, next-exhibit links, one shared footer); inactive gallery windows **now show graphic covers**; the dossier **now opens at the selected line's evidence** instead of only at its cover; the electric blue is **#3A5CCB**, not #4169E1; and the performance table for case studies and the homepage was re-measured there.
