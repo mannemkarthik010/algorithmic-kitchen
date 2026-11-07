@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { preventive, simulateLoop } from "../../components/case/preventive-data";
 import { LIMITS, SCENARIOS, STAGES } from "./data";
 

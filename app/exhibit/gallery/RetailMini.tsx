@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { scaleLinear } from "d3-scale";
 import { area, line } from "d3-shape";
 import { retail, MODELS, MODEL_LABEL } from "../../components/case/retail-data";

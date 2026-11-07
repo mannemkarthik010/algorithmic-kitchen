@@ -133,18 +133,16 @@ function Theatre() {
  * A full-screen exhibit. It opens by growing from the on-screen rectangle of the window that launched it and closes by
  * shrinking back to wherever that window is now. Focus is trapped, the page behind is locked, Escape closes.
  */
-export default function Overlay({ index, getRect, onClosed }: { index: number; getRect: () => DOMRect | null; onClosed: () => void }) {
+export default function Overlay({ index, opener: openerProp, getRect, onClosed }: { index: number; opener: React.MutableRefObject<Element | null>; getRect: () => DOMRect | null; onClosed: () => void }) {
   const rm = useReducedMotion();
   const root = useRef<HTMLDivElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
   const [shown, setShown] = useState(false);
-  const opener = useRef<Element | null>(null);
   const start = useRef<DOMRect | null>(null);
   const closing = useRef(false);
 
   const full = { top: 0, left: 0, width: "100vw", height: "100dvh" };
   useEffect(() => {
-    opener.current = document.activeElement;
     start.current = getRect();
     const el = root.current!;
     document.body.style.overflow = "hidden";
@@ -165,7 +163,7 @@ export default function Overlay({ index, getRect, onClosed }: { index: number; g
     const el = root.current!;
     const r = getRect();
     if (r && !rm) await animate(el, { top: r.top, left: r.left, width: r.width, height: r.height }, { duration: 0.5, ease: [0.22, 1, 0.36, 1] });
-    (opener.current as HTMLElement | null)?.focus?.();
+    (openerProp.current as HTMLElement | null)?.focus?.();
     onClosed();
   }, [getRect, onClosed, rm]);
 

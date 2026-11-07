@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { MODELS, MODEL_LABEL, retail, type Model } from "./retail-data";
 import { useWidth } from "./useWidth";
 
-const COLOR: Record<Model, string> = { seasonal_naive: "#8C9CA7", holt_winters: "#F2EFE8", global_gbm: "#D87B55" };
+const COLOR: Record<Model, string> = { seasonal_naive: "#A3A29E", holt_winters: "#EDEBE4", global_gbm: "#F45132" };
 const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; };
 const FEATURED = new Set(retail.series.map((s) => s.id));
 
@@ -43,7 +43,7 @@ export default function FleetPanel() {
         <h4 className="cs-h4 cs-h4--light" style={{ marginTop: 28 }}>Which model won each series</h4>
         <div className="cs-wins" role="img" aria-label={lb.map((r) => `${MODEL_LABEL[r.model]} won ${r.wins} of ${total} series`).join(", ")}>
           {lb.map((r) => (
-            <div key={r.model} className="cs-wins__seg" style={{ flexGrow: r.wins, background: COLOR[r.model], color: r.model === "holt_winters" || r.model === "global_gbm" ? "#101317" : "#101317" }}>
+            <div key={r.model} className="cs-wins__seg" style={{ flexGrow: r.wins, background: COLOR[r.model], color: r.model === "holt_winters" || r.model === "global_gbm" ? "#121212" : "#121212" }}>
               <b>{r.wins}</b><span>{MODEL_LABEL[r.model]}</span>
             </div>
           ))}
@@ -59,7 +59,7 @@ export default function FleetPanel() {
             <svg width={w} height={H} role="img" aria-label="Backtest error of the selected model for each of 240 series, grouped by model">
               {Array.from({ length: maxW / 5 + 1 }).map((_, i) => {
                 const v = i * 5;
-                return <g key={v}><line x1={m.l} x2={w - m.r} y1={y(v)} y2={y(v)} stroke="rgba(242,239,232,0.09)" /><text x={m.l - 8} y={y(v) + 4} textAnchor="end" className="cs-ax cs-ax--light">{v}%</text></g>;
+                return <g key={v}><line x1={m.l} x2={w - m.r} y1={y(v)} y2={y(v)} stroke="rgba(237, 235, 228,0.09)" /><text x={m.l - 8} y={y(v) + 4} textAnchor="end" className="cs-ax cs-ax--light">{v}%</text></g>;
               })}
               {MODELS.map((k) => (
                 <text key={k} x={m.l + lane(k) * laneW + laneW / 2} y={H - 14} textAnchor="middle" className="cs-ax cs-ax--light">{MODEL_LABEL[k]}</text>
@@ -69,7 +69,7 @@ export default function FleetPanel() {
                 const feat = FEATURED.has(f.series);
                 return (
                   <circle key={f.series} cx={cx} cy={y(f.wape)} r={feat ? 5 : 3.2} fill={COLOR[f.model]} fillOpacity={hover === f.series ? 1 : feat ? 0.95 : 0.55}
-                    stroke={feat || hover === f.series ? "#F2EFE8" : "none"} strokeWidth={feat ? 1.5 : 1}
+                    stroke={feat || hover === f.series ? "#EDEBE4" : "none"} strokeWidth={feat ? 1.5 : 1}
                     onPointerEnter={() => setHover(f.series)} onPointerLeave={() => setHover(null)} />
                 );
               })}

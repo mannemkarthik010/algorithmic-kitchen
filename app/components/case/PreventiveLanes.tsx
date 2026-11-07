@@ -66,7 +66,7 @@ export default function PreventiveLanes() {
           task={`Pipeline stages for a ${pt.age}-year-old ${pt.sex}, ${pt.risk.risk_percentage}% 10-year risk`}
           lanes={lanes}
           answer=""
-          className="pl__lanes max-w-none dark:bg-[#12161A] dark:ring-[rgba(242,239,232,0.14)]"
+          className="pl__lanes max-w-none dark:bg-[#12161A] dark:ring-[rgba(237, 235, 228,0.14)]"
         />
       </div>
       <p className="cs-small cs-small--light">A schematic of order and responsibility. Bars are stages, not durations. The risk number is the repository code&apos;s output for an invented patient. Retrieved text, drafts and verdicts are not shown because none were captured.</p>

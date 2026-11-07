@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "../lib/useReducedMotion";
 import { retail } from "../components/case/retail-data";
 import MagneticSlideButton from "../components/MagneticSlideButton";
 

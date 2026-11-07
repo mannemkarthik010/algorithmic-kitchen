@@ -343,7 +343,7 @@
 .pm__play { min-height: 36px; padding: 0 16px; background: var(--ink); color: var(--paper); border: 0; font: 700 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; margin-left: auto; }
 .pm__foot { border-top: 1px solid rgba(237,235,228,.45); } .pm__foot p { margin: 0; font: 500 11px/1.4 var(--f-mono); letter-spacing: .04em; max-width: 64ch; }
 .pm .mw-open { background: var(--paper); } .pm .mw-open:hover { background: var(--orange); }
-.gx-win:not(.is-active) button { pointer-events: none; }
+.gx-win:not(.is-active) .gx-win__in button { pointer-events: none; }
 
 @container (max-width: 720px) {
   .tm__body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }

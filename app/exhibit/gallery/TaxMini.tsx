@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createDrawable, createTimeline, stagger } from "animejs";
-import { useReducedMotion } from "motion/react";
+import {  } from "motion/react";
+import { useReducedMotion } from "../../lib/useReducedMotion";
 import { taxproof, type TNode } from "../../components/case/taxproof-data";
 
 /**

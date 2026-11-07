@@ -20,11 +20,11 @@ export default function MonitoringPanel() {
         <div ref={ref} className="cs-strip">
           {w > 0 && (
             <svg width={w} height={H} role="img" aria-label={`Fleet mean WAPE stayed between ${lo.toFixed(1)}% and ${hi.toFixed(1)}%, with no fleet-level drift flagged.`}>
-              {[0, 5, 10].map((v) => <g key={v}><line x1={m.l} x2={w - m.r} y1={y(v)} y2={y(v)} stroke="rgba(242,239,232,0.09)" /><text x={m.l - 8} y={y(v) + 4} textAnchor="end" className="cs-ax cs-ax--light">{v}%</text></g>)}
-              <path d={mon.map((p, i) => `${i ? "L" : "M"}${x(i)} ${y(p.wape)}`).join("")} fill="none" stroke="#F2EFE8" strokeWidth={2} />
+              {[0, 5, 10].map((v) => <g key={v}><line x1={m.l} x2={w - m.r} y1={y(v)} y2={y(v)} stroke="rgba(237, 235, 228,0.09)" /><text x={m.l - 8} y={y(v) + 4} textAnchor="end" className="cs-ax cs-ax--light">{v}%</text></g>)}
+              <path d={mon.map((p, i) => `${i ? "L" : "M"}${x(i)} ${y(p.wape)}`).join("")} fill="none" stroke="#EDEBE4" strokeWidth={2} />
               {mon.map((p, i) => (
                 <g key={p.cutoff}>
-                  <circle cx={x(i)} cy={y(p.wape)} r={4} fill="#101317" stroke="#F2EFE8" strokeWidth={2} />
+                  <circle cx={x(i)} cy={y(p.wape)} r={4} fill="#121212" stroke="#EDEBE4" strokeWidth={2} />
                   <text x={x(i)} y={y(p.wape) - 10} textAnchor="middle" className="cs-ax cs-ax--light">{p.wape.toFixed(1)}</text>
                   <text x={x(i)} y={H - 8} textAnchor="middle" className="cs-ax cs-ax--light">{p.cutoff.slice(5, 7)}/{p.cutoff.slice(2, 4)}</text>
                 </g>

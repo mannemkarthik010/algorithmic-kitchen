@@ -2,7 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { useReducedMotion } from "../lib/useReducedMotion";
 import { EXHIBITS } from "./Opening";
 import TaxMini from "./gallery/TaxMini";
 import RetailMini from "./gallery/RetailMini";
@@ -50,7 +51,8 @@ export default function Gallery() {
 
   const rectOf = useCallback(() => wins.current[open ?? sel]?.getBoundingClientRect() ?? null, [open, sel]);
   const e = EXHIBITS[sel];
-  const expand = (i: number) => () => setOpen(i);
+  const opener = useRef<Element | null>(null);
+  const expand = (i: number) => (ev?: React.MouseEvent) => { opener.current = (ev?.currentTarget as Element | undefined) ?? document.activeElement; setOpen(i); };
 
   const spring = rm ? { duration: 0 } : { type: "spring" as const, stiffness: 120, damping: 20, mass: 0.9 };
   const offset = (i: number) => ((i - sel + 4) % 3) - 1; // -1, 0, 1
@@ -109,7 +111,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {open !== null && <Overlay index={open} getRect={rectOf} onClosed={() => setOpen(null)} />}
+      {open !== null && <Overlay index={open} opener={opener} getRect={rectOf} onClosed={() => setOpen(null)} />}
     </section>
   );
 }

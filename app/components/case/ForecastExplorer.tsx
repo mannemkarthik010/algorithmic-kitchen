@@ -11,8 +11,8 @@ const RANGES: { k: Range; label: string; n: number }[] = [
   { k: "all", label: "All 5 years", n: 260 },
 ];
 
-const COLOR = { ink: "#101317", slate: "#5F6B74", copper: "#D9532B", copperSoft: "rgba(217,83,43,0.16)", grid: "rgba(16,19,23,0.09)" };
-const MODEL_COLOR: Record<Model, string> = { seasonal_naive: "#5F6B74", holt_winters: "#101317", global_gbm: "#D9532B" };
+const COLOR = { ink: "#121212", slate: "#5F6B74", copper: "#D9532B", copperSoft: "rgba(217,83,43,0.16)", grid: "rgba(16,19,23,0.09)" };
+const MODEL_COLOR: Record<Model, string> = { seasonal_naive: "#5F6B74", holt_winters: "#121212", global_gbm: "#D9532B" };
 
 interface Row { d: string; v: number; lo?: number; hi?: number; h: boolean; p: boolean; kind: "actual" | "forecast" }
 
@@ -200,7 +200,7 @@ export default function ForecastExplorer() {
             {hv && hover !== null && (
               <g pointerEvents="none">
                 <line x1={x(hover)} x2={x(hover)} y1={m.t} y2={m.t + ih} stroke={COLOR.ink} strokeOpacity={0.35} />
-                <circle cx={x(hover)} cy={y(hv.v)} r={4.5} fill={hv.kind === "forecast" ? COLOR.copper : COLOR.ink} stroke="#F2EFE8" strokeWidth={2} />
+                <circle cx={x(hover)} cy={y(hv.v)} r={4.5} fill={hv.kind === "forecast" ? COLOR.copper : COLOR.ink} stroke="#EDEBE4" strokeWidth={2} />
               </g>
             )}
           </svg>
