@@ -10,15 +10,31 @@ Scope: keep `#3A5CCB` and the current design; no merge, no deployment.
 1. **Dossier centred.** The page-flip frame is `mx-auto max-w-4xl`; opened at Lines 9, 28 and 29 it sits within 2 px of the overlay's centre.
 2. **Lines 28 and 29.** The opened spread now says it shows only the mileage contribution to the line (the car-and-truck amount, $8,260), not the line's complete calculation. The gallery button reads "Open the mileage part in the dossier" for those two lines.
 3. **Mobile Lightbox.** Two columns of even 4:3 tiles up to 860 px wide, four columns above. Screenshot: `docs/screenshots/screens-lightbox-390.png`.
-4. **Floating navigation versus chart controls.** Reproduced at 390 px: the capsules sat over the "26 wk" and "80% band" buttons when those were scrolled under the bar. The bar now steps away while reading down on screens up to 960 px, returns on any upward scroll, at the top, or when it receives focus. Screenshots: `nav-hidden-retail-390.png` (nothing over the controls) and `nav-returned-retail-390.png` (the bar back, over the top of the tab strip, by design).
+4. **Floating navigation versus controls.** Reproduced at 390 px: the capsules sat over the "26 wk" and "80% band" buttons when those were scrolled under the bar. The bar steps away while reading down on screens up to 960 px, and returns on upward scroll, at the top, or when it holds keyboard focus. The QA correction pass below found that this was not enough: on the way back up it could still land on the gallery selector, so it now also stays away while the selector or a miniature's control strip is under it. Screenshots: `nav-hidden-retail-390.png`, `nav-yields-to-selector-390.png`, `nav-returned-after-selector-390.png`.
 
 ### Defects found in this pass and fixed
 - **Deep links landed at the top.** `ScrollToTop` called `scrollTo(0, 0)` on every mount, so `/#work`, `/#about` and similar loaded at the top. Found while looking at desktop and iOS Safari; reproduced in Chrome. `ScrollToTop` now honours the hash (retries for about 1.2 s while the layout settles, and stops as soon as the visitor scrolls or presses a key). My earlier link test only checked that targets existed, which is why it missed this; `qa/hash.mjs` now loads each hash cold and checks where the page lands.
 - **Structure.** The gallery had no heading, there was no skip link, four case-study panels jumped from `h2` to `h4`, and the shared `TabsTrigger` pointed `aria-controls` at ids that did not exist. All fixed; `qa/axaudit.mjs` covers each.
 - **A stale check.** The "on-this-page bar stays 66 px below the nav" test contradicted the new auto-hide. It now asserts both states (bar at the top edge while the nav is hidden, 66 px below the nav once it returns).
 
+### QA correction pass
+
+Scope: the test harness and one navigation defect it exposed. No redesign.
+
+**1. The runner could report success for a failing suite.** `qa/run-all.mjs` counted `PASS` and `FAIL` lines and ignored how the child process ended, so a suite that printed `PASS` and then crashed, was killed, or hung would still count as `ok`. The pass/fail rule is now in `qa/runner.mjs`: a suite fails if it printed a `FAIL`, exited non-zero, was terminated by a signal, timed out (15 minutes), could not be started, or printed no results. Verified with deliberately failing fixtures (`npm run qa:selftest`, 8 of 8): PASS then exit 3, PASS then SIGKILL, PASS then a hang (timeout), a program that does not exist, a FAIL line, a silent suite, and one bad suite among good ones all make the run exit 1 with the reason printed, and the control exits 0. As a mutation check I disabled the exit, signal and error handling: 5 of the 8 cases then failed, and the old behaviour showed as `ok exit3 2 passed` with the run exiting 0.
+
+**2. `qa/navobs.mjs` did not do what its comment said.** It scrolled with `window.scrollBy`, sampled one state, and would have passed if it found no controls. It now uses real touch input (a tap and `Input.synthesizeScrollGesture` swipes) and real key events, asserts that controls were found, and checks after every scroll step that the visible centre of every control is what a pointer would hit. 11 assertions; 86 control checks across 7 sampled positions in the last run. One setup step is programmatic: `focus()` puts focus on the first control after the bar before a real Shift+Tab.
+
+**3. The new test found a real defect in the previous behaviour.** I ran it against the previous `ExNav`: it failed with `01 TaxProof @y30 hit NAV; 03 Preventive Care @y30 hit NAV`, and the assertion that the bar stays clear of the selector failed too. That is, when the bar returned on scroll up, a touch on the TaxProof or Preventive Care tab would have landed on the nav capsules. The earlier note that the returned bar covering the top of the tab strip was "by design" understated this and is withdrawn. Fix: the bar now yields while `.gx__index`, `.rm__bar`, `.rm__ctl`, `.pm__ctl` or `.tm__lines` (in the active exhibit) is within 72 px of the top, returns once it has passed, and stays reachable by keyboard (focus on the bar reveals it; focus does not re-hide it while inside). The new suite passes 11 of 11 against the fix and fails against the old code.
+
+**4. README overstated what the scripts exercise.** Corrected in `qa/README.md`, which now lists for each suite what it checks and what it does not. The wrong statements were: `motion` is a frame-time measurement, not a reduced-motion test (reduced motion is in `gallery` and `game`); `keys` does not drive the menu sheet or the command palette; `touch` does not swipe the coverflow or the dossier; `game` plays level "first-echo" (keyboard and touch) and uses "the-switch", not every level; `links` fetches internal links only and checks five removed section names, not four; `structure` checks DOM structure and has no navigation-landmark or dialog assertion; "no extra dependencies" omitted `vite-node`. The manual checklist moved to `docs/MANUAL_REVIEW.md`.
+
+**5. Found while checking the manual script against the code (not fixed).** On the Retail case study (`ForecastExplorer.tsx`): the series strip is marked `role="tablist"` but arrow keys do not move between its tabs, and the time-range buttons do not expose a pressed state. The first version of the manual script asserted the opposite for both. Neither is covered by any suite. They are listed in `docs/MANUAL_REVIEW.md` as things to expect, for the reviewer to confirm.
+
+**Scope of the nav fix.** It applies at 960 px and below, and the automated test runs at 390 px only. Above 960 px the bar never hides, so it can still sit over the selector or a control strip while the page scrolls past; that was not measured.
+
 ### Browser suites, rerun on the final build
-156 checks in 12 suites, all passing (`npm run qa`; see `qa/README.md`). New in this pass: `finish` (7), `nav` (1), `hash` (12), `structure` (32). Earlier suites grew by one check (`touch`). These are Chrome-only.
+166 checks in 12 suites, all passing, exit 0 (`npm run qa`; see `qa/README.md`). By suite: layout 28, links 3, keys 9, touch 6, motion 4, new 9, finish 7, nav 11, hash 12, structure 32, gallery 28, game 17. Plus `npm run qa:selftest`: 8 of 8. All Chrome-only.
 
 | Project check | Result |
 |---|---|
@@ -29,12 +45,12 @@ Scope: keep `#3A5CCB` and the current design; no merge, no deployment.
 | `sync:check` | résumé and site agree |
 
 ### Safari, observed in this pass
-- **Mobile Safari (iOS Simulator, iPhone 17 Pro, WebKit), driven by touch:** `/#work` lands on the gallery; the nav capsules are absent while scrolling down and return after scrolling up; the Retail tab opens.
+- **Mobile Safari (iOS Simulator, iPhone 17 Pro, WebKit), driven by touch:** `/#work` lands on the gallery; the nav capsules are absent while scrolling down and return after scrolling up; the Retail tab opens. **These observations predate the correction pass.** The newer behaviour (the bar staying away while the selector or a control strip is under it) has been exercised in headless Chrome only, not in Safari.
 - **Desktop Safari:** launched and viewed read-only (screenshots). The deep-link defect above was seen there before the fix and the corrected landing was seen after it.
 
 ### Could not be run (recorded, not claimed)
-- **VoiceOver.** Not run. The structure audit is a programmatic stand-in, not a screen-reader pass. A manual script is in `qa/README.md`.
-- **Desktop Safari beyond viewing.** My computer-use access to Safari is read-only (clicks and typing are blocked), and Safari's automation setting stays off. So gallery selection, overlay open and close with the keyboard, the case-study journey and Tab order were **not** exercised in desktop Safari.
+- **VoiceOver: not run.** The structure audit is a programmatic stand-in, not a screen-reader pass. The checklist is `docs/MANUAL_REVIEW.md`; its status line says NOT RUN and its results table is empty.
+- **Desktop Safari interaction: not run.** My computer-use access to Safari is read-only (clicks and typing are blocked), and Safari's automation setting stays off. So gallery selection, overlay open and close with the keyboard, the case-study journey and Tab order were **not** exercised in desktop Safari.
 - **A physical phone**, **Lighthouse and a true INP**, and **frame rate on a real mid-range phone**: not available here.
 
 ## Observed in the earlier milestone (counts below are superseded by the finishing pass)
@@ -107,6 +123,6 @@ rAF cadence was a flat 16.7 ms (p95 16.8 ms, 0 % of frames over 50 ms) across ex
 7. The `mix-blend-mode: difference` navigation is clever but fragile on saturated backgrounds; the blue opening needed a special case.
 
 ## Merge-readiness evidence (not a claim that it should merge)
-- All project checks and 156 browser checks pass on the final build; no known failing check. (103 was the earlier count.)
+- All project checks, 166 browser checks and the 8 runner self-tests pass on the final build; no known failing check. (103 was the earlier count.)
 - Branch is pushed; nothing is merged or deployed.
-- The unverified areas (desktop Safari interaction, VoiceOver, a physical phone, real-device frame rate) are the honest gap between "passes everything I could run" and "verified on the devices people use".
+- The unverified areas (desktop Safari interaction and VoiceOver, both marked NOT RUN in `docs/MANUAL_REVIEW.md`; a physical phone; real-device frame rate; the nav fix in Safari and above 960 px) are the honest gap between "passes everything I could run" and "verified on the devices people use".

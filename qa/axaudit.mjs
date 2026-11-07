@@ -1,4 +1,5 @@
-// Structure audit of what assistive technology reads: headings, landmarks, names, tabs, dialogs.
+// Structure audit of what assistive technology reads: h1 and main, heading levels, accessible names, alt text, duplicate ids,
+// skip link, tab attributes. It does NOT assert navigation landmarks or dialogs (the nav labels are collected but unused).
 // A programmatic stand-in for a screen-reader pass. It is NOT VoiceOver. usage: node qa/axaudit.mjs [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";

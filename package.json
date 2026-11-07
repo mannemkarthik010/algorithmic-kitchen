@@ -11,7 +11,8 @@
     "test": "vitest run",
     "qa:solutions": "vite-node qa/dump-solutions.ts qa/.generated/solutions.json",
     "qa:serve": "next start -p 3300",
-    "qa": "node qa/run-all.mjs"
+    "qa": "node qa/run-all.mjs",
+    "qa:selftest": "node qa/selftest.mjs"
   },
   "dependencies": {
     "@number-flow/react": "^0.6.2",
