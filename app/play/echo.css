@@ -10,8 +10,9 @@
 .eg-bg i:nth-child(2) { background: #c084fc; left: 78%; top: 78%; box-shadow: 0 0 24px #c084fc; animation-delay: -5s; animation-duration: 18s; }
 .eg-bg i:nth-child(3) { background: #fb923c; left: 55%; top: 85%; box-shadow: 0 0 24px #fb923c; animation-delay: -9s; animation-duration: 22s; }
 @keyframes egdrift { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: .55; } 90% { opacity: .55; } 100% { transform: translate(40px, -78vh); opacity: 0; } }
-.eg.is-reduced .eg-bg i, .eg.is-reduced .eg-logo__ghost { animation: none; opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .eg-bg i, .eg-logo__ghost { animation: none; opacity: 0; } }
+.eg.is-reduced .eg-bg i { animation: none; opacity: 0; }
+.eg.is-reduced .eg-logo__ghost { animation: none; }
+@media (prefers-reduced-motion: reduce) { .eg-bg i { animation: none; opacity: 0; } .eg-logo__ghost { animation: none; } }
 
 .eg-kicker { font: 500 11px var(--f-mono); letter-spacing: .24em; text-transform: uppercase; color: var(--dim); margin: 0 0 14px; }
 .eg-link { background: none; border: 0; color: var(--ink); font: 600 12px var(--f-mono); letter-spacing: .16em; padding: 14px 6px; min-height: 44px; cursor: pointer; text-decoration: none; }

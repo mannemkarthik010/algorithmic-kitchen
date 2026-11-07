@@ -1,7 +1,7 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { EchoGame, replayRuns } from "@/lib/echo/game";
 import { DAILY_POOL, LEVELS, levelOf } from "@/lib/echo/levels";
 import {
@@ -44,6 +44,10 @@ function useSfx(enabled: boolean) {
   }, [enabled]);
 }
 
+/* read the system setting directly so the game's own reduced mode always follows it */
+const subscribeReduced = (cb: () => void) => { const m = window.matchMedia("(prefers-reduced-motion: reduce)"); m.addEventListener("change", cb); return () => m.removeEventListener("change", cb); };
+const useSystemReduced = () => useSyncExternalStore(subscribeReduced, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => false);
+
 const ordinal = (i: number) => String(i + 1).padStart(2, "0");
 
 export default function EchoApp() {
@@ -58,7 +62,7 @@ export default function EchoApp() {
   const [, bump] = useState(0);
   const [copied, setCopied] = useState(false);
   const [coarse, setCoarse] = useState(false);
-  const sysReduced = useReducedMotion();
+  const sysReduced = useSystemReduced();
   const board = useRef<BoardHandle>(null);
   const deadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
