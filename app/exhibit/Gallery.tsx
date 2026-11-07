@@ -60,7 +60,8 @@ export default function Gallery() {
   const offset = (i: number) => ((i - sel + 4) % 3) - 1; // -1, 0, 1
 
   return (
-    <section id="work" className="gx" aria-label="Live project exhibits">
+    <section id="work" className="gx" aria-labelledby="gx-h">
+      <h2 id="gx-h" className="sr-only">Three working exhibits: TaxProof, Retail Intelligence and Preventive Care</h2>
       <div className="gx__bignum" aria-hidden="true">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span key={e.n} initial={rm ? false : { y: "35%", opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={rm ? { opacity: 0 } : { y: "-25%", opacity: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>{e.n}</motion.span>

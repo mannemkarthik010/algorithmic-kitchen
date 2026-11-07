@@ -27,7 +27,7 @@ export default function FleetPanel() {
   return (
     <div className="cs-fleet">
       <div>
-        <h4 className="cs-h4 cs-h4--light">Leaderboard across all 240 series</h4>
+        <h3 className="cs-h4 cs-h4--light">Leaderboard across all 240 series</h3>
         <div className="cs-lb">
           {lb.map((r, i) => (
             <div key={r.model} className="cs-lb__row">
@@ -40,7 +40,7 @@ export default function FleetPanel() {
         </div>
         <p className="cs-small cs-small--light">Mean WAPE over a rolling-origin backtest (6 cutoffs, 8 weeks ahead). Gradient boosting wins on average, but by under a point over seasonal-naive.</p>
 
-        <h4 className="cs-h4 cs-h4--light" style={{ marginTop: 28 }}>Which model won each series</h4>
+        <h3 className="cs-h4 cs-h4--light" style={{ marginTop: 28 }}>Which model won each series</h3>
         <div className="cs-wins" role="img" aria-label={lb.map((r) => `${MODEL_LABEL[r.model]} won ${r.wins} of ${total} series`).join(", ")}>
           {lb.map((r) => (
             <div key={r.model} className="cs-wins__seg" style={{ flexGrow: r.wins, background: COLOR[r.model], color: r.model === "holt_winters" || r.model === "global_gbm" ? "#121212" : "#121212" }}>
@@ -52,7 +52,7 @@ export default function FleetPanel() {
       </div>
 
       <div>
-        <h4 className="cs-h4 cs-h4--light">Every series, plotted</h4>
+        <h3 className="cs-h4 cs-h4--light">Every series, plotted</h3>
         <p className="cs-small cs-small--light" style={{ marginBottom: 6 }}>Each dot is one series, placed under the model that was selected for it, at that model&apos;s backtest error. Hover a dot.</p>
         <div ref={ref} className="cs-strip">
           {w > 0 && (

@@ -18,7 +18,7 @@ export default function LabPage() {
   }, []);
 
   return (
-    <main className="ex lab-ex">
+    <main id="main-content" tabIndex={-1} className="ex lab-ex">
       <Nav />
       <header id="lab" className="lab-hero">
         <p className="ex-mono">(Lab) &nbsp;Things I make when nobody asked</p>

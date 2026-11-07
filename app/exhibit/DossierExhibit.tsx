@@ -21,9 +21,9 @@ const SPREAD_FOR: Record<string, number> = { "SchC.44a": 2, "SchC.9": 4, "SchC.2
 const WHERE: Record<string, string> = {
   "SchC.44a": "the original pages, with page 3 stamped as the duplicate",
   "SchC.9": "the calculated output and its verification",
-  "SchC.28": "the calculated output and its verification",
-  "SchC.29": "the calculated output and its verification",
 };
+/** Lines built from many inputs. The dossier follows only the mileage lineage, so it can show their mileage part, not the whole sum. */
+const PARTIAL = new Set(["SchC.28", "SchC.29"]);
 
 export default function DossierExhibit({ line }: { line?: string }) {
   const [start, setStart] = useState(line ? (SPREAD_FOR[line] ?? 0) : 0);
@@ -118,7 +118,11 @@ export default function DossierExhibit({ line }: { line?: string }) {
       <p className="dos-ctx" role="status">
         {picked && start > 0 ? (
           <>
-            <span>Opened from the workpaper: <b>{picked.id.replace("SchC.", "Line ")} · {picked.label}</b>. The dossier is open at {WHERE[picked.id]}.</span>
+            {PARTIAL.has(picked.id) ? (
+              <span>Opened from the workpaper: <b>{picked.id.replace("SchC.", "Line ")} · {picked.label}</b>. This dossier follows one lineage, the mileage. The spread shows <b>only the mileage contribution</b> to this line (the car-and-truck line, ${fmt(cost.value ?? 0)}), not the complete calculation of the line.</span>
+            ) : (
+              <span>Opened from the workpaper: <b>{picked.id.replace("SchC.", "Line ")} · {picked.label}</b>. The dossier is open at {WHERE[picked.id]}.</span>
+            )}
             <button type="button" onClick={() => { setStart(0); setShown((n) => n + 1); }}>Start from the cover</button>
           </>
         ) : (
@@ -126,7 +130,7 @@ export default function DossierExhibit({ line }: { line?: string }) {
         )}
       </p>
       <div className="dos-book" aria-label="TaxProof evidence dossier, a book of pages you can turn">
-        <PageFlip key={`${start}-${shown}`} pages={pages} initialSpread={start} />
+        <PageFlip key={`${start}-${shown}`} className="mx-auto max-w-4xl" pages={pages} initialSpread={start} />
       </div>
       <p className="dos-keys ex-mono">Turn pages: drag a corner, click an edge, or use ← →</p>
       <div className="dos-head dos-head--2">

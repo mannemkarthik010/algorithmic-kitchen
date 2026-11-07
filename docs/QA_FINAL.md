@@ -2,7 +2,42 @@
 
 This file separates what was **observed in this milestone** from what earlier documents reported. Earlier documents (`QA_REPORT.md`, `EXHIBITION_REDESIGN.md`) describe earlier states of the site; their numbers were not re-measured here unless a row below says so.
 
-## Observed in this milestone
+## Finishing pass (supersedes the counts and two defects below)
+
+Scope: keep `#3A5CCB` and the current design; no merge, no deployment.
+
+### Changes
+1. **Dossier centred.** The page-flip frame is `mx-auto max-w-4xl`; opened at Lines 9, 28 and 29 it sits within 2 px of the overlay's centre.
+2. **Lines 28 and 29.** The opened spread now says it shows only the mileage contribution to the line (the car-and-truck amount, $8,260), not the line's complete calculation. The gallery button reads "Open the mileage part in the dossier" for those two lines.
+3. **Mobile Lightbox.** Two columns of even 4:3 tiles up to 860 px wide, four columns above. Screenshot: `docs/screenshots/screens-lightbox-390.png`.
+4. **Floating navigation versus chart controls.** Reproduced at 390 px: the capsules sat over the "26 wk" and "80% band" buttons when those were scrolled under the bar. The bar now steps away while reading down on screens up to 960 px, returns on any upward scroll, at the top, or when it receives focus. Screenshots: `nav-hidden-retail-390.png` (nothing over the controls) and `nav-returned-retail-390.png` (the bar back, over the top of the tab strip, by design).
+
+### Defects found in this pass and fixed
+- **Deep links landed at the top.** `ScrollToTop` called `scrollTo(0, 0)` on every mount, so `/#work`, `/#about` and similar loaded at the top. Found while looking at desktop and iOS Safari; reproduced in Chrome. `ScrollToTop` now honours the hash (retries for about 1.2 s while the layout settles, and stops as soon as the visitor scrolls or presses a key). My earlier link test only checked that targets existed, which is why it missed this; `qa/hash.mjs` now loads each hash cold and checks where the page lands.
+- **Structure.** The gallery had no heading, there was no skip link, four case-study panels jumped from `h2` to `h4`, and the shared `TabsTrigger` pointed `aria-controls` at ids that did not exist. All fixed; `qa/axaudit.mjs` covers each.
+- **A stale check.** The "on-this-page bar stays 66 px below the nav" test contradicted the new auto-hide. It now asserts both states (bar at the top edge while the nav is hidden, 66 px below the nav once it returns).
+
+### Browser suites, rerun on the final build
+156 checks in 12 suites, all passing (`npm run qa`; see `qa/README.md`). New in this pass: `finish` (7), `nav` (1), `hash` (12), `structure` (32). Earlier suites grew by one check (`touch`). These are Chrome-only.
+
+| Project check | Result |
+|---|---|
+| `tsc --noEmit` | clean |
+| `eslint` | 0 errors, 1 warning (unused `i` in `EvidenceGraph.tsx`, predates this pass) |
+| `vitest` | 38 of 38 (ECHO//SHIFT engine only) |
+| `next build` | succeeds; 10 routes, 12 static pages |
+| `sync:check` | résumé and site agree |
+
+### Safari, observed in this pass
+- **Mobile Safari (iOS Simulator, iPhone 17 Pro, WebKit), driven by touch:** `/#work` lands on the gallery; the nav capsules are absent while scrolling down and return after scrolling up; the Retail tab opens.
+- **Desktop Safari:** launched and viewed read-only (screenshots). The deep-link defect above was seen there before the fix and the corrected landing was seen after it.
+
+### Could not be run (recorded, not claimed)
+- **VoiceOver.** Not run. The structure audit is a programmatic stand-in, not a screen-reader pass. A manual script is in `qa/README.md`.
+- **Desktop Safari beyond viewing.** My computer-use access to Safari is read-only (clicks and typing are blocked), and Safari's automation setting stays off. So gallery selection, overlay open and close with the keyboard, the case-study journey and Tab order were **not** exercised in desktop Safari.
+- **A physical phone**, **Lighthouse and a true INP**, and **frame rate on a real mid-range phone**: not available here.
+
+## Observed in the earlier milestone (counts below are superseded by the finishing pass)
 
 ### Project checks (run on the final commit)
 | Check | Result |
@@ -63,15 +98,15 @@ rAF cadence was a flat 16.7 ms (p95 16.8 ms, 0 % of frames over 50 ms) across ex
 - Frame rate on a real mid-range phone.
 
 ## Remaining defects and risks
-1. When the dossier opens on a later spread (for example the calculated-output spread) the open book sits left of centre in its container.
+1. ~~The dossier sat left of centre on later spreads.~~ Fixed in the finishing pass.
 2. Case-study pages have new openings, a sticky section bar, paper sections and next-exhibit links, but their interactive explorers are the earlier components in new colours; only the problem and decisions sections are on paper.
 3. Kokonut Page Flip (`initialSpread`) and AI Diff Review (`readOnly`, `defaultOpen`) are vendored with small documented local changes; upgrading them means re-applying those.
 4. Kokonut Scroll Index is installed but not used on any page. `/api/chat` and `/api/contact` exist and nothing calls them.
 5. The deeper blue differs from the brief's hex (see above).
-6. The mobile Lightbox grid is a cramped mosaic.
+6. ~~The mobile Lightbox grid was a cramped mosaic.~~ Fixed in the finishing pass (2×2).
 7. The `mix-blend-mode: difference` navigation is clever but fragile on saturated backgrounds; the blue opening needed a special case.
 
 ## Merge-readiness evidence (not a claim that it should merge)
-- All project checks and 103 browser checks pass on the final commit; no known failing check.
+- All project checks and 156 browser checks pass on the final build; no known failing check. (103 was the earlier count.)
 - Branch is pushed; nothing is merged or deployed.
-- The unverified areas above (desktop Safari, a physical phone, a screen reader, real-device frame rate) are the honest gap between "passes everything I could run" and "verified on the devices people use".
+- The unverified areas (desktop Safari interaction, VoiceOver, a physical phone, real-device frame rate) are the honest gap between "passes everything I could run" and "verified on the devices people use".

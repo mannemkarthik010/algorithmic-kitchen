@@ -19,7 +19,7 @@ export default function AgentPanel() {
   return (
     <div className="cs-agent">
       <div>
-        <h4 className="cs-h4 cs-h4--light">Six read-only tools, one audit trail</h4>
+        <h3 className="cs-h4 cs-h4--light">Six read-only tools, one audit trail</h3>
         <ul className="cs-tools">
           {TOOLS.map(([n, d]) => (<li key={n}><code>{n}</code><span>{d}</span></li>))}
         </ul>
@@ -35,7 +35,7 @@ export default function AgentPanel() {
       </div>
 
       <div>
-        <h4 className="cs-h4 cs-h4--light">Evaluation: {a.passed} of {a.cases} routing cases pass</h4>
+        <h3 className="cs-h4 cs-h4--light">Evaluation: {a.passed} of {a.cases} routing cases pass</h3>
         <div className="cs-eval">
           {Object.entries(a.byCategory).map(([k, v]) => (
             <div key={k} className="cs-eval__row">

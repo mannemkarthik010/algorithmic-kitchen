@@ -16,7 +16,7 @@ export default function MonitoringPanel() {
   return (
     <div className="cs-mon">
       <div>
-        <h4 className="cs-h4 cs-h4--light">Fleet-wide error, six cutoffs</h4>
+        <h3 className="cs-h4 cs-h4--light">Fleet-wide error, six cutoffs</h3>
         <div ref={ref} className="cs-strip">
           {w > 0 && (
             <svg width={w} height={H} role="img" aria-label={`Fleet mean WAPE stayed between ${lo.toFixed(1)}% and ${hi.toFixed(1)}%, with no fleet-level drift flagged.`}>
@@ -36,7 +36,7 @@ export default function MonitoringPanel() {
       </div>
 
       <div>
-        <h4 className="cs-h4 cs-h4--light">Four series flagged, and what the loop did</h4>
+        <h3 className="cs-h4 cs-h4--light">Four series flagged, and what the loop did</h3>
         <div className="cs-alerts">
           {retail.alerts.map((a) => {
             const r = retail.retraining.find((x) => x.series === a.series)!;

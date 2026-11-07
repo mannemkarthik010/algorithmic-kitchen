@@ -111,7 +111,7 @@ export default function TaxMini({ onExpand, onSelect, active }: { onExpand: () =
       </div>
       <footer className="tm__foot">
         <p>Three lineages are traced (mileage, receipts, wages), not every line of the return.</p>
-        <button type="button" className="mw-open" onClick={onExpand} tabIndex={active ? 0 : -1}>Open the dossier at this line <span aria-hidden="true">↗</span></button>
+        <button type="button" className="mw-open" onClick={onExpand} tabIndex={active ? 0 : -1}>{sel === "SchC.28" || sel === "SchC.29" ? "Open the mileage part in the dossier" : "Open the dossier at this line"} <span aria-hidden="true">↗</span></button>
       </footer>
     </div>
   );

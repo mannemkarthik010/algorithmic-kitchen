@@ -14,7 +14,7 @@ import CommandPalette from "./components/CommandPalette";
 /** The homepage as an exhibition: opening installation (ink), live exhibits (paper), code gallery (ink), about (paper), contact (ink). */
 export default function Home() {
   return (
-    <main className="ex">
+    <main id="main-content" tabIndex={-1} className="ex">
       <ScrollToTop />
       <ExNav />
       <Opening />

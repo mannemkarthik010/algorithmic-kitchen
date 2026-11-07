@@ -18,7 +18,7 @@ const FLAGSHIP = new Set(["taxproof", "retail-intel", "preventive-care"]);
 export default function Archive() {
   const rows = resume.projects.filter((p) => !FLAGSHIP.has(p.slug));
   return (
-    <main className="ex arc">
+    <main id="main-content" tabIndex={-1} className="ex arc">
       <Nav />
       <header className="arc__head">
         <p className="ex-mono">Work archive · {rows.length} projects</p>

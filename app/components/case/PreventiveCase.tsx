@@ -35,7 +35,7 @@ const LIMITS = [
 export default function PreventiveCase() {
   const m = preventive.meta;
   return (
-    <main className="cs cs--prev">
+    <main id="main-content" tabIndex={-1} className="cs cs--prev">
       <Nav />
 
       <header className="cs-hero">

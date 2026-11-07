@@ -110,7 +110,7 @@ export default function CodeEvolution({ onOpenWriteup }: { onOpenWriteup: (c: Co
             <motion.div key={`${slug}-${stage}`} initial={rm ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={rm ? { opacity: 0 } : { opacity: 0, y: -8 }} transition={{ duration: 0.26, ease: EASE }}>
               {stage === "problem" && (
                 <div className="ce__prose">
-                  <h4>{c.title}</h4>
+                  <h3>{c.title}</h3>
                   <p>{c.excerpt}</p>
                   <p className="ce__meta"><a href={c.issueUrl} target="_blank" rel="noopener noreferrer">Issue #{c.issueNumber} ↗</a><span>{c.repo}</span><span>{c.language}</span></p>
                 </div>

@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "sync:check": "node scripts/check-sync.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "qa:solutions": "vite-node qa/dump-solutions.ts qa/.generated/solutions.json",
+    "qa:serve": "next start -p 3300",
+    "qa": "node qa/run-all.mjs"
   },
   "dependencies": {
     "@number-flow/react": "^0.6.2",

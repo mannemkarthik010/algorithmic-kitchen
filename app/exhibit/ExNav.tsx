@@ -21,11 +21,23 @@ const LINKS = [
 export default function ExNav() {
   const [scrolled, setScrolled] = useState(false);
   const [onBlue, setOnBlue] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     // difference-blending turns amber over saturated blue, so use plain white while the blue case-study opening is behind the bar
     const hero = document.querySelector<HTMLElement>(".cs--prev .cs-hero");
-    const on = () => { setScrolled(window.scrollY > 40); setOnBlue(!!hero && hero.getBoundingClientRect().bottom > 64); };
+    let last = window.scrollY;
+    const on = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      setOnBlue(!!hero && hero.getBoundingClientRect().bottom > 64);
+      // On phones and tablets the capsules would sit on top of controls scrolled up beneath them (chart ranges, series strips).
+      // So the bar steps away while reading downward and returns on any upward scroll, at the top, or when focused.
+      if (window.innerWidth > 960) setHidden(false);
+      else if (y > 140 && y - last > 4) setHidden(true);
+      else if (y < 140 || last - y > 4) setHidden(false);
+      last = y;
+    };
     on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
@@ -33,11 +45,13 @@ export default function ExNav() {
 
   return (
     <motion.header
-      className={`exnav${scrolled ? " is-split" : ""}${onBlue ? " is-blue" : ""}`}
+      className={`exnav${scrolled ? " is-split" : ""}${onBlue ? " is-blue" : ""}${hidden ? " is-hidden" : ""}`}
+      onFocusCapture={() => setHidden(false)}
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
     >
+      <a href="#main-content" className="exnav__skip" onClick={(e) => { const m = document.getElementById("main-content"); if (m) { e.preventDefault(); m.focus({ preventScroll: true }); m.scrollIntoView({ block: "start" }); } }}>Skip to content</a>
       <nav aria-label="Main" className="exnav__row">
         <Link href="/" className="exnav__cap exnav__brand" aria-label="Karthik Mannem, home">
           <span className="exnav__mark" aria-hidden="true">KM</span>

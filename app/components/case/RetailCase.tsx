@@ -38,7 +38,7 @@ const LIMITS = [
 
 export default function RetailCase() {
   return (
-    <main className="cs cs--retail">
+    <main id="main-content" tabIndex={-1} className="cs cs--retail">
       <Nav />
 
       {/* HERO: split, asymmetric */}

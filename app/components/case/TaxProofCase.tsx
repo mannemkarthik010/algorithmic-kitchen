@@ -75,7 +75,7 @@ export default function TaxProofCase() {
   const m = taxproof.meta;
 
   return (
-    <main className="cs cs--tax">
+    <main id="main-content" tabIndex={-1} className="cs cs--tax">
       <Nav />
 
       <header className="cs-hero">

@@ -226,7 +226,7 @@ export default function ForecastExplorer() {
 
       <div className="cs-panel__grid">
         <div>
-          <h4 className="cs-h4">Model comparison for this series</h4>
+          <h3 className="cs-h4">Model comparison for this series</h3>
           <p className="cs-small">Backtest WAPE averaged over six rolling cutoffs. Lower is better.</p>
           <div className="cs-mbars">
             {MODELS.map((k) => (
@@ -239,7 +239,7 @@ export default function ForecastExplorer() {
             ))}
           </div>
 
-          <h4 className="cs-h4" style={{ marginTop: 22 }}>Error at each cutoff</h4>
+          <h3 className="cs-h4" style={{ marginTop: 22 }}>Error at each cutoff</h3>
           <div ref={cref} className="cs-cut">
             {cw > 0 && (
               <svg width={cw} height={CH} role="img" aria-label="Backtest error by cutoff for each model">
@@ -257,7 +257,7 @@ export default function ForecastExplorer() {
         </div>
 
         <div>
-          <h4 className="cs-h4">Why this model is serving</h4>
+          <h3 className="cs-h4">Why this model is serving</h3>
           <p className="cs-p">{selectionNote(s)}</p>
           <div className="cs-note-box">
             <b>What you are looking at.</b> The sales history is synthetic. The copper line and band are the platform&apos;s real 8-week output for this series, read from <code>reports/current_forecasts.csv</code>. The repo does not store the other two models&apos; forecast curves, so only their backtest error is shown, never an invented line.
