@@ -130,9 +130,9 @@ export default function ForecastExplorer() {
           <p className="cs-eyebrow cs-eyebrow--ink">Interactive</p>
           <h3 className="cs-panel__title">Explore a forecast</h3>
         </div>
-        <div className="cs-chips" role="tablist" aria-label="Series">
+        <div className="cs-chips" role="group" aria-label="Series">
           {retail.series.map((x) => (
-            <button key={x.id} role="tab" aria-selected={x.id === sid} className={`cs-chip${x.id === sid ? " is-on" : ""}`} onClick={() => { setSid(x.id); setHover(null); }}>
+            <button key={x.id} type="button" aria-pressed={x.id === sid} className={`cs-chip${x.id === sid ? " is-on" : ""}`} onClick={() => { setSid(x.id); setHover(null); }}>
               Store {x.store} · Dept {x.dept}
             </button>
           ))}
@@ -144,7 +144,7 @@ export default function ForecastExplorer() {
       <div className="cs-controls">
         <div className="cs-seg" role="group" aria-label="Time range">
           {RANGES.map((r) => (
-            <button key={r.k} className={range === r.k ? "is-on" : ""} onClick={() => { setRange(r.k); setHover(null); }}>{r.label}</button>
+            <button key={r.k} type="button" aria-pressed={range === r.k} className={range === r.k ? "is-on" : ""} onClick={() => { setRange(r.k); setHover(null); }}>{r.label}</button>
           ))}
         </div>
         <label className="cs-check"><input type="checkbox" checked={band} onChange={(e) => setBand(e.target.checked)} /> 80% interval</label>

@@ -1,4 +1,4 @@
-// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish> [base]
+// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y> [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 const [mode, base = "http://localhost:3300"] = process.argv.slice(2);
@@ -217,5 +217,70 @@ if (mode === "finish") {
     rec(`${name} Lightbox grid has ${cols} columns, even 4:3 tiles, no sideways overflow`, g.tracks === cols && Math.abs(g.ratio - 4 / 3) < 0.08 && g.ov <= 1, JSON.stringify(g));
     t.done();
   }
+}
+if (mode === "retail-a11y") {
+  // Retail case study explorer: the series selector and the time-range buttons, read from Chrome's accessibility tree and driven by real keys.
+  const s = await session();
+  await s.send("Accessibility.enable");
+  await s.go("/work/retail-demand-intelligence", 5500);
+  await s.ev(`document.getElementById('explorer').scrollIntoView({block:'center'})`); await sleep(1500);
+  const tree = async () => (await s.send("Accessibility.getFullAXTree")).result.nodes;
+  const prop = (n, k) => n.properties?.find((p) => p.name === k)?.value?.value;
+  const kids = (nodes, n) => (n.childIds ?? []).flatMap((id) => { const c = nodes.find((x) => x.nodeId === id); return !c ? [] : c.role?.value === "button" ? [c] : kids(nodes, c); });
+  const read = async (groupName) => {
+    const nodes = await tree();
+    const gs = nodes.filter((n) => n.role?.value === "group" && n.name?.value === groupName && !n.ignored);
+    return { groups: gs.length, buttons: gs[0] ? kids(nodes, gs[0]).map((b) => ({ name: b.name?.value, role: b.role?.value, pressed: prop(b, "pressed") })) : [] };
+  };
+  const pressedNames = (g) => g.buttons.filter((b) => String(b.pressed) === "true").map((b) => b.name);
+  const dom = (sel) => s.ev(`[...document.querySelectorAll(${JSON.stringify(sel)})].map(b=>b.innerText.trim())`);
+  const keyEv = async (k, mod = 0) => {
+    const d = { Tab: [9, "Tab", ""], " ": [32, "Space", " "], Enter: [13, "Enter", "\r"] }[k];
+    await s.send("Input.dispatchKeyEvent", { type: "keyDown", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod, ...(d[2] ? { text: d[2] } : {}) });
+    await sleep(25); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod }); await sleep(400);
+  };
+  const active = () => s.ev(`(()=>{const a=document.activeElement; return {text:(a.innerText||'').trim(), pressed:a.getAttribute('aria-pressed'), tag:a.tagName, inChips:!!a.closest('#explorer .cs-chips'), inSeg:!!a.closest('#explorer .cs-seg')}})()`);
+  const chart = () => s.ev(`(()=>{const v=document.querySelector('#explorer .cs-chart svg'); return {label:v.getAttribute('aria-label'), sig:v.outerHTML.length}})()`);
+
+  const seriesDom = await dom("#explorer .cs-chips button"), rangeDom = await dom("#explorer .cs-seg button");
+  let series = await read("Series"), range = await read("Time range");
+  rec("series selector: one labelled group, with every series a button that exposes a pressed state, exactly one pressed",
+    series.groups === 1 && series.buttons.length === seriesDom.length && seriesDom.length >= 5 && series.buttons.every((b) => b.role === "button" && (String(b.pressed) === "true" || String(b.pressed) === "false")) && pressedNames(series).length === 1,
+    `${series.buttons.length} of ${seriesDom.length} buttons; pressed: ${pressedNames(series).join(", ")}`);
+  rec("series selector: accessible names match the visible labels",
+    JSON.stringify(series.buttons.map((b) => b.name)) === JSON.stringify(seriesDom.map((t) => t.replace(/\s+/g, " "))), series.buttons.slice(0, 2).map((b) => b.name).join(" | "));
+  rec("time range: one labelled group of 3 buttons, each exposing a pressed state, exactly one pressed",
+    range.groups === 1 && range.buttons.length === 3 && rangeDom.length === 3 && range.buttons.every((b) => b.role === "button" && (String(b.pressed) === "true" || String(b.pressed) === "false")) && pressedNames(range).length === 1,
+    `${range.buttons.map((b) => `${b.name}=${b.pressed}`).join(", ")}`);
+  rec("the explorer no longer declares tab or tablist roles (they promised arrow-key behaviour that was not there)",
+    (await s.ev(`document.querySelectorAll('#explorer [role=tab], #explorer [role=tablist]').length`)) === 0 && !(await tree()).some((n) => ["tab", "tablist"].includes(n.role?.value) && n.name?.value === "Series"));
+
+  // keyboard: series. Focus is placed on the pressed series button (the one programmatic step), then real keys do the rest.
+  const before = pressedNames(series)[0], c0 = await chart();
+  await s.ev(`document.querySelector('#explorer .cs-chips button[aria-pressed="true"]').focus()`);
+  await keyEv("Tab"); const a1 = await active();
+  rec("series: a real Tab moves focus to the next series button (each is a Tab stop), without selecting it", a1.inChips && a1.pressed === "false" && a1.text !== before.replace(/\s+/g, " "), `focus on "${a1.text}", pressed ${a1.pressed}`);
+  await keyEv(" "); series = await read("Series"); const c1 = await chart(); const a2 = await active();
+  rec("series: Space selects it; the accessibility tree then reports it pressed and the previous one not; the chart changes; focus stays on the button",
+    pressedNames(series).length === 1 && pressedNames(series)[0] === a1.text && pressedNames(series)[0] !== before && c1.label !== c0.label && c1.sig !== c0.sig && a2.text === a1.text,
+    `pressed now "${pressedNames(series)[0]}" (was "${before}"); chart: ${c1.label?.slice(0, 40)}`);
+  await keyEv("Tab"); const a3 = await active(); await keyEv("Enter"); series = await read("Series"); const c2 = await chart();
+  rec("series: Tab then Enter selects the next one the same way", pressedNames(series).length === 1 && pressedNames(series)[0] === a3.text && c2.label !== c1.label, `pressed "${pressedNames(series)[0]}"`);
+  await keyEv("Tab", 8); const a4 = await active();
+  rec("series: Shift+Tab moves back to the previous series button", a4.inChips && a4.text === a1.text, `focus on "${a4.text}"`);
+
+  // keyboard: time range
+  const rBefore = pressedNames(range)[0], r0 = await chart();
+  await s.ev(`document.querySelector('#explorer .cs-seg button[aria-pressed="true"]').focus()`);
+  await keyEv("Tab"); const b1 = await active();
+  await keyEv(" "); range = await read("Time range"); const r1 = await chart();
+  rec("time range: Tab reaches the next range button; Space selects it; the accessibility tree reports it pressed and the previous one not; the chart changes",
+    b1.inSeg && pressedNames(range).length === 1 && pressedNames(range)[0] === b1.text && pressedNames(range)[0] !== rBefore && r1.sig !== r0.sig,
+    `pressed now "${pressedNames(range)[0]}" (was "${rBefore}")`);
+  await keyEv("Tab", 8); const b2 = await active();   // back towards the first range button (Tab from the last one would leave the group)
+  if (b2.inSeg) { await keyEv("Enter"); range = await read("Time range"); }
+  rec("time range: Shift+Tab then Enter selects the previous range button", b2.inSeg && b2.text !== b1.text && pressedNames(range).length === 1 && pressedNames(range)[0] === b2.text, `focus "${b2.text}", pressed "${pressedNames(range)[0]}"`);
+  rec("no console errors during the keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+  s.done();
 }
 console.log(out.join("\n")); process.exit(0);

@@ -34,6 +34,7 @@ if (suitesFile) {
     ["motion", ["qa/fqa.mjs", "motion", base]],
     ["new", ["qa/fqa.mjs", "new", base]],
     ["finish", ["qa/fqa.mjs", "finish", base]],
+    ["retail-a11y", ["qa/fqa.mjs", "retail-a11y", base]],
     ["nav", ["qa/navobs.mjs", base]],
     ["hash", ["qa/hash.mjs", base]],
     ["structure", ["qa/axaudit.mjs", base]],

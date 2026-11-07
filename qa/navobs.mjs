@@ -1,17 +1,20 @@
-// Does the floating navigation get in the way of controls on a phone? usage: node qa/navobs.mjs [base]
+// Does the floating navigation get in the way of controls? usage: node qa/navobs.mjs [base]
 //
-// What this exercises (headless Chrome, 390x844 mobile emulation with touch):
-//   - real touch input: a tap (Input.dispatchTouchEvent) and swipes (Input.synthesizeScrollGesture, gestureSourceType "touch");
-//     the page is never scrolled with window.scrollBy/scrollTo here, so the page's own scroll-direction logic runs
-//   - real key events (Input.dispatchKeyEvent) for the keyboard-focus case
-// What it asserts:
-//   - the controls were actually found (a count is asserted, so "found nothing" fails instead of passing)
-//   - at every sampled scroll position, the visible centre of every control (gallery selector tabs, and the controls inside the
-//     active exhibit) is what a pointer would actually hit: elementFromPoint at that centre returns the control itself
-//   - scrolling down hides the bar; scrolling up through the control strips yields to them and returns after them
-//   - keyboard focus on the bar brings it back, and it hides again once focus has left and the page is scrolled down
-// What it does not do: it does not run in Safari, and the one programmatic step is placing focus on the first control after the
-// bar (focus()) before pressing a real Shift+Tab, because Chrome has no sequential-focus start point in a fresh page.
+// Runs the same journey at 390, 768, 960 (touch) and 1024, 1440 px (real mouse wheel and mouse clicks), headless Chrome.
+// What this exercises:
+//   - real input: taps and swipes (Input.synthesizeScrollGesture, touch) up to 960 px; mouse clicks and mouse-wheel scrolling
+//     from 1024 px; real key events for the keyboard case. The page is never scrolled with scrollBy/scrollTo, so the page's own
+//     scroll logic runs.
+// What it asserts, at every width:
+//   - the controls were actually found (counts are asserted, so "found nothing" fails instead of passing)
+//   - after each scroll step on the way down and then back up through the gallery selector and the Retail controls, the visible
+//     centre of every control (selector tabs and the active exhibit's buttons) is what a pointer would actually hit
+//   - when the bar is showing, the centre of each of its own controls receives input
+//   - up to 960 px: scrolling down hides the bar, scrolling up yields to the selector and control strips and returns after, and
+//     keyboard focus on the bar brings it back (real Shift+Tab) and it hides again once focus has left
+// What it does not do: no Safari; Chrome's touch emulation is not a finger on iOS. From 1024 px the keyboard case is not run
+// (the bar's Menu button is not shown there). One programmatic setup step: focus() on the first control after the bar before the
+// real Shift+Tab.
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 
@@ -55,85 +58,117 @@ const PROBE = `(() => {
     const hit = document.elementFromPoint(c.x, c.y);
     ctrls.push({ n: name(el), y: Math.round(c.y), ok: hit === el || el.contains(hit), by: hit?.closest('.exnav') ? 'NAV' : (hit ? String(hit.className || hit.tagName).slice(0, 24) : 'nothing') });
   }
+  const navCtl = [];                              // the bar's own controls that are on screen: does a pointer hit each one?
+  for (const el of document.querySelectorAll('.exnav a, .exnav button')) {
+    const r = el.getBoundingClientRect();
+    if (r.width < 4 || r.height < 4 || r.bottom <= 0 || r.top >= innerHeight) continue;
+    const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    navCtl.push({ n: name(el), ok: hit === el || el.contains(hit) });
+  }
   const idx = document.querySelector('.gx__index')?.getBoundingClientRect();
   const menu = document.querySelector('.exnav__menu');
   const mc = menu ? menu.getBoundingClientRect() : null;
   const mhit = mc ? document.elementFromPoint(mc.x + mc.width / 2, mc.y + mc.height / 2) : null;
   return {
-    y: Math.round(scrollY), hidden: nav.classList.contains('is-hidden'),
+    y: Math.round(scrollY), hidden: nav.classList.contains('is-hidden'), yielded: /is-yield/.test(nav.className),
     selTop: idx ? Math.round(idx.top) : null, selBottom: idx ? Math.round(idx.bottom) : null,
     selUnderBar: !!idx && idx.bottom > 0 && idx.top < 72,
     menuOnScreen: !!mc && mc.top >= 0 && mc.bottom <= innerHeight, menuHit: !!mhit && (mhit === menu || menu.contains(mhit)),
     inNav: !!document.activeElement?.closest('.exnav'), active: document.activeElement?.className?.toString().slice(0, 30) || document.activeElement?.tagName,
-    ctrls,
+    navCtl, ctrls,
   };
 })()`;
 
 // ── real input ──
-const tap = async (x, y) => { await send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] }); await sleep(60); await send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] }); await sleep(500); };
-// positive dy reads further down the page. The bar's own transition is ~350 ms, so wait it out before sampling.
-const swipe = async (dy) => { const y0 = await ev("scrollY"); await send("Input.synthesizeScrollGesture", { x: 195, y: 420, yDistance: -dy, gestureSourceType: "touch", speed: 500, preventFling: true }); await sleep(800); return (await ev("scrollY")) - y0; };
-const tab = async (shift) => { const m = shift ? 8 : 0; await send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(20); await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(500); };
 const summary = (cs) => cs.filter((c) => !c.ok).map((c) => `${c.n} @y${c.y} hit ${c.by}`).slice(0, 4).join("; ");
+const tab = async (shift) => { const m = shift ? 8 : 0; await send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(20); await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(500); };
+
+async function runWidth({ w, h, touch }) {
+  const L = `${w}px`;
+  const mobile = w <= 960 && touch;
+  const tap = async (x, y) => {
+    if (touch) { await send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] }); await sleep(60); await send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] }); }
+    else { await send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y }); await send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 }); await sleep(40); await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 }); }
+    await sleep(500);
+  };
+  // positive dy reads further down the page. The bar's own transition is ~350 ms, so wait it out before sampling.
+  const swipe = async (dy) => { const y0 = await ev("scrollY"); await send("Input.synthesizeScrollGesture", { x: Math.round(w / 2), y: 420, yDistance: -dy, gestureSourceType: touch ? "touch" : "mouse", speed: touch ? 500 : 800, preventFling: true }); await sleep(800); return (await ev("scrollY")) - y0; };
+
+  await send("Emulation.setDeviceMetricsOverride", { width: w, height: h, deviceScaleFactor: 1, mobile: touch });
+  await send("Emulation.setTouchEmulationEnabled", { enabled: touch, maxTouchPoints: touch ? 5 : 0 });
+  await send("Page.navigate", { url: `${base}/?nw=${w}#work` }); await sleep(7500);
+
+  // 1 ── the selector is found and every tab's visible centre receives input
+  let s = await ev(PROBE);
+  const tabs = s.ctrls.filter((c) => /Taxproof|Retail|Preventive/i.test(c.n));
+  rec(`${L}: gallery selector: all 3 tabs found on screen, and each visible centre hits the tab itself`, tabs.length === 3 && tabs.every((c) => c.ok), `found ${tabs.length}; ${summary(s.ctrls) || "none blocked"}`);
+
+  // 2 ── a real tap or click on the Retail tab selects it
+  const pt = await ev(`(()=>{const r=document.getElementById('gx-tab-1').getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+  await tap(pt.x, pt.y); await sleep(1800);
+  rec(`${L}: ${touch ? "touch tap" : "mouse click"} on the Retail tab selects it`, (await ev(`document.getElementById('gx-tab-1').getAttribute('aria-selected')`)) === "true");
+
+  // 3 ── scroll DOWN until the chart's range buttons are near the top of the screen
+  const moved = [];
+  // Position under control: coarse gestures down, then corrective gestures (either direction) until the range buttons sit 0 to 60 px
+  // from the top, i.e. under where the bar would be. A fixed number of gestures lands on a threshold at some widths and overshoots.
+  const rtop = () => ev(`document.querySelector('.rm__range').getBoundingClientRect().top`);
+  for (let i = 0; i < 20; i++) { const t0 = await rtop(); if (t0 >= 0 && t0 <= 60) break; moved.push(await swipe(Math.max(-120, Math.min(110, Math.round(t0 - 30))))); }
+  s = await ev(PROBE);
+  const retailCtl = s.ctrls.filter((c) => /^S\d|wk|1 yr|All|band|Expand/i.test(c.n));
+  const rangeTop = await ev(`document.querySelector('.rm__range').getBoundingClientRect().top`);
+  rec(`${L}: ${touch ? "touch" : "mouse-wheel"} scroll down: the page moved and the range buttons are 0 to 60 px from the top of the screen`, moved.length > 0 && moved.some((d) => d > 20) && rangeTop >= 0 && rangeTop <= 60, `${moved.length} gestures, moved ${moved.join(",")}px, range top ${Math.round(rangeTop)}`);
+  rec(`${L}: scroll down: the Retail controls (series, ranges, band, Expand) are found${mobile ? " and the bar is hidden" : ""}`, retailCtl.length >= 8 && (!mobile || s.hidden), `found ${retailCtl.length} of ${s.ctrls.length} controls (${s.ctrls.map((c) => c.n).join(' | ').slice(0, 160)}); bar hidden ${s.hidden}; scrollY ${s.y}; range top ${Math.round(rangeTop)}`);
+  let all = [...s.ctrls]; let sawYield = false, sawReturn = false, samples = 1, hiddenSamples = s.hidden ? 1 : 0; const offenders = [], navBad = [];
+  if (s.ctrls.some((c) => !c.ok)) offenders.push(`down y${s.y}: ${summary(s.ctrls)}`);
+
+  // 4 ── scroll UP in small steps past the chart controls and past the gallery selector, sampling every step
+  const step = touch ? 70 : 40; const upMoves = []; let guard = 0;
+  while (guard++ < 70) {
+    const d = await swipe(-step); upMoves.push(d);
+    s = await ev(PROBE); samples++; all = all.concat(s.ctrls);
+    if (s.hidden || s.yielded) hiddenSamples++;
+    if (s.ctrls.some((c) => !c.ok)) offenders.push(`y${s.y} ${s.hidden ? "bar hidden" : "bar shown"}: ${summary(s.ctrls)}`);
+    if (s.navCtl.some((c) => !c.ok)) navBad.push(`y${s.y}: ${s.navCtl.filter((c) => !c.ok).map((c) => c.n).join(",")}`);
+    if (s.selUnderBar && s.hidden) sawYield = true;
+    if (!s.hidden) sawReturn = true;
+    if (s.selTop !== null && s.selTop > 150) break;       // the selector has passed under the bar and is well below it
+    if (d >= -5) break;                                    // top of the page reached, or the gesture did not move it
+  }
+  rec(`${L}: scroll up: every gesture moved the page up, and the selector was reached`, upMoves.length > 3 && upMoves.slice(0, -1).every((d) => d < -10) && s.selTop !== null && s.selTop > 150, `${upMoves.length} gestures; selector top ${s.selTop}`);
+  rec(`${L}: visible centre of every control receives input at all ${samples} sampled positions (down, then up through the control strips)`, offenders.length === 0 && all.length >= 30, `${all.length} control checks; ${offenders.slice(0, 3).join(" | ") || "none obstructed"}`);
+  rec(`${L}: whenever the bar is showing, each of its own on-screen controls receives input at its centre`, navBad.length === 0 && sawReturn && !s.hidden && s.navCtl.length >= 2, `${s.navCtl.length} bar controls on screen at the end; ${navBad.slice(0, 2).join(" | ") || "none obstructed"}`);
+  if (mobile) {
+    rec(`${L}: scroll up: the bar stayed away while the selector or a control strip was under it`, sawYield);
+    rec(`${L}: scroll up: the bar returned once they had passed, and its Menu button is hit at its centre`, sawReturn && s.menuHit && s.menuOnScreen && !s.hidden, `shown ${!s.hidden}, menu hit ${s.menuHit}`);
+  } else {
+    out.push(`INFO  ${L}: a capsule stepped aside in ${hiddenSamples} of ${samples} samples while a control sat under it (not an assertion by itself; the obstruction assertions above are)`);
+  }
+
+  // 5 ── keyboard (up to 960 px, where the Menu button is the bar's last control): hide the bar, then bring focus back with a real Shift+Tab
+  if (mobile) {
+    await swipe(130); await swipe(130);
+    s = await ev(PROBE);
+    const hiddenAgain = s.hidden;
+    const anchored = await ev(`(()=>{const nav=document.querySelector('.exnav'); const f=[...document.querySelectorAll('a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])')].find(e=>!nav.contains(e)&&(nav.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)&&e.offsetParent!==null); if(!f) return null; f.focus({preventScroll:true}); return (f.innerText||f.getAttribute('aria-label')||f.tagName).trim().slice(0,28)})()`);
+    await tab(true);
+    s = await ev(PROBE);
+    rec(`${L}: keyboard: with the bar hidden, a real Shift+Tab from the first control after it lands on the bar and brings it back`, hiddenAgain && !!anchored && s.inNav && !s.hidden && /exnav__menu/.test(s.active), `hidden before ${hiddenAgain}; focus now ${s.active}; bar shown ${!s.hidden}`);
+    rec(`${L}: keyboard: the focused Menu button is on screen and receives input at its centre`, s.menuOnScreen && s.menuHit);
+    await tab(false); await tab(false);
+    s = await ev(PROBE);
+    const left = !s.inNav;
+    // Tabbing onward can scroll the page back to the top, where the bar is always shown (by design, below 140 px). Read down again first.
+    for (let i = 0; i < 6 && (await ev("scrollY")) < 400; i++) await swipe(130);
+    s = await ev(PROBE);
+    rec(`${L}: keyboard: once focus has left the bar, scrolling down hides it again`, left && s.hidden && s.y >= 400, `focus left bar ${left}; scrollY ${s.y}; hidden ${s.hidden}`);
+  }
+}
 
 await send("Page.enable");
-await send("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
-await send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
-await send("Page.navigate", { url: base + "/#work" }); await sleep(6500);
-await sleep(1500); // let the hash-landing retries finish
-
-// 1 ── the selector is found and every tab's visible centre receives input
-let s = await ev(PROBE);
-const tabs = s.ctrls.filter((c) => /Taxproof|Retail|Preventive/i.test(c.n));
-rec("gallery selector: all 3 tabs found on screen, and each visible centre hits the tab itself", tabs.length === 3 && tabs.every((c) => c.ok), `found ${tabs.length}; ${summary(s.ctrls) || "none blocked"}`);
-
-// 2 ── a real touch tap on the Retail tab selects it
-const pt = await ev(`(()=>{const r=document.getElementById('gx-tab-1').getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
-await tap(pt.x, pt.y); await sleep(1800);
-rec("touch tap on the Retail tab selects it", (await ev(`document.getElementById('gx-tab-1').getAttribute('aria-selected')`)) === "true");
-
-// 3 ── touch-scroll DOWN until the chart's range buttons are near the top; the bar must be away and nothing sits under it
-let moved = [];
-for (let i = 0; i < 14 && (await ev(`document.querySelector('.rm__range').getBoundingClientRect().top`)) > 60; i++) moved.push(await swipe(110));
-s = await ev(PROBE);
-const retailCtl = s.ctrls.filter((c) => /^S\d|wk|1 yr|All|band|Expand/i.test(c.n));
-rec("touch scroll down: the page moved with every swipe and the range buttons reached the top of the screen", moved.length > 0 && moved.every((d) => d > 20) && (await ev(`document.querySelector('.rm__range').getBoundingClientRect().top`)) <= 60, `${moved.length} swipes, moved ${moved.join(",")}px`);
-rec("touch scroll down: the bar is hidden and the Retail controls (series, ranges, band, Expand) are found", s.hidden && retailCtl.length >= 8, `hidden ${s.hidden}; found ${retailCtl.length} Retail controls`);
-let all = [...s.ctrls]; let sawYield = false, sawReturn = false, samples = 1; const offenders = [];
-if (s.ctrls.some((c) => !c.ok)) offenders.push(`down: ${summary(s.ctrls)}`);
-
-// 4 ── touch-scroll UP in small steps, past the chart controls and past the gallery selector, sampling every step
-let upMoves = [], guard = 0;
-while (guard++ < 40) {
-  const d = await swipe(-70); upMoves.push(d);
-  s = await ev(PROBE); samples++; all = all.concat(s.ctrls);
-  if (s.ctrls.some((c) => !c.ok)) offenders.push(`y${s.y} ${s.hidden ? "bar hidden" : "bar shown"}: ${summary(s.ctrls)}`);
-  if (s.selUnderBar && s.hidden) sawYield = true;
-  if (!s.hidden && s.menuOnScreen) sawReturn = true;
-  if (s.selTop !== null && s.selTop > 150) break;       // the selector has passed under the bar and is well below it
-  if (d >= -5) break;                                    // reached the top of the page or the swipe did not move it
-}
-rec("touch scroll up: every swipe moved the page up, and the selector was reached", upMoves.length > 3 && upMoves.slice(0, -1).every((d) => d < -20) && s.selTop !== null && s.selTop > 150, `${upMoves.length} swipes; selector top ${s.selTop}`);
-rec(`visible centre of every control receives input at all ${samples} sampled positions (down, then up through the control strips)`, offenders.length === 0 && all.length >= 30, `${all.length} control checks; ${offenders.slice(0, 3).join(" | ") || "none obstructed"}`);
-rec("scroll up: the bar stayed away while the selector or a control strip was under it", sawYield);
-rec("scroll up: the bar returned once they had passed, and its Menu button is hit at its centre", sawReturn && s.menuHit && s.menuOnScreen && !s.hidden, `shown ${!s.hidden}, menu hit ${s.menuHit}`);
-
-// 5 ── keyboard: hide the bar again, then bring focus back to it with real Shift+Tab
-await swipe(130); await swipe(130);
-s = await ev(PROBE);
-const hiddenAgain = s.hidden;
-const anchored = await ev(`(()=>{const nav=document.querySelector('.exnav'); const f=[...document.querySelectorAll('a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])')].find(e=>!nav.contains(e)&&(nav.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)&&e.offsetParent!==null); if(!f) return null; f.focus({preventScroll:true}); return (f.innerText||f.getAttribute('aria-label')||f.tagName).trim().slice(0,28)})()`);
-await tab(true);
-s = await ev(PROBE);
-rec("keyboard: with the bar hidden, a real Shift+Tab from the first control after it lands on the bar and brings it back", hiddenAgain && !!anchored && s.inNav && !s.hidden && /exnav__menu/.test(s.active), `hidden before ${hiddenAgain}; anchored on "${anchored}"; focus now ${s.active}; bar shown ${!s.hidden}`);
-rec("keyboard: the focused Menu button is on screen and receives input at its centre", s.menuOnScreen && s.menuHit);
-await tab(false); await tab(false);
-s = await ev(PROBE);
-const left = !s.inNav;
-// Tabbing onward can scroll the page back to the top, where the bar is always shown (by design, below 140 px). Read down again first.
-for (let i = 0; i < 5 && (await ev("scrollY")) < 400; i++) await swipe(130);
-s = await ev(PROBE);
-rec("keyboard: once focus has left the bar, scrolling down hides it again", left && s.hidden && s.y >= 400, `focus left bar ${left}; scrollY ${s.y}; hidden ${s.hidden}`);
+// NAVOBS_WIDTHS=768,1024 runs only those widths (for reproducing one)
+const only = process.env.NAVOBS_WIDTHS?.split(",").map(Number);
+for (const cfg of [{ w: 390, h: 844, touch: true }, { w: 768, h: 1024, touch: true }, { w: 960, h: 800, touch: true }, { w: 1024, h: 768, touch: false }, { w: 1440, h: 900, touch: false }]) if (!only || only.includes(cfg.w)) await runWidth(cfg);
 
 console.log(out.join("\n"));
 ws.close(); chrome.kill();
