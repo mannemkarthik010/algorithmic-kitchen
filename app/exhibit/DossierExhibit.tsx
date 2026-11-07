@@ -11,6 +11,10 @@ import { taxproof } from "../components/case/taxproof-data";
  */
 const fmt = (n: number) => n.toLocaleString("en-US");
 
+function Tag({ k, children }: { k: "orig" | "ext" | "calc" | "ver"; children: React.ReactNode }) {
+  return <span className={`dos-tag dos-tag--${k}`}>{children}</span>;
+}
+
 export default function DossierExhibit() {
   const m = taxproof.traces.find((t) => t.id === "mileage")!;
   const docs = m.nodes.filter((n) => n.kind === "doc");
@@ -19,8 +23,6 @@ export default function DossierExhibit() {
   const cost = m.nodes.find((n) => n.id === "SchC.9")!;
   const dupDoc = Object.entries(m.flags).find(([, f]) => f.type === "duplicate" && f.title === "Duplicate page");
   const sha = taxproof.meta.packetSha256.slice(0, 16);
-
-  const Tag = ({ k, children }: { k: "orig" | "ext" | "calc" | "ver"; children: React.ReactNode }) => (<span className={`dos-tag dos-tag--${k}`}>{children}</span>);
 
   const pages = [
     // 0 cover
