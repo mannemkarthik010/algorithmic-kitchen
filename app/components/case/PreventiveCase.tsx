@@ -42,7 +42,7 @@ export default function PreventiveCase() {
         <div className="container">
           <Link className="cs-back" href="/#work">← The exhibition</Link>
           <p className="cs-eyebrow">Case study 03 · Agentic RAG, deterministic risk, critic loop</p>
-          <motion.h1 className="cs-h1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
+          <motion.h1 className="cs-h1" initial={{ y: 22 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
             An agent that keeps the <em>arithmetic</em> out of the model.
           </motion.h1>
 

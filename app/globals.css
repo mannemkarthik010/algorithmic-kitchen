@@ -103,7 +103,7 @@
   --muted-hi:  #A3A29E;   /* soft grey */
   --signal:    #70D5B3;   /* data and status only */
   --ivory:     #EDEBE4;
-  --blue:      #4169E1;
+  --blue:      #3A5CCB;   /* electric blue, deepened from #4169E1 so paper text on it and it on paper both clear 4.5:1 */
   --ink:       #121212;
   --paper:     #EDEBE4;
   --orange-ink: #C8381B;   /* signal orange darkened for text on paper (4.6:1) */

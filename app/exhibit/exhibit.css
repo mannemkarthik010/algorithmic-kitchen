@@ -605,3 +605,33 @@
 @media (prefers-reduced-motion: reduce) { .cx__card, .cn__bar { transition: none; } }
 .exnav.is-blue { mix-blend-mode: normal; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ── target sizes: nothing interactive under 24px, most at 36px or more ───────────────────── */
+.ex-foot--full a { display: inline-flex; align-items: center; min-height: 36px; min-width: 44px; padding: 0 4px; }
+.arc__sub a, .ex-open__index a { display: inline-block; padding: 5px 2px; }
+.cs .cs-links a { display: inline-flex; align-items: center; min-height: 36px; }
+.cs .cs-check { min-height: 32px; } .cs .cs-check input { width: 20px; height: 20px; }
+.cs summary { display: flex; align-items: center; min-height: 36px; cursor: pointer; }
+.lib-tab { height: 32px; min-width: 44px; }
+.cs-seg button, .cs-chip { min-height: 32px; }
+
+/* ── narrow TaxProof chain: rows size to their content so the stamp never lands on the next label ── */
+@container (max-width: 720px) {
+  .tm__chain { grid-template-rows: none; grid-auto-rows: auto; align-content: start; gap: 6px; overflow-y: auto; }
+  .tm-row { padding-bottom: 4px; }
+  .tm__warn { rotate: 0deg; margin: 8px 0 2px; }
+}
+/* ── overlay bar on a phone ── */
+@media (max-width: 640px) {
+  .gx-over__bar { padding-top: max(10px, env(safe-area-inset-top)); }
+  .gx-over__close, .gx-over__case { font-size: 10.5px; letter-spacing: .05em; gap: 6px; }
+}
+.lib-credit { display: inline-flex; align-items: center; min-height: 32px; }
+.cs .cs-check input { width: 24px; height: 24px; }
+.cs .cs-src a, .cs-small a { display: inline-block; padding: 4px 0; }
+.cs button { min-height: 28px; }
+@container (max-width: 720px) {
+  .tm__foot, .pm__foot { flex-direction: column; align-items: stretch; gap: 10px; }
+  .tm__foot p, .pm__foot p { max-width: none; }
+  .tm__foot .mw-open, .pm__foot .mw-open { width: 100%; justify-content: center; text-align: center; }
+}
