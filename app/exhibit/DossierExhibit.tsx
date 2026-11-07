@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import PageFlip from "@/components/kokonutui/page-flip";
 import EvidenceGraph from "../components/case/EvidenceGraph";
 import { taxproof } from "../components/case/taxproof-data";
@@ -15,8 +16,20 @@ function Tag({ k, children }: { k: "orig" | "ext" | "calc" | "ver"; children: Re
   return <span className={`dos-tag dos-tag--${k}`}>{children}</span>;
 }
 
-export default function DossierExhibit() {
+/** Which spread holds the evidence for a return line: the scanned pages for the mileage total, the calculated page for the lines built from it. */
+const SPREAD_FOR: Record<string, number> = { "SchC.44a": 2, "SchC.9": 4, "SchC.28": 4, "SchC.29": 4 };
+const WHERE: Record<string, string> = {
+  "SchC.44a": "the original pages, with page 3 stamped as the duplicate",
+  "SchC.9": "the calculated output and its verification",
+  "SchC.28": "the calculated output and its verification",
+  "SchC.29": "the calculated output and its verification",
+};
+
+export default function DossierExhibit({ line }: { line?: string }) {
+  const [start, setStart] = useState(line ? (SPREAD_FOR[line] ?? 0) : 0);
+  const [shown, setShown] = useState(0);
   const m = taxproof.traces.find((t) => t.id === "mileage")!;
+  const picked = line ? m.nodes.find((n) => n.id === line) : null;
   const docs = m.nodes.filter((n) => n.kind === "doc");
   const ev = m.nodes.filter((n) => n.kind === "evidence");
   const total = m.nodes.find((n) => n.id === "SchC.44a")!;
@@ -102,8 +115,18 @@ export default function DossierExhibit() {
         <p className="ex-mono">01 · The dossier</p>
         <h3>TaxProof: a tax workpaper where every number carries its <em>proof</em>.</h3>
       </div>
+      <p className="dos-ctx" role="status">
+        {picked && start > 0 ? (
+          <>
+            <span>Opened from the workpaper: <b>{picked.id.replace("SchC.", "Line ")} · {picked.label}</b>. The dossier is open at {WHERE[picked.id]}.</span>
+            <button type="button" onClick={() => { setStart(0); setShown((n) => n + 1); }}>Start from the cover</button>
+          </>
+        ) : (
+          <span>The dossier opens at its cover. Turn the pages, or pick a return line in the workpaper to open it at that line&apos;s evidence.</span>
+        )}
+      </p>
       <div className="dos-book" aria-label="TaxProof evidence dossier, a book of pages you can turn">
-        <PageFlip pages={pages} />
+        <PageFlip key={`${start}-${shown}`} pages={pages} initialSpread={start} />
       </div>
       <p className="dos-keys ex-mono">Turn pages: drag a corner, click an edge, or use ← →</p>
       <div className="dos-head dos-head--2">

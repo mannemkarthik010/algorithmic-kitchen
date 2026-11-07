@@ -44,6 +44,8 @@ export interface PageFlipProps {
   /** Called with the spread index after a page settles. */
   onSpreadChange?: (spread: number) => void;
   className?: string;
+  /** Local adaptation: the spread to open on, counted as on a wide screen (spread s shows pages 2s-1 and 2s; 0 is the cover). */
+  initialSpread?: number;
 }
 
 /** Below this frame width (px), the book shows one page at a time. */
@@ -207,6 +209,7 @@ export default function PageFlip({
   pages = DEFAULT_PAGES,
   onSpreadChange,
   className,
+  initialSpread = 0,
 }: PageFlipProps) {
   const reduceMotion = useReducedMotion();
   const bookRef = useRef<HTMLDivElement>(null);
@@ -216,7 +219,7 @@ export default function PageFlip({
   const [single, setSingle] = useState(false);
   const singleRef = useRef(false);
   // The spread on two pages, or the page on one.
-  const [spread, setSpread] = useState(0);
+  const [spread, setSpread] = useState(Math.max(0, Math.min(initialSpread, Math.ceil((pages.length - 1) / 2))));
   const [turn, setTurn] = useState<Turn | null>(null);
   /** The spread a committed turn is heading for, so the book recenters with it. */
   const [heading, setHeading] = useState<number | null>(null);

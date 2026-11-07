@@ -20,9 +20,12 @@ const LINKS = [
  */
 export default function ExNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [onBlue, setOnBlue] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40);
+    // difference-blending turns amber over saturated blue, so use plain white while the blue case-study opening is behind the bar
+    const hero = document.querySelector<HTMLElement>(".cs--prev .cs-hero");
+    const on = () => { setScrolled(window.scrollY > 40); setOnBlue(!!hero && hero.getBoundingClientRect().bottom > 64); };
     on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
@@ -30,7 +33,7 @@ export default function ExNav() {
 
   return (
     <motion.header
-      className={`exnav${scrolled ? " is-split" : ""}`}
+      className={`exnav${scrolled ? " is-split" : ""}${onBlue ? " is-blue" : ""}`}
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}

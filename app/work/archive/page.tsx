@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "../../exhibit/exhibit.css";
 import Nav from "../../components/Nav";
+import ExFooter from "../../exhibit/ExFooter";
 import { resume } from "../../data/resume";
 import { STATUS } from "../../lib/status";
 
@@ -50,15 +51,7 @@ export default function Archive() {
         })}
       </ol>
 
-      <footer className="ex-foot">
-        <span>© {new Date().getFullYear()} Karthik Mannem</span>
-        <nav aria-label="Footer">
-          <Link href="/">Home</Link>
-          <Link href="/#work">The exhibition</Link>
-          <a href={resume.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-          <Link href="/play">Play ECHO//SHIFT</Link>
-        </nav>
-      </footer>
+      <ExFooter />
     </main>
   );
 }

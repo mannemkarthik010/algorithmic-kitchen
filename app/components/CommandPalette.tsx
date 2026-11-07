@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "./ui/command";
 import { DialogDescription, DialogTitle } from "./ui/dialog";
 import { resume, featuredWork } from "../data/resume";
@@ -17,6 +17,7 @@ const SECTIONS: [string, string, string][] = [
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const run = useCallback((fn: () => void) => () => { setOpen(false); setTimeout(fn, 90); }, []);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function CommandPalette() {
 
         <CommandGroup heading="Go to">
           {SECTIONS.map(([id, label, kw]) => (
-            <CommandItem key={id} value={`${label} ${kw}`} onSelect={run(() => scrollToId(id))}>
+            <CommandItem key={id} value={`${label} ${kw}`} onSelect={run(() => (pathname === "/" ? scrollToId(id) : router.push(`/#${id}`)))}>
               <span>{label}</span>
               <CommandShortcut>#{id}</CommandShortcut>
             </CommandItem>

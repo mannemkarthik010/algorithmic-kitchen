@@ -3,7 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import Nav from "../Nav";
-import Footer from "../Footer";
+import ExFooter from "../../exhibit/ExFooter";
+import CaseNav from "../../exhibit/CaseNav";
+import CaseNext from "../../exhibit/CaseNext";
 import CommandPalette from "../CommandPalette";
 import AgentWorkflow from "./AgentWorkflow";
 import PreventiveLanes from "./PreventiveLanes";
@@ -33,12 +35,12 @@ const LIMITS = [
 export default function PreventiveCase() {
   const m = preventive.meta;
   return (
-    <main className="cs">
+    <main className="cs cs--prev">
       <Nav />
 
       <header className="cs-hero">
         <div className="container">
-          <Link className="cs-back" href="/#projects">← All work</Link>
+          <Link className="cs-back" href="/#work">← The exhibition</Link>
           <p className="cs-eyebrow">Case study 03 · Agentic RAG, deterministic risk, critic loop</p>
           <motion.h1 className="cs-h1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
             An agent that keeps the <em>arithmetic</em> out of the model.
@@ -71,8 +73,9 @@ export default function PreventiveCase() {
           </div>
         </div>
       </header>
+      <CaseNav />
 
-      <section className="cs-sec">
+      <section className="cs-sec cs-paper">
         <div className="container cs-split">
           <div className="cs-rail"><span>01</span><h2>The problem</h2></div>
           <div>
@@ -145,7 +148,7 @@ export default function PreventiveCase() {
         </div>
       </section>
 
-      <section className="cs-sec">
+      <section className="cs-sec cs-paper">
         <div className="container cs-two">
           <motion.div {...reveal}>
             <p className="cs-eyebrow">06 · Decisions</p>
@@ -171,13 +174,14 @@ export default function PreventiveCase() {
           <div className="cs-end__links">
             <a className="pill-cta" href={m.demoUrl} target="_blank" rel="noopener noreferrer">Open the live demo ↗</a>
             <a className="fw-ghost" href={m.repoUrl} target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
-            <Link className="fw-ghost" href="/#projects">← Back to all work</Link>
+            <Link className="fw-ghost" href="/#work">← Back to the exhibition</Link>
           </div>
           <p className="cs-src">Values on this page are read from <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer">{m.repo} @ {m.sha.slice(0, 7)}</a> by <code>scripts/build-preventive-data.py</code>, which executes the repository&apos;s risk function and asserts every statement about the pipeline against its source.</p>
         </div>
       </section>
 
-      <Footer />
+      <CaseNext current="preventive" />
+      <ExFooter />
       <CommandPalette />
     </main>
   );

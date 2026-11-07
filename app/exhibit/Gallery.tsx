@@ -8,6 +8,7 @@ import { EXHIBITS } from "./Opening";
 import TaxMini from "./gallery/TaxMini";
 import RetailMini from "./gallery/RetailMini";
 import PrevMini from "./gallery/PrevMini";
+import { PrevCover, RetailCover, TaxCover } from "./gallery/Covers";
 
 const Overlay = dynamic(() => import("./gallery/Overlay"), { ssr: false });
 
@@ -27,6 +28,7 @@ const TONE = ["tax", "retail", "prev"] as const;
 export default function Gallery() {
   const [sel, setSel] = useState(0);
   const [open, setOpen] = useState<number | null>(null);
+  const [taxLine, setTaxLine] = useState("SchC.44a");
   const rm = useReducedMotion();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const wins = useRef<(HTMLDivElement | null)[]>([]);
@@ -88,13 +90,17 @@ export default function Gallery() {
             <motion.div key={i} id={`gx-win-${i}`} className={`gx-win gx-win--${TONE[i]}${active ? " is-active" : ""}`} ref={(el) => { wins.current[i] = el; }}
               role="tabpanel" aria-labelledby={`gx-tab-${i}`} aria-hidden={!active}
               initial={false}
-              animate={{ x: `${o * 56}%`, rotateY: o * -30, scale: active ? 1 : 0.76, opacity: active ? 1 : 0.5, filter: active ? "blur(0px)" : "blur(2.5px)", z: active ? 0 : -260 }}
+              animate={{ x: `${o * 56}%`, rotateY: o * -30, scale: active ? 1 : 0.76, opacity: active ? 1 : 0.82, filter: active ? "blur(0px)" : "blur(1.2px)", z: active ? 0 : -260 }}
               transition={spring} style={{ zIndex: active ? 3 : 1 }}>
               <div className="gx-win__in" inert={!active}>
-                {i === 0 && <TaxMini onExpand={expand(0)} active={active} />}
+                {i === 0 && <TaxMini onExpand={expand(0)} onSelect={setTaxLine} active={active} />}
                 {i === 1 && <RetailMini onExpand={expand(1)} active={active} />}
                 {i === 2 && <PrevMini onExpand={expand(2)} active={active} />}
               </div>
+              {/* the cover sits over the live interface (still mounted, state kept) and fades away when the window comes forward */}
+              <motion.div className="gx-cover" aria-hidden="true" initial={false} animate={{ opacity: active ? 0 : 1 }} transition={rm ? { duration: 0 } : { duration: 0.5, delay: active ? 0.15 : 0 }}>
+                {i === 0 && <TaxCover />}{i === 1 && <RetailCover />}{i === 2 && <PrevCover />}
+              </motion.div>
               {!active && <button type="button" className="gx-win__veil" onClick={() => setSel(i)} aria-label={`Bring forward: ${EXHIBITS[i].name}`} />}
             </motion.div>
           );
@@ -111,7 +117,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {open !== null && <Overlay index={open} opener={opener} getRect={rectOf} onClosed={() => setOpen(null)} />}
+      {open !== null && <Overlay index={open} line={taxLine} opener={opener} getRect={rectOf} onClosed={() => setOpen(null)} />}
     </section>
   );
 }

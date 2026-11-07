@@ -33,7 +33,7 @@ function lineage(id: string) {
   };
 }
 
-export default function TaxMini({ onExpand, active }: { onExpand: () => void; active: boolean }) {
+export default function TaxMini({ onExpand, onSelect, active }: { onExpand: () => void; onSelect?: (id: string) => void; active: boolean }) {
   const rm = useReducedMotion();
   const [sel, setSel] = useState(LINES[0]);
   const L = useMemo(() => lineage(sel), [sel]);
@@ -66,7 +66,7 @@ export default function TaxMini({ onExpand, active }: { onExpand: () => void; ac
             const n = L.trace.nodes.find((x) => x.id === id)!;
             return (
               <li key={id}>
-                <button type="button" className={`tm__line${sel === id ? " is-on" : ""}`} aria-pressed={sel === id} onClick={() => setSel(id)} tabIndex={active ? 0 : -1}>
+                <button type="button" className={`tm__line${sel === id ? " is-on" : ""}`} aria-pressed={sel === id} onClick={() => { setSel(id); onSelect?.(id); }} tabIndex={active ? 0 : -1}>
                   <span className="tm__id">{id.replace("SchC.", "Line ")}</span>
                   <span className="tm__lab">{n.label}</span>
                   <b className={`tm__val${flag(id) ? " is-flag" : ""}`}>{fmt(n.value, n.unit)}</b>
@@ -111,7 +111,7 @@ export default function TaxMini({ onExpand, active }: { onExpand: () => void; ac
       </div>
       <footer className="tm__foot">
         <p>Three lineages are traced (mileage, receipts, wages), not every line of the return.</p>
-        <button type="button" className="mw-open" onClick={onExpand} tabIndex={active ? 0 : -1}>Open the dossier <span aria-hidden="true">↗</span></button>
+        <button type="button" className="mw-open" onClick={onExpand} tabIndex={active ? 0 : -1}>Open the dossier at this line <span aria-hidden="true">↗</span></button>
       </footer>
     </div>
   );

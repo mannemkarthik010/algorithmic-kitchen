@@ -25,9 +25,9 @@ function Observatory() {
       <div className="obs__head">
         <p className="ex-mono">Forecasting observatory · synthetic sales, real repository output</p>
         <div className="obs__nums">
-          <div><b>{gbm.meanWape.toFixed(1)}<small>%</small></b><span>mean WAPE, gradient boosting, best of three models</span></div>
-          <div><b>{gbm.wins}<small> / {total}</small></b><span>series won; seasonal-naive won {retail.leaderboard.find((m) => m.model === "seasonal_naive")!.wins}</span></div>
-          <div><b className="is-gap">{(cov.overall * 100).toFixed(1)}<small>%</small></b><span>of held-out values fell inside the 80% interval. The target was 80. That gap is reported, not hidden.</span></div>
+          <div><b>{gbm.meanWape.toFixed(1)}<small>%</small></b><span>mean WAPE, gradient boosting<em className="obs__more">, best of three models</em></span></div>
+          <div><b>{gbm.wins}<small> / {total}</small></b><span>series won<em className="obs__more">; seasonal-naive won {retail.leaderboard.find((m) => m.model === "seasonal_naive")!.wins}</em></span></div>
+          <div><b className="is-gap">{(cov.overall * 100).toFixed(1)}<small>%</small></b><span>inside the 80% interval, target 80<em className="obs__more">. That gap is reported, not hidden.</em></span></div>
         </div>
       </div>
       <ForecastStudio variant="observatory" />
@@ -133,7 +133,7 @@ function Theatre() {
  * A full-screen exhibit. It opens by growing from the on-screen rectangle of the window that launched it and closes by
  * shrinking back to wherever that window is now. Focus is trapped, the page behind is locked, Escape closes.
  */
-export default function Overlay({ index, opener: openerProp, getRect, onClosed }: { index: number; opener: React.MutableRefObject<Element | null>; getRect: () => DOMRect | null; onClosed: () => void }) {
+export default function Overlay({ index, line, opener: openerProp, getRect, onClosed }: { index: number; line?: string; opener: React.MutableRefObject<Element | null>; getRect: () => DOMRect | null; onClosed: () => void }) {
   const rm = useReducedMotion();
   const root = useRef<HTMLDivElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
@@ -191,7 +191,7 @@ export default function Overlay({ index, opener: openerProp, getRect, onClosed }
           <Link className="gx-over__case" href={m.href}>Open the case study →</Link>
         </header>
         <div className="gx-over__body">
-          {index === 0 && <DossierExhibit />}
+          {index === 0 && <DossierExhibit line={line} />}
           {index === 1 && <Observatory />}
           {index === 2 && <Theatre />}
         </div>
