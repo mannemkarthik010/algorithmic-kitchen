@@ -165,7 +165,7 @@ export default function Overlay({ index, opener: openerProp, getRect, onClosed }
     if (r && !rm) await animate(el, { top: r.top, left: r.left, width: r.width, height: r.height }, { duration: 0.5, ease: [0.22, 1, 0.36, 1] });
     (openerProp.current as HTMLElement | null)?.focus?.();
     onClosed();
-  }, [getRect, onClosed, rm]);
+  }, [getRect, onClosed, rm, openerProp]);
 
   useEffect(() => {
     const key = (e: KeyboardEvent) => {

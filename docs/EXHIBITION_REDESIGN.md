@@ -21,7 +21,8 @@ Branch `redesign/exhibition`. Nothing here is merged or deployed. The previous d
 | Kokonut UI | AI Agent Lanes (customised) | `/work/preventive-care` | Used (earlier round) |
 | Kokonut UI | Slide Text Button | Hero call to action | Used |
 | Kokonut UI | Scroll Index | Installed; no longer on the homepage (the brief limits it to long case studies) | Installed, not placed on a case page yet |
-| Kokonut UI | AI Diff Review, Lightbox Grid | Installed, read | **Not integrated.** Code Evolution still uses my own diff viewer from the earlier round |
+| Kokonut UI | AI Diff Review (patched: `readOnly`, `defaultOpen`) | Code Evolution, Change and Validation stages and the expanded view, fed by the real GitHub hunks | Used. Every accept, reject, undo and bulk control is removed so nothing implies a write to GitHub |
+| Kokonut UI | Lightbox Grid | "The real screens" under the gallery: three flagship screenshots and the SplitWise poster | Used |
 | Kokonut UI | Split Nav, Extruded Text | Pro (paid). Not copied | I built an original split-capsule navigation instead |
 | Motion | springs, drag with constraints, layoutId, AnimatePresence, scroll | Hero artifacts, gallery index and exhibit transitions, nav, game screens and results | Used |
 | Anime.js | timeline, drawable | TaxProof explorer wires (earlier round); game time-reset sweep, door and flash | Used |
@@ -71,3 +72,59 @@ Desktop, unthrottled: LCP 120 ms (`/`), 84 ms (`/play`). These are single cold l
 - `/api/chat` and `/api/contact` remain but nothing on the site calls them now.
 - Not tested: Safari, a physical touch device, a screen reader, a full keyboard-only pass of the homepage (the gallery has arrow, Home and End keys and the game is fully keyboard-playable, but I did not drive the homepage with the keyboard), sound.
 - The game has no audio files: sound is tiny oscillator effects behind an off-by-default toggle.
+
+---
+
+## Milestone 2: the flagship gallery and full-screen exhibits
+
+Branch `redesign/exhibition` (pushed; not merged or deployed).
+
+**Gallery** (`app/exhibit/Gallery.tsx`, `app/exhibit/gallery/*`). A depth coverflow on a soft-grey floor: the active exhibit is large, sharp and interactive; the other two turn away, recede, dim and blur, and a click on the visible part of one brings it forward (the index is also a keyboard tablist: arrows, Home, End). Three working miniature applications, each with its own identity:
+
+| Exhibit | What you can do in the miniature | Opens into |
+|---|---|---|
+| TaxProof (paper workpaper) | Pick a return line; Anime.js draws the original pages, the values read, the rule and the result from the real mileage lineage. The duplicated page 3 is flagged | The flippable dossier (Kokonut Page Flip) and the full evidence explorer |
+| Retail (ink instrument) | Choose among 7 real series, change the range, toggle the 80% band, hover or arrow through weeks; error by model; the 74.2% vs 80% coverage | Forecasting Observatory: the Bklit chart dominant under three metrics (7.9%, 154 of 240, 74.2% shown against its 80% target) |
+| Preventive Care (blue editor) | Select any of the five real stages; choose a sample patient (real computed risk); replay one pass through the real router under three critic scenarios | Agent Theatre: five large stage modules, replay, the real LoopSim, and the four limitations |
+
+Each overlay grows from the on-screen rectangle of the window that opened it and shrinks back to wherever that window is; focus is trapped, the page is locked, Escape closes and returns focus to the button that opened it.
+
+**What the pages do not do.** The Theatre runs only the risk arithmetic and the router. It shows no retrieved passages, drafts, critic text or medical recommendations, and says so on every stage module. The TaxProof miniature follows selected lineages only; the dossier does not follow the line selected in the miniature (Page Flip has no controlled page API).
+
+**Work Archive** `/work/archive`: Woodlands IMS, SplitWise Pro, Fake Currency Detection, the Netflix recommender and the BERT length predictor, read from `resume.ts`, with real GitHub and demo links and no link where none exists. "Explore all projects" sits under the gallery.
+
+**Tablet.** 1024: the installation is scaled as one piece and every link is clear of the artwork. 768: the copy runs in two columns and the three artifacts cascade across the full width on a diagonal.
+
+**Case studies.** They inherit the new type and colours through the tokens, and hard-coded old copper, slate and ivory values in their panels and charts were migrated. They keep their original all-dark layouts, which is the main remaining inconsistency with the ink and paper rhythm of the homepage.
+
+### Verification
+
+`tsc` clean, `eslint` 0 errors (1 existing warning), 38 tests pass, production build (`/work/archive` is static), résumé sync passes.
+
+Real browser input over the DevTools protocol, run against the production server:
+- Gallery, 28 checks, all pass: arrow, Home and End keys on the index with focus following; clicking a receding window; only the active window interactive; the TaxProof line change (result $8,260 and rule R-STANDARD-MILEAGE); Retail series choice and arrow-key week reading; the "never passes" replay reaching the revision cap; overlay dialog, scroll lock, initial focus, Tab trapped, Escape closing and focus returning to the opener; at 390px one exhibit at a time, no horizontal overflow, selector targets 75px, controls at least 32px, the theatre opening and closing; reduced motion; zero console errors in desktop, phone and reduced-motion runs.
+- ECHO//SHIFT regression, 17 of 17 pass (keyboard, saved progress, replay, share, hazard death, daily, touch, reduced motion).
+
+Bugs the checks found, now fixed: reduced motion caused a React hydration mismatch (Motion's hook reports the client value on first render); the overlay recorded its opener after the lazy module loaded, so focus returned to the wrong element; a CSS rule I added disabled pointer events on the click-to-bring-forward veil.
+
+Performance (production build, headless Chrome on this Mac, cold cache, 390px, 4x CPU, 1.6 Mbps, 150 ms RTT):
+
+| Page | FCP / LCP | CLS | JS up front | Slowest real event |
+|---|---|---|---|---|
+| `/` | 1.76 s | 0 | 377 KB | 40 ms (project tab), 24 ms (opening the dossier overlay) |
+| `/work/archive` | 1.53 s | 0 | 378 KB | none |
+| `/play` | 1.50 s | 0 | 473 KB | none |
+
+Desktop, unthrottled: LCP 100 ms, CLS 0.015. The overlay code (Bklit, the dossier, the explorer) loads when an exhibit is opened and is not in the up-front figure. Single cold loads and one interaction each: not Lighthouse and not a true INP.
+
+### Visual comparison
+
+`docs/screenshots/compare-marlow-vs-gallery.png` sets Marlow's selected work beside this gallery. Marlow's covers are polished product-mockup objects on coloured grounds, all in view at once. Mine are denser, working data interfaces in depth: more interactive, less graphic. Tablet and phone captures: `exhibition-hero-{1440,1024,768,390}.png`, `gallery-retail-390.png`, `overlay-theatre-390.png`.
+
+### Not done, or not verified
+
+- The gallery is a coverflow of working applications, not Marlow-style graphic covers. A graphic cover state for the inactive windows would make the three feel more like objects.
+- The dossier does not sync with the line selected in the TaxProof miniature.
+- Case-study pages still use their original layouts (all dark).
+- Not tested: Safari, a physical touch device, a screen reader. The homepage was driven by keyboard in the gallery and overlays only, not end to end.
+- The coverflow blurs and transforms are CSS and Motion; no frame-rate measurement was made on a real mid-range phone.
