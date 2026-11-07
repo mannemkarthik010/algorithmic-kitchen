@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { EXHIBITS } from "./Opening";
 
-const TaxProofShowcase = dynamic(() => import("../components/showcase/TaxProofShowcase"));
+const DossierExhibit = dynamic(() => import("./DossierExhibit"));
 const RetailShowcase = dynamic(() => import("../components/showcase/RetailShowcase"));
 const PreventiveShowcase = dynamic(() => import("../components/showcase/PreventiveShowcase"));
 
@@ -45,7 +45,7 @@ export default function Gallery() {
     tabs.current[n]?.focus();
   }, [sel]);
 
-  const Body = [TaxProofShowcase, RetailShowcase, PreventiveShowcase][sel];
+  const Body = [DossierExhibit, RetailShowcase, PreventiveShowcase][sel];
   const e = EXHIBITS[sel];
 
   return (

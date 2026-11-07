@@ -190,3 +190,46 @@
 .lab-play__art i:nth-child(2) { left: 46%; top: 36%; background: #c084fc; box-shadow: 0 0 26px #c084fc; opacity: .8; }
 .lab-play__art i:nth-child(3) { left: 76%; top: 14%; background: #fff; box-shadow: 0 0 30px #fff; }
 @media (max-width: 860px) { .lab-play { grid-template-columns: minmax(0, 1fr); } .lab-play__art { height: 120px; } }
+
+/* ── TaxProof dossier ─────────────────────────────────────────────────────────────────────── */
+.dos { display: grid; gap: 18px; }
+.dos-head .ex-mono { color: var(--orange); margin: 0 0 10px; }
+.dos-head h3 { font: 800 clamp(1.6rem, 3.6vw, 3rem)/1 var(--f-body); letter-spacing: -.045em; margin: 0; max-width: 20ch; }
+.dos-head h3 em { color: var(--orange); }
+.dos-head--2 { margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(237,235,228,.2); }
+.dos-explain { margin: 0; color: var(--muted-hi); max-width: 60ch; font-size: 15px; line-height: 1.5; }
+.dos-book { max-width: 1020px; width: 100%; margin: 6px auto 0; filter: drop-shadow(0 40px 50px rgba(0,0,0,.6)); }
+.dos-keys { text-align: center; color: var(--muted-hi); margin: 0; }
+.dos-explorer { min-width: 0; }
+.dos-page { height: 100%; padding: clamp(14px, 2.6vw, 34px); background: var(--paper); color: var(--ink); font-size: clamp(10.5px, 1.2vw, 14px); line-height: 1.45; overflow: hidden; display: flex; flex-direction: column; gap: .7em; }
+.dos-page h4 { font: 800 clamp(1.1rem, 2.4vw, 2rem)/1.02 var(--f-body); letter-spacing: -.04em; margin: 0; }
+.dos-page p { margin: 0; }
+.dos-mono { font: 500 .78em var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: rgba(18,18,18,.62); }
+.dos-note { color: #34342f; max-width: 42ch; }
+.dos-note--small { font-size: .85em; color: rgba(18,18,18,.62); }
+.dos-cover { background: var(--ink); color: var(--paper); justify-content: space-between; border-left: 6px solid var(--orange); }
+.dos-cover .dos-mono { color: var(--muted-hi); }
+.dos-cover h3 { font: 800 clamp(2.2rem, 5.6vw, 4.6rem)/.84 var(--f-body); letter-spacing: -.07em; margin: 0; text-transform: uppercase; }
+.dos-cover__who { font: 400 clamp(1rem, 2vw, 1.6rem)/1.15 var(--f-display); font-style: italic; }
+.dos-cover__hint { color: var(--orange) !important; }
+.dos-tag { align-self: flex-start; display: inline-block; padding: .25em .7em; font: 600 .74em var(--f-mono); letter-spacing: .14em; text-transform: uppercase; border: 1px solid currentColor; }
+.dos-tag--orig { color: var(--ink); }
+.dos-tag--ext { color: var(--blue); }
+.dos-tag--calc { color: var(--orange-ink); }
+.dos-tag--ver { color: #146b4a; }
+.dos-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: .9em; }
+.dos-legend li { display: grid; gap: .35em; }
+.dos-scan { flex: 1; min-height: 60px; background: #e2dfd6; border: 1px solid rgba(18,18,18,.18); padding: 12% 10%; display: grid; align-content: space-evenly; gap: 6px; position: relative; }
+.dos-scan i { display: block; height: 5px; background: rgba(18,18,18,.2); }
+.dos-scan i:nth-child(2) { width: 80%; } .dos-scan i:nth-child(3) { width: 92%; } .dos-scan i:nth-child(4) { width: 64%; } .dos-scan i:nth-child(5) { width: 86%; }
+.dos-scan b { display: block; height: 14px; width: 36%; background: rgba(65,105,225,.35); justify-self: end; }
+.dos-read { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-top: 1px solid var(--ink); padding-top: .6em; }
+.dos-read span { font: 500 .78em var(--f-mono); letter-spacing: .1em; text-transform: uppercase; }
+.dos-read b { font: 800 1.6em var(--f-body); letter-spacing: -.04em; color: var(--blue); }
+.dos-stamp { align-self: flex-start; rotate: -4deg; border: 3px solid var(--orange-ink); color: var(--orange-ink); font: 800 1.1em var(--f-mono); letter-spacing: .14em; text-transform: uppercase; padding: .2em .6em; }
+.dos-table { width: 100%; border-collapse: collapse; font-size: 1em; }
+.dos-table th { text-align: left; font: 500 .78em var(--f-mono); letter-spacing: .1em; text-transform: uppercase; border-bottom: 1px solid var(--ink); padding: .4em 0; }
+.dos-table td { padding: .55em 0; border-bottom: 1px solid rgba(18,18,18,.15); font-variant-numeric: tabular-nums; color: var(--blue); font-weight: 700; }
+.dos-table tr.is-flag td { color: var(--orange-ink); }
+.dos-rule { font: 500 .95em/1.45 var(--f-mono); border-left: 3px solid var(--orange-ink); padding-left: .8em; }
+.dos-line { font-size: 1.05em; } .dos-line b { display: block; font: 800 2em var(--f-body); letter-spacing: -.04em; color: var(--orange-ink); }
