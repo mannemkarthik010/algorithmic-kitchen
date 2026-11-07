@@ -34,7 +34,7 @@ const iso = (s: string) => new Date(`${s}T00:00:00Z`);
  * the repository data. Only that model's forecast exists in the data, so other models appear by error, never as curves.
  * The week scrubber and the data table are the keyboard and screen-reader routes into the same numbers.
  */
-export default function ForecastStudio() {
+export default function ForecastStudio({ variant = "card" }: { variant?: "card" | "observatory" }) {
   const rm = useReducedMotion();
   const [sid, setSid] = useState(IDS[0]);
   const [preset, setPreset] = useState<(typeof PRESETS)[number]["k"]>("2y");
@@ -88,7 +88,7 @@ export default function ForecastStudio() {
   const trans = rm ? { duration: 0 } : { duration: 0.6, ease: EASE };
 
   return (
-    <div className="fs">
+    <div className={`fs${variant === "observatory" ? " fs--obs" : ""}`}>
       <div className="fs__head">
         <div>
           <h4>Forecasting studio</h4>

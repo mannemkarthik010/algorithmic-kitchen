@@ -1,30 +1,34 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { EXHIBITS } from "./Opening";
+import TaxMini from "./gallery/TaxMini";
+import RetailMini from "./gallery/RetailMini";
+import PrevMini from "./gallery/PrevMini";
 
-const DossierExhibit = dynamic(() => import("./DossierExhibit"));
-const RetailShowcase = dynamic(() => import("../components/showcase/RetailShowcase"));
-const PreventiveShowcase = dynamic(() => import("../components/showcase/PreventiveShowcase"));
+const Overlay = dynamic(() => import("./gallery/Overlay"), { ssr: false });
 
 const CASE = ["/work/taxproof", "/work/retail-demand-intelligence", "/work/preventive-care"];
 const LINE = [
-  "Every number on the return carries its source, its rule and a tamper-evident history.",
-  "Forecasts that report how often their own intervals were right: 74.2% against a nominal 80%.",
-  "Risk computed in code, sources listed, a critic loop with at most two revisions.",
+  "Pick a return line. The path behind it draws itself: page, value read, rule, result.",
+  "Change the series, scrub the weeks, read the 80% band. It covered 74.2% where it promised 80.",
+  "Five stages and one loop. Replay it, and see what the page does not run.",
 ];
+const TONE = ["tax", "retail", "prev"] as const;
 
 /**
- * The live project gallery. A large editorial index on the left, one enormous working exhibit on the right.
- * Selection uses a shared layout underline; the exhibit changes with a short depth-of-field transition (the outgoing
- * piece softens and recedes, the incoming one sharpens and arrives). Fully keyboard-operable (arrow keys, Home/End).
+ * The live gallery as a coverflow. Three working miniature applications stand in one space: the active one is large, sharp
+ * and interactive; its neighbours turn away, recede, dim and soften, and a click on one brings it forward. Each opens into
+ * a full-screen exhibit from its own on-screen rectangle. Keyboard: the index is a tablist (arrows, Home, End).
  */
 export default function Gallery() {
   const [sel, setSel] = useState(0);
+  const [open, setOpen] = useState<number | null>(null);
   const rm = useReducedMotion();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const wins = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const on = (e: Event) => setSel((e as CustomEvent<number>).detail);
@@ -33,73 +37,79 @@ export default function Gallery() {
   }, []);
 
   const onKey = useCallback((e: React.KeyboardEvent) => {
-    const k = e.key;
     let n = sel;
-    if (k === "ArrowRight" || k === "ArrowDown") n = (sel + 1) % 3;
-    else if (k === "ArrowLeft" || k === "ArrowUp") n = (sel + 2) % 3;
-    else if (k === "Home") n = 0;
-    else if (k === "End") n = 2;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") n = (sel + 1) % 3;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") n = (sel + 2) % 3;
+    else if (e.key === "Home") n = 0;
+    else if (e.key === "End") n = 2;
     else return;
     e.preventDefault();
     setSel(n);
     tabs.current[n]?.focus();
   }, [sel]);
 
-  const Body = [DossierExhibit, RetailShowcase, PreventiveShowcase][sel];
+  const rectOf = useCallback(() => wins.current[open ?? sel]?.getBoundingClientRect() ?? null, [open, sel]);
   const e = EXHIBITS[sel];
+  const expand = (i: number) => () => setOpen(i);
+
+  const spring = rm ? { duration: 0 } : { type: "spring" as const, stiffness: 120, damping: 20, mass: 0.9 };
+  const offset = (i: number) => ((i - sel + 4) % 3) - 1; // -1, 0, 1
 
   return (
-    <section id="work" className="ex-gallery" aria-label="Live project exhibits">
-      <div className="ex-gallery__bignum" aria-hidden="true">
+    <section id="work" className="gx" aria-label="Live project exhibits">
+      <div className="gx__bignum" aria-hidden="true">
         <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span key={e.n} initial={rm ? false : { y: "40%", opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={rm ? { opacity: 0 } : { y: "-30%", opacity: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>{e.n}</motion.span>
+          <motion.span key={e.n} initial={rm ? false : { y: "35%", opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={rm ? { opacity: 0 } : { y: "-25%", opacity: 0 }} transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}>{e.n}</motion.span>
         </AnimatePresence>
       </div>
 
-      <div className="ex-gallery__grid">
-        <div className="ex-gallery__side">
-          <p className="ex-mono ex-gallery__eyebrow">(01) &nbsp;Three working exhibits</p>
-          <LayoutGroup id="ex-index">
-            <div role="tablist" aria-label="Projects" aria-orientation="vertical" className="ex-index" onKeyDown={onKey}>
-              {EXHIBITS.map((x, i) => (
-                <button
-                  key={x.slug}
-                  ref={(el) => { tabs.current[i] = el; }}
-                  role="tab" id={`ex-tab-${i}`} aria-selected={sel === i} aria-controls="ex-panel" tabIndex={sel === i ? 0 : -1}
-                  className={`ex-index__item${sel === i ? " is-on" : ""}`}
-                  onClick={() => setSel(i)}
-                >
-                  <span className="ex-index__n">{x.n}</span>
-                  <span className="ex-index__t">{x.name}</span>
-                  <span className="ex-index__k">{x.kind}</span>
-                  {sel === i && <motion.span layoutId="ex-index-bar" className="ex-index__bar" transition={{ type: "spring", stiffness: 380, damping: 36 }} />}
-                </button>
-              ))}
-            </div>
-          </LayoutGroup>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.p key={sel} className="ex-gallery__line" initial={rm ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-              {LINE[sel]}
-            </motion.p>
-          </AnimatePresence>
-          <Link className="ex-link ex-gallery__case" href={CASE[sel]}>Open the full case study →</Link>
-        </div>
+      <div className="gx__top">
+        <p className="ex-mono">(01) &nbsp;Three working exhibits · interact before you read</p>
+        <LayoutGroup id="gx-index">
+          <div role="tablist" aria-label="Projects" className="gx__index" onKeyDown={onKey}>
+            {EXHIBITS.map((x, i) => (
+              <button key={x.slug} ref={(el) => { tabs.current[i] = el; }} role="tab" id={`gx-tab-${i}`} aria-selected={sel === i} aria-controls={`gx-win-${i}`} tabIndex={sel === i ? 0 : -1}
+                className={`gx__tab${sel === i ? " is-on" : ""}`} onClick={() => setSel(i)}>
+                <span>{x.n}</span><b>{x.name}</b>
+                {sel === i && <motion.i layoutId="gx-bar" className="gx__bar" transition={{ type: "spring", stiffness: 380, damping: 36 }} />}
+              </button>
+            ))}
+          </div>
+        </LayoutGroup>
+      </div>
 
-        <div className="ex-stage" id="ex-panel" role="tabpanel" aria-labelledby={`ex-tab-${sel}`}>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={sel}
-              className="ex-stage__inner"
-              initial={rm ? false : { opacity: 0, scale: 0.965, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={rm ? { opacity: 0 } : { opacity: 0, scale: 1.03, filter: "blur(8px)" }}
-              transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Body />
+      <div className="gx__stage">
+        {[0, 1, 2].map((i) => {
+          const o = offset(i);
+          const active = o === 0;
+          return (
+            <motion.div key={i} id={`gx-win-${i}`} className={`gx-win gx-win--${TONE[i]}${active ? " is-active" : ""}`} ref={(el) => { wins.current[i] = el; }}
+              role="tabpanel" aria-labelledby={`gx-tab-${i}`} aria-hidden={!active}
+              initial={false}
+              animate={{ x: `${o * 56}%`, rotateY: o * -30, scale: active ? 1 : 0.76, opacity: active ? 1 : 0.5, filter: active ? "blur(0px)" : "blur(2.5px)", z: active ? 0 : -260 }}
+              transition={spring} style={{ zIndex: active ? 3 : 1 }}>
+              <div className="gx-win__in" inert={!active}>
+                {i === 0 && <TaxMini onExpand={expand(0)} active={active} />}
+                {i === 1 && <RetailMini onExpand={expand(1)} active={active} />}
+                {i === 2 && <PrevMini onExpand={expand(2)} active={active} />}
+              </div>
+              {!active && <button type="button" className="gx-win__veil" onClick={() => setSel(i)} aria-label={`Bring forward: ${EXHIBITS[i].name}`} />}
             </motion.div>
-          </AnimatePresence>
+          );
+        })}
+      </div>
+
+      <div className="gx__foot">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p key={sel} className="gx__line" initial={rm ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>{LINE[sel]}</motion.p>
+        </AnimatePresence>
+        <div className="gx__links">
+          <Link className="ex-link" href={CASE[sel]}>Open the full case study →</Link>
+          <Link className="ex-link" href="/work/archive">Explore all projects →</Link>
         </div>
       </div>
+
+      {open !== null && <Overlay index={open} getRect={rectOf} onClosed={() => setOpen(null)} />}
     </section>
   );
 }
