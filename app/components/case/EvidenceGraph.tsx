@@ -360,9 +360,9 @@ export default function EvidenceGraph() {
     <div className="cs-panel tp-panel">
       <div className="cs-panel__top">
         <h3 className="cs-panel__title">Follow a number to its proof</h3>
-        <div className="cs-chips" role="tablist" aria-label="Choose a lineage">
+        <div className="cs-chips" role="group" aria-label="Choose a lineage">
           {taxproof.traces.map((t) => (
-            <button key={t.id} type="button" role="tab" aria-selected={t.id === id} className={`cs-chip${t.id === id ? " is-on" : ""}`} onClick={() => setId(t.id)}>{t.tab}</button>
+            <button key={t.id} type="button" aria-pressed={t.id === id} className={`cs-chip${t.id === id ? " is-on" : ""}`} onClick={() => setId(t.id)}>{t.tab}</button>
           ))}
         </div>
       </div>

@@ -12,9 +12,13 @@
 //   - when the bar is showing, the centre of each of its own controls receives input
 //   - up to 960 px: scrolling down hides the bar, scrolling up yields to the selector and control strips and returns after, and
 //     keyboard focus on the bar brings it back (real Shift+Tab) and it hides again once focus has left
-// What it does not do: no Safari; Chrome's touch emulation is not a finger on iOS. From 1024 px the keyboard case is not run
-// (the bar's Menu button is not shown there). One programmatic setup step: focus() on the first control after the bar before the
-// real Shift+Tab.
+// From 1024 px (where one capsule at a time steps aside) it also runs a keyboard case: return to a position where a capsule had
+// yielded, enter the header with real Tab or Shift+Tab, and assert that every capsule is back and on screen, that the focused link
+// is hit at its centre, that the command-palette button works with Enter, and that once focus has left (a real mouse click on
+// empty page) the capsule yields again.
+// What it does not do: no Safari; Chrome's touch emulation is not a finger on iOS. Programmatic setup steps: focus() on the first
+// control after the bar before a real Shift+Tab; scrollTo() back to a position recorded during the sweep before the wide keyboard
+// case; focusing <body> so that a real Tab starts from the skip link.
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 
@@ -70,7 +74,8 @@ const PROBE = `(() => {
   const mc = menu ? menu.getBoundingClientRect() : null;
   const mhit = mc ? document.elementFromPoint(mc.x + mc.width / 2, mc.y + mc.height / 2) : null;
   return {
-    y: Math.round(scrollY), hidden: nav.classList.contains('is-hidden'), yielded: /is-yield/.test(nav.className),
+    y: Math.round(scrollY), hidden: nav.classList.contains('is-hidden'), yielded: /is-yield/.test(nav.className), yb: nav.classList.contains('is-yield-b'), yr: nav.classList.contains('is-yield-r'),
+    focusEl: (() => { const a = document.activeElement; if (!a || !a.closest('.exnav')) return null; const r = a.getBoundingClientRect(); const h = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return { cls: String(a.className || a.tagName).slice(0, 40), onScreen: r.width > 0 && r.top >= 0 && r.bottom <= innerHeight, hit: h === a || a.contains(h) }; })(),
     selTop: idx ? Math.round(idx.top) : null, selBottom: idx ? Math.round(idx.bottom) : null,
     selUnderBar: !!idx && idx.bottom > 0 && idx.top < 72,
     menuOnScreen: !!mc && mc.top >= 0 && mc.bottom <= innerHeight, menuHit: !!mhit && (mhit === menu || menu.contains(mhit)),
@@ -82,6 +87,56 @@ const PROBE = `(() => {
 // ── real input ──
 const summary = (cs) => cs.filter((c) => !c.ok).map((c) => `${c.n} @y${c.y} hit ${c.by}`).slice(0, 4).join("; ");
 const tab = async (shift) => { const m = shift ? 8 : 0; await send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(20); await send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9, modifiers: m }); await sleep(500); };
+
+// A real key press (keyDown with its character, then keyUp).
+const press = async (key, vk, code, text = "", modifiers = 0) => {
+  await send("Input.dispatchKeyEvent", { type: "keyDown", key, code, windowsVirtualKeyCode: vk, modifiers, ...(text ? { text } : {}) });
+  await sleep(25); await send("Input.dispatchKeyEvent", { type: "keyUp", key, code, windowsVirtualKeyCode: vk, modifiers }); await sleep(700);
+};
+// 1024 px and wider: keyboard focus entering a capsule that has stepped aside must bring every capsule back, and leaving must re-check.
+async function wideKeyboard(L, pos) {
+  rec(`${L}: wide keyboard: the sweep found a position where a capsule had stepped aside`, pos.r !== null || pos.b !== null, `right capsule at scrollY ${pos.r}, brand capsule at scrollY ${pos.b}`);
+  if (pos.r === null && pos.b === null) return;
+  const goTo = async (y) => { await ev(`window.scrollTo(0, ${y})`); await sleep(1200); return ev(PROBE); };
+  const allBack = (s) => !s.yb && !s.yr && !s.hidden && s.navCtl.length >= 7 && s.navCtl.every((c) => c.ok);
+
+  // A. enter from below with a real Shift+Tab: the first stop is the last control of the right-hand capsule (the command-palette button)
+  const y0 = pos.r ?? pos.b;
+  let s = await goTo(y0);
+  const pre = { yb: s.yb, yr: s.yr, y: s.y };
+  const anchored = await ev(`(()=>{const nav=document.querySelector('.exnav'); const f=[...document.querySelectorAll('a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])')].find(e=>!nav.contains(e)&&(nav.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING)&&e.offsetParent!==null); if(!f) return false; f.focus({preventScroll:true}); return true})()`);
+  s = await ev(PROBE);
+  rec(`${L}: wide keyboard: with focus in the page, the capsule is stepped aside (precondition)`, anchored && (pre.yb || pre.yr) && s.yielded && !s.focusEl, `right ${s.yr}, brand ${s.yb}`);
+  await press("Tab", 9, "Tab", "", 8);
+  s = await ev(PROBE);
+  rec(`${L}: wide keyboard: Shift+Tab into the header brings every capsule back; the focused link is on screen and is hit at its centre`, /exnav__k/.test(s.focusEl?.cls ?? "") && s.focusEl.onScreen && s.focusEl.hit && allBack(s), `focus ${s.focusEl?.cls}; on screen ${s.focusEl?.onScreen}; hit ${s.focusEl?.hit}; yielded b:${s.yb} r:${s.yr}; ${s.navCtl.length} bar controls, ${s.navCtl.filter((c) => !c.ok).length} obstructed`);
+  await press("Enter", 13, "Enter", "\r");
+  const opened = await ev(`!!document.querySelector('[role=dialog]')`);
+  await press("Escape", 27, "Escape");
+  const closed = !(await ev(`!!document.querySelector('[role=dialog]')`));
+  rec(`${L}: wide keyboard: Enter on the focused command-palette button opens the palette, Escape closes it`, opened && closed, `opened ${opened}, closed ${closed}`);
+
+  // focus leaves: a real mouse click on empty page, then the capsule must yield again at the same scroll position
+  const blank = await ev(`(()=>{const bad='a,button,input,[role=tab],[role=dialog],.exnav,[tabindex]:not([tabindex="-1"])'; for (let y = 90; y < innerHeight - 20; y += 20) for (let x = 6; x < innerWidth - 6; x += 30) { const e = document.elementFromPoint(x, y); if (!e || e.closest(bad)) continue; if (e.closest('.gx__stage') && !e.classList.contains('gx__stage')) continue; return { x, y }; } return null; })()`);
+  if (blank) { await send("Input.dispatchMouseEvent", { type: "mouseMoved", x: blank.x, y: blank.y }); await send("Input.dispatchMouseEvent", { type: "mousePressed", x: blank.x, y: blank.y, button: "left", clickCount: 1 }); await sleep(40); await send("Input.dispatchMouseEvent", { type: "mouseReleased", x: blank.x, y: blank.y, button: "left", clickCount: 1 }); }
+  await sleep(1300);
+  s = await ev(PROBE);
+  rec(`${L}: wide keyboard: after focus leaves the header the overlap is re-checked and the capsule yields again`, !!blank && !s.focusEl && s.yb === pre.yb && s.yr === pre.yr && Math.abs(s.y - pre.y) <= 2, `clicked ${JSON.stringify(blank)}; now right ${s.yr} brand ${s.yb} (before: right ${pre.yr} brand ${pre.yb}); scrollY ${s.y} (before ${pre.y})`);
+
+  // B. enter from above, as Tab from the start of the page does: skip link first, then the brand link
+  if (pos.b !== null) {
+    await ev(`document.activeElement.blur()`); await sleep(500);
+    s = await goTo(pos.b);
+    const preB = { yb: s.yb, yr: s.yr };
+    await ev(`document.activeElement.blur(); const b = document.body; b.tabIndex = -1; b.focus({ preventScroll: true }); b.removeAttribute('tabindex')`);
+    await press("Tab", 9, "Tab");
+    s = await ev(PROBE);
+    const first = s.focusEl?.cls ?? "";
+    await press("Tab", 9, "Tab");
+    s = await ev(PROBE);
+    rec(`${L}: wide keyboard: Tab from the top of the page (skip link, then the brand link) brings the stepped-aside brand capsule back; its link is on screen and hit at its centre`, preB.yb && /exnav__skip/.test(first) && /exnav__brand/.test(s.focusEl?.cls ?? "") && s.focusEl.onScreen && s.focusEl.hit && !s.yb && !s.yr, `first stop ${first}; then ${s.focusEl?.cls}; on screen ${s.focusEl?.onScreen}; hit ${s.focusEl?.hit}; yielded b:${s.yb} r:${s.yr}`);
+  } else out.push(`INFO  ${L}: the brand capsule never stepped aside in this sweep, so the forward (skip link, brand link) entry was not run`);
+}
 
 async function runWidth({ w, h, touch }) {
   const L = `${w}px`;
@@ -119,6 +174,7 @@ async function runWidth({ w, h, touch }) {
   const rangeTop = await ev(`document.querySelector('.rm__range').getBoundingClientRect().top`);
   rec(`${L}: ${touch ? "touch" : "mouse-wheel"} scroll down: the page moved and the range buttons are 0 to 60 px from the top of the screen`, moved.length > 0 && moved.some((d) => d > 20) && rangeTop >= 0 && rangeTop <= 60, `${moved.length} gestures, moved ${moved.join(",")}px, range top ${Math.round(rangeTop)}`);
   rec(`${L}: scroll down: the Retail controls (series, ranges, band, Expand) are found${mobile ? " and the bar is hidden" : ""}`, retailCtl.length >= 8 && (!mobile || s.hidden), `found ${retailCtl.length} of ${s.ctrls.length} controls (${s.ctrls.map((c) => c.n).join(' | ').slice(0, 160)}); bar hidden ${s.hidden}; scrollY ${s.y}; range top ${Math.round(rangeTop)}`);
+  const yieldPos = { b: null, r: null };
   let all = [...s.ctrls]; let sawYield = false, sawReturn = false, samples = 1, hiddenSamples = s.hidden ? 1 : 0; const offenders = [], navBad = [];
   if (s.ctrls.some((c) => !c.ok)) offenders.push(`down y${s.y}: ${summary(s.ctrls)}`);
 
@@ -128,6 +184,8 @@ async function runWidth({ w, h, touch }) {
     const d = await swipe(-step); upMoves.push(d);
     s = await ev(PROBE); samples++; all = all.concat(s.ctrls);
     if (s.hidden || s.yielded) hiddenSamples++;
+    if (s.yb && yieldPos.b === null) yieldPos.b = s.y;
+    if (s.yr && yieldPos.r === null) yieldPos.r = s.y;
     if (s.ctrls.some((c) => !c.ok)) offenders.push(`y${s.y} ${s.hidden ? "bar hidden" : "bar shown"}: ${summary(s.ctrls)}`);
     if (s.navCtl.some((c) => !c.ok)) navBad.push(`y${s.y}: ${s.navCtl.filter((c) => !c.ok).map((c) => c.n).join(",")}`);
     if (s.selUnderBar && s.hidden) sawYield = true;
@@ -162,6 +220,8 @@ async function runWidth({ w, h, touch }) {
     for (let i = 0; i < 6 && (await ev("scrollY")) < 400; i++) await swipe(130);
     s = await ev(PROBE);
     rec(`${L}: keyboard: once focus has left the bar, scrolling down hides it again`, left && s.hidden && s.y >= 400, `focus left bar ${left}; scrollY ${s.y}; hidden ${s.hidden}`);
+  } else {
+    await wideKeyboard(L, yieldPos);
   }
 }
 

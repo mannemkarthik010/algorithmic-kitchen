@@ -1,4 +1,4 @@
-// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y> [base]
+// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y> [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 const [mode, base = "http://localhost:3300"] = process.argv.slice(2);
@@ -281,6 +281,67 @@ if (mode === "retail-a11y") {
   if (b2.inSeg) { await keyEv("Enter"); range = await read("Time range"); }
   rec("time range: Shift+Tab then Enter selects the previous range button", b2.inSeg && b2.text !== b1.text && pressedNames(range).length === 1 && pressedNames(range)[0] === b2.text, `focus "${b2.text}", pressed "${pressedNames(range)[0]}"`);
   rec("no console errors during the keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+  s.done();
+}
+if (mode === "case-a11y") {
+  // The other case-study selectors, read from Chrome's accessibility tree and driven by real keys:
+  // TaxProof: lineage chips (EvidenceGraph), sample-log modes (HashChain), system-design layers (TaxProofCase).
+  // Retail: pipeline stages (PipelineDiagram). The last two were not changed; they are tested to confirm they already work.
+  const s = await session();
+  await s.send("Accessibility.enable"); await s.send("DOM.enable");
+  const ax = async (sel) => {
+    const doc = await s.send("DOM.getDocument", { depth: 0 });
+    const q = await s.send("DOM.querySelectorAll", { nodeId: doc.result.root.nodeId, selector: sel });
+    const out = [];
+    for (const nodeId of q.result.nodeIds) {
+      const n = (await s.send("Accessibility.getPartialAXTree", { nodeId, fetchRelatives: false })).result.nodes[0];
+      out.push({ role: n.role?.value, name: n.name?.value, pressed: n.properties?.find((p) => p.name === "pressed")?.value?.value });
+    }
+    return out;
+  };
+  const keyEv = async (k, mod = 0) => {
+    const d = { Tab: [9, "Tab", ""], " ": [32, "Space", " "], Enter: [13, "Enter", "\r"] }[k];
+    await s.send("Input.dispatchKeyEvent", { type: "keyDown", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod, ...(d[2] ? { text: d[2] } : {}) });
+    await sleep(25); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: k, code: d[1], windowsVirtualKeyCode: d[0], modifiers: mod }); await sleep(450);
+  };
+  const isPressed = (n) => String(n.pressed) === "true";
+  async function check(label, sel, effect, groupSel, groupName) {
+    const q = JSON.stringify(sel);
+    await s.ev(`document.querySelector(${q}).scrollIntoView({block:'center'})`); await sleep(900);
+    let nodes = await ax(sel);
+    const pressedIdx = () => s.ev(`[...document.querySelectorAll(${q})].findIndex(b=>b.getAttribute('aria-pressed')==='true')`);
+    const focusIdx = () => s.ev(`[...document.querySelectorAll(${q})].indexOf(document.activeElement)`);
+    rec(`${label}: ${nodes.length} buttons, each exposing a pressed state in the accessibility tree, exactly one pressed`,
+      nodes.length >= 2 && nodes.every((n) => n.role === "button" && ["true", "false"].includes(String(n.pressed))) && nodes.filter(isPressed).length === 1,
+      nodes.map((n) => `${n.name}=${n.pressed}`).join("; ").slice(0, 220));
+    if (groupSel) {
+      const g = (await ax(groupSel))[0];
+      rec(`${label}: the buttons sit in a labelled group named "${groupName}"`, g?.role === "group" && g?.name === groupName, `role ${g?.role}, name ${g?.name}`);
+    }
+    const p0 = await pressedIdx(), dir = p0 + 1 < nodes.length ? 1 : -1, t1 = p0 + dir, e0 = await effect();
+    await s.ev(`document.querySelectorAll(${q})[${p0}].focus()`);
+    await keyEv("Tab", dir < 0 ? 8 : 0);
+    rec(`${label}: a real ${dir < 0 ? "Shift+Tab" : "Tab"} moves focus to the neighbouring button without selecting it`, (await focusIdx()) === t1 && (await pressedIdx()) === p0, `focus on ${await focusIdx()} (wanted ${t1}), pressed ${await pressedIdx()}`);
+    await keyEv(" "); await sleep(1300); nodes = await ax(sel);
+    const e1 = await effect();
+    rec(`${label}: Space selects it; the tree reports it pressed and the others not; the page content changes`,
+      (await pressedIdx()) === t1 && nodes.filter(isPressed).length === 1 && isPressed(nodes[t1]) && e1 !== e0, `pressed ${await pressedIdx()} (wanted ${t1}); content changed ${e1 !== e0}`);
+    const t2 = t1 + dir >= 0 && t1 + dir < nodes.length ? t1 + dir : p0;
+    await keyEv("Tab", t2 > t1 ? 0 : 8);
+    const f2 = await focusIdx();
+    await keyEv("Enter"); await sleep(1300); nodes = await ax(sel);
+    rec(`${label}: ${t2 > t1 ? "Tab" : "Shift+Tab"} then Enter selects that one; the tree reports it pressed and the others not`, f2 === t2 && (await pressedIdx()) === t2 && nodes.filter(isPressed).length === 1 && isPressed(nodes[t2]), `focus ${f2}, pressed ${await pressedIdx()} (wanted ${t2})`);
+  }
+
+  await s.go("/work/taxproof", 6000);
+  rec("TaxProof lineage selector declares no tab or tablist roles", (await s.ev(`document.querySelectorAll('.tp-panel .cs-chips [role=tab], .tp-panel .cs-chips[role=tablist]').length`)) === 0);
+  await check("TaxProof lineage chips", ".tp-panel .cs-chips button", () => s.ev(`document.querySelector('.tp-panel .cs-panel__why').innerText`), ".tp-panel .cs-chips", "Choose a lineage");
+  await check("TaxProof sample-log modes", ".tp-chain__ctl button", () => s.ev(`document.querySelector('.tp-chain').innerText`), ".tp-chain__ctl", "Tamper with the sample log");
+  await check("TaxProof system-design layers (unchanged)", ".cs-pipe .cs-node", () => s.ev(`document.querySelector('.cs-pipe__detail').innerText`));
+  rec("no console errors on the TaxProof case study during keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+  await s.go("/work/retail-demand-intelligence", 6000);
+  await check("Retail pipeline stages (unchanged)", ".cs-pipe .cs-node", () => s.ev(`document.querySelector('.cs-pipe__detail').innerText`));
+  rec("no console errors on the Retail case study during keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
   s.done();
 }
 console.log(out.join("\n")); process.exit(0);

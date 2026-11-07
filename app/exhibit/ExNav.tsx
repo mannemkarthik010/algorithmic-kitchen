@@ -28,6 +28,8 @@ export default function ExNav() {
   const header = useRef<HTMLElement>(null);
   const hid = useRef(false); // mirrors `hidden` so the scroll handler and the focus handler agree
   const show = (v: boolean) => { hid.current = v; setHidden(v); };
+  const yieldTo = (v: string) => { yld.current = v; setYielded(v); };
+  const evaluate = useRef<() => void>(() => {}); // the scroll handler, so focus leaving the bar can re-check the overlap
   useEffect(() => {
     // difference-blending turns amber over saturated blue, so use plain white while the blue case-study opening is behind the bar
     const hero = document.querySelector<HTMLElement>(".cs--prev .cs-hero");
@@ -71,22 +73,24 @@ export default function ExNav() {
       else if (!hid.current && controlUnderBar()) next = true;
       last = y;
       if (next !== hid.current) show(next);
-      if (yl !== yld.current) { yld.current = yl; setYielded(yl); }
+      if (yl !== yld.current) yieldTo(yl);
     };
+    evaluate.current = on;
     on();
     window.addEventListener("scroll", on, { passive: true });
     window.addEventListener("resize", on);
     // choosing another exhibit moves controls without any scroll, so look again once its animation has settled
     const afterClick = () => { window.setTimeout(on, 800); };
     window.addEventListener("click", afterClick);
-    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); window.removeEventListener("click", afterClick); };
+    return () => { evaluate.current = () => {}; window.removeEventListener("scroll", on); window.removeEventListener("resize", on); window.removeEventListener("click", afterClick); };
   }, []);
 
   return (
     <motion.header
       ref={header}
       className={`exnav${scrolled ? " is-split" : ""}${onBlue ? " is-blue" : ""}${hidden ? " is-hidden" : ""}${yielded.includes("b") ? " is-yield-b" : ""}${yielded.includes("r") ? " is-yield-r" : ""}`}
-      onFocusCapture={() => show(false)}
+      onFocusCapture={() => { show(false); yieldTo(""); }}
+      onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) window.requestAnimationFrame(() => evaluate.current()); }}
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}

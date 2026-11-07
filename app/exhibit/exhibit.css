@@ -650,6 +650,9 @@
 /* wide screens: only the capsule that has a control under it steps aside (see ExNav) */
 .exnav__cap { transition: transform .35s cubic-bezier(.22, 1, .36, 1); }
 .exnav.is-yield-b .exnav__brand, .exnav.is-yield-r .exnav__links, .exnav.is-yield-r .exnav__menu { transform: translateY(-160%); pointer-events: none; }
+/* focus inside the bar always wins (placed after the rules above, which have equal specificity): nothing stays tucked away while a keyboard user is in it, even before ExNav's state catches up */
+.exnav:focus-within .exnav__row, .exnav:focus-within .exnav__cap { transform: none; }
+.exnav:focus-within .exnav__cap { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .exnav__row, .exnav__cap { transition: none; } }
 .cn { transition: top .35s cubic-bezier(.22, 1, .36, 1); }
 body:has(.exnav.is-hidden) .cn { top: 0; }
