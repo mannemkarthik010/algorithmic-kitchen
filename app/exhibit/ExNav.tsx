@@ -34,11 +34,12 @@ export default function ExNav() {
     // difference-blending turns amber over saturated blue, so use plain white while the blue case-study opening is behind the bar
     const hero = document.querySelector<HTMLElement>(".cs--prev .cs-hero");
     let last = window.scrollY;
-    // Controls the bar must never sit on: the gallery selector and the buttons and links inside the active exhibit (windows that are
+    // Controls the bar must never sit on: the gallery selector and the buttons and links inside the active exhibit, and the Reading Room's shelf tabs,
+    // action row and credit link (gallery windows that are
     // not the active one are aria-hidden and ignored). Only a real overlap counts: a control whose box meets the horizontal extent
     // of one of the capsules, inside the band the capsules occupy. The extents come from layout, so they do not move when the bar
     // slides away, which keeps the decision stable (no flicker between hidden and shown).
-    const CONTROLS = ".gx__index [role=tab], .gx__stage [role=tabpanel] button, .gx__stage [role=tabpanel] a[href]";
+    const CONTROLS = ".gx__index [role=tab], .gx__stage [role=tabpanel] button, .gx__stage [role=tabpanel] a[href], .lib-tab, .lib-ctl button, .lib-credit"; // the last three are the Reading Room on /lab
     const BAND = 66; // the capsules occupy roughly the top 14 to 58 px
     // which capsules (b = brand, r = the right-hand one) have a control under them right now
     const overlap = () => {

@@ -1,4 +1,4 @@
-// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y|reading-room> [base]
+// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y|reading-room|reading-room-covers|reading-room-touch> [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 const [mode, base = "http://localhost:3300"] = process.argv.slice(2);
@@ -9,7 +9,8 @@ async function session(o = {}) {
   let t; for (let i = 0; i < 40; i++) { try { t = await (await fetch(`http://127.0.0.1:${port}/json`)).json(); if (t.find((x) => x.type === "page")) break; } catch {} await sleep(250); }
   const ws = new WebSocket(t.find((x) => x.type === "page").webSocketDebuggerUrl); await new Promise((r) => (ws.onopen = r));
   let id = 0; const pend = new Map(); const errors = [];
-  ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id && pend.has(d.id)) { pend.get(d.id)(d); pend.delete(d.id); } else if (d.method === "Runtime.exceptionThrown") errors.push(d.params.exceptionDetails.exception?.description?.split("\n")[0] ?? "exception"); else if (d.method === "Runtime.consoleAPICalled" && d.params.type === "error") errors.push(d.params.args.map((a) => a.value ?? a.description).join(" ").slice(0, 140)); };
+  const handlers = new Map(); // CDP events a test wants to see, e.g. Fetch.requestPaused
+  ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id && pend.has(d.id)) { pend.get(d.id)(d); pend.delete(d.id); } else if (d.method && handlers.has(d.method)) handlers.get(d.method)(d.params); else if (d.method === "Runtime.exceptionThrown") errors.push(d.params.exceptionDetails.exception?.description?.split("\n")[0] ?? "exception"); else if (d.method === "Runtime.consoleAPICalled" && d.params.type === "error") errors.push(d.params.args.map((a) => a.value ?? a.description).join(" ").slice(0, 140)); };
   const send = (method, params = {}) => new Promise((r) => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
   const ev = async (e) => (await send("Runtime.evaluate", { expression: e, returnByValue: true, awaitPromise: true })).result.result?.value;
   await send("Page.enable"); await send("Runtime.enable");
@@ -19,7 +20,7 @@ async function session(o = {}) {
   if (o.cpu) await send("Emulation.setCPUThrottlingRate", { rate: o.cpu });
   const key = async (k, c, code) => { await send("Input.dispatchKeyEvent", { type: k === "Enter" ? "keyDown" : "rawKeyDown", key: k, windowsVirtualKeyCode: c, code: code ?? k, ...(k === "Enter" ? { text: "\r" } : {}) }); await sleep(15); await send("Input.dispatchKeyEvent", { type: "keyUp", key: k, windowsVirtualKeyCode: c, code: code ?? k }); };
   const go = async (path, wait = 5000) => { errors.length = 0; await send("Page.navigate", { url: base + path }); await sleep(wait); };
-  return { send, ev, key, go, errors, done: () => { ws.close(); chrome.kill(); } };
+  return { send, ev, key, go, errors, on: (method, fn) => handlers.set(method, fn), done: () => { ws.close(); chrome.kill(); } };
 }
 const out = []; const rec = (n, ok, d = "") => out.push(`${ok ? "PASS" : "FAIL"}  ${n}${d ? "  — " + d : ""}`);
 const PAGES = ["/", "/work/archive", "/work/taxproof", "/work/retail-demand-intelligence", "/work/preventive-care", "/lab", "/play"];
@@ -344,7 +345,7 @@ if (mode === "case-a11y") {
   rec("no console errors on the Retail case study during keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
   s.done();
 }
-if (mode === "reading-room") {
+if (mode === "reading-room" || mode === "reading-room-covers" || mode === "reading-room-touch") {
   // The Reading Room on /lab, in headless Chrome: desktop with a real keyboard and mouse, a phone with real touch, and reduced motion.
   const keyEv = (s) => async (k, mod = 0) => {
     const d = { Tab: [9, "Tab", ""], " ": [32, "Space", " "], Enter: [13, "Enter", "\r"], Escape: [27, "Escape", ""], ArrowRight: [39, "ArrowRight", ""], ArrowLeft: [37, "ArrowLeft", ""] }[k];
@@ -358,6 +359,8 @@ if (mode === "reading-room") {
   const over = (s) => s.ev(`(()=>{const d=document.querySelector('.lib-over'); const r=d.getBoundingClientRect(); const cs=getComputedStyle(d); return {vis:cs.visibility, w:Math.round(r.width), h:Math.round(r.height), top:Math.round(r.top), label:d.getAttribute('aria-label'), modal:d.getAttribute('aria-modal'), role:d.getAttribute('role'), hidden:d.getAttribute('aria-hidden'), overflow:document.documentElement.style.overflow, lesson:(d.querySelector('.lib-over__lesson')?.innerText||'').trim(), eyebrow:(d.querySelector('.lib-over__eyebrow')?.innerText||'').trim(), status:(d.querySelector('.lib-over__status')?.innerText||'').trim(), title:(d.querySelector('.lib-over__title')?.innerText||'').trim(), poster:!!d.querySelector('.lib-over__poster svg'), textLeft:Math.round(d.querySelector('.lib-over__text').getBoundingClientRect().left)}})()`);
   const active = (s) => s.ev(`(()=>{const a=document.activeElement; return {cls:String(a.className||a.tagName), label:(a.getAttribute('aria-label')||a.innerText||'').trim().slice(0,30), inOver:!!a.closest('.lib-over'), inLib:!!a.closest('#library')}})()`);
   const toLib = async (s, path = "/lab") => { await s.go(path, 6500); await s.ev(`document.getElementById('library').scrollIntoView()`); await sleep(2200); };
+
+  if (mode === "reading-room") {
 
   // ── desktop ──
   let s = await session();
@@ -420,7 +423,7 @@ if (mode === "reading-room") {
   const y1w = await s.ev(`scrollY`);
   rec("1440px mouse: a plain vertical wheel over the shelf scrolls the page and leaves the book alone", y1w > y0w + 100 && (await srTitle()) === t2b, `scrollY ${y0w} to ${y1w}; still "${await srTitle()}"`);
   await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(700);
-  const spine = await s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-sp').getBoundingClientRect(); const cx=r.x+r.width/2; if(r.width<20||cx<innerWidth/2+260||cx>innerWidth-40) continue; const d=cx-innerWidth/2; if(!best||d<best.d) best={d,x:cx,y:r.y+r.height/2,name:t.getAttribute('aria-label').split(' by ')[0]}; } return best})()`);
+  const spine = await s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-sp').getBoundingClientRect(); const cx=r.x+r.width/2; if(r.width<20||cx<innerWidth/2+260||cx>innerWidth-40) continue; const d=cx-innerWidth/2; if(!best||d<best.d) best={d,x:cx,y:r.y+r.height/2,name:t.getAttribute('data-title')}; } return best})()`);
   await mouse(spine.x, spine.y); await sleep(1500);
   rec("1440px mouse: clicking a neighbouring spine brings that book forward (and does not open the overlay)", (await srTitle()) === spine.name && (await over(s)).vis === "hidden", `clicked "${spine.name}"; selected "${await srTitle()}"`);
   await s.ev(`document.activeElement.blur(); document.getElementById('library').focus()`);
@@ -514,6 +517,185 @@ if (mode === "reading-room") {
     rec(`${L}: touching Back to the shelf closes it, unlocks the page and returns focus to the action`, o.vis === "hidden" && o.overflow === "" && /lib-open/.test(a.cls), `visibility ${o.vis}; focus ${a.label}`);
     rec(`${L}: no console errors`, s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
     s.done();
+  }
+  }
+
+  // ═══ covers that fail or are slow ═══
+  if (mode === "reading-room-covers") {
+    // A synthetic cover (two colour bands) served in place of the Open Library image, so the "slow, then arrives" case needs no network.
+    const { deflateSync, crc32 } = await import("node:zlib");
+    const png = (w, h, top, bottom) => {
+      const raw = Buffer.alloc((w * 3 + 1) * h);
+      for (let y = 0; y < h; y++) { raw[y * (w * 3 + 1)] = 0; const c = y < h / 2 ? top : bottom; for (let x = 0; x < w; x++) { raw[y * (w * 3 + 1) + 1 + x * 3] = c[0]; raw[y * (w * 3 + 1) + 2 + x * 3] = c[1]; raw[y * (w * 3 + 1) + 3 + x * 3] = c[2]; } }
+      const chunk = (t, d) => { const b = Buffer.concat([Buffer.from(t), d]); const o = Buffer.alloc(4); o.writeUInt32BE(crc32(b)); const l = Buffer.alloc(4); l.writeUInt32BE(d.length); return Buffer.concat([l, b, o]); };
+      const ih = Buffer.alloc(13); ih.writeUInt32BE(w, 0); ih.writeUInt32BE(h, 4); ih[8] = 8; ih[9] = 2;
+      return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", ih), chunk("IDAT", deflateSync(raw)), chunk("IEND", Buffer.alloc(0))]).toString("base64");
+    };
+    const COVER = png(40, 60, [30, 140, 90], [160, 50, 40]);
+    // How much detail is in a region? The standard deviation of its luminance: a flat colour block is near 0, generated art or a real cover is not.
+    const detail = async (s, r) => {
+      const shot = await s.send("Page.captureScreenshot", { format: "png" });
+      return s.ev(`new Promise((res)=>{const i=new Image(); i.onload=()=>{const c=document.createElement('canvas'); const x0=${r.x}+${r.w}*.2, y0=${r.y}+${r.h}*.2, w=${r.w}*.6, h=${r.h}*.6; c.width=Math.max(4,Math.round(w)); c.height=Math.max(4,Math.round(h)); const g=c.getContext('2d'); g.drawImage(i,x0,y0,w,h,0,0,c.width,c.height); const d=g.getImageData(0,0,c.width,c.height).data; let n=0,m=0,q=0; for(let k=0;k<d.length;k+=4){const l=.3*d[k]+.59*d[k+1]+.11*d[k+2]; n++; m+=l; q+=l*l} res(Math.sqrt(Math.max(0,q/n-(m/n)*(m/n))))}; i.src='data:image/png;base64,${shot.result.data}'})`);
+    };
+    const frontCover = (s) => s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-cv').getBoundingClientRect(); const d=Math.abs(r.x+r.width/2-innerWidth/2); if(!best||d<best.d) best={d,x:r.x,y:r.y,w:r.width,h:r.height}; } return best})()`);
+    const posterRect = (s) => s.ev(`(()=>{const r=document.querySelector('.lib-over__poster').getBoundingClientRect(); return {x:r.x,y:r.y,w:r.width,h:r.height}})()`);
+    // images that are showing without having loaded: a flat tint where the generated art should be
+    const phantom = (s) => s.ev(`[...document.querySelectorAll('.lib-cover-img')].filter((i)=>{const cs=getComputedStyle(i); return cs.display!=='none' && Number(cs.opacity)>0 && !(i.complete && i.naturalWidth>0)}).length`);
+    // the cover image and its colour block are only allowed in the overlay once the image has loaded (a failed <image> draws a broken-image icon over the art)
+    const tintBoxes = (s) => s.ev(`document.querySelectorAll('.lib-over__poster [data-cover-tint], .lib-over__poster [data-cover-image]').length`);
+
+    const scenarios = [
+      ["every cover request fails (network error)", (s, p) => s.send("Fetch.failRequest", { requestId: p.requestId, errorReason: "Failed" })],
+      ["every cover request returns 404 (what Open Library sends for a missing cover)", (s, p) => s.send("Fetch.fulfillRequest", { requestId: p.requestId, responseCode: 404, responseHeaders: [{ name: "Content-Type", value: "text/plain" }], body: Buffer.from("not found").toString("base64") })],
+      ["every cover request hangs (slow connection)", null],
+    ];
+    for (const [label, respond] of scenarios) {
+      const s = await session();
+      const held = []; let seen = 0;
+      s.on("Fetch.requestPaused", (p) => { seen++; if (respond) respond(s, p); else held.push(p.requestId); });
+      await s.send("Fetch.enable", { patterns: [{ urlPattern: "*covers.openlibrary.org*" }] });
+      await s.go("/lab", 6500);
+      await s.ev(`document.getElementById('library').scrollIntoView()`); await sleep(4500);
+      const L = label.split(" (")[0];
+      rec(`covers, ${L}: the requests were really intercepted`, seen >= 1, `${seen} cover requests intercepted${respond ? "" : `, ${held.length} held`}`);
+      const fc = await frontCover(s);
+      const shelfDetail = await detail(s, { x: fc.x, y: fc.y, w: fc.w, h: fc.h });
+      rec(`covers, ${L}: the pulled-out cover on the shelf shows the generated artwork (not a flat colour), and no image is showing unloaded`, shelfDetail > 12 && (await phantom(s)) === 0, `detail ${shelfDetail.toFixed(1)} (flat colour is near 0); unloaded images showing: ${await phantom(s)}`);
+      await s.ev(`document.querySelector('.lib-open').click()`); await sleep(2500);
+      const pr = await posterRect(s);
+      if (process.env.RR_SHOT) (await import("node:fs")).writeFileSync(`${process.env.RR_SHOT}-${scenarios.findIndex((x) => x[0] === label)}.png`, Buffer.from((await s.send("Page.captureScreenshot", { format: "png" })).result.data, "base64"));
+      const overlayDetail = await detail(s, pr);
+      rec(`covers, ${L}: the overlay's cover shows the generated artwork, with no colour block or image element over it`, overlayDetail > 12 && (await tintBoxes(s)) === 0, `detail ${overlayDetail.toFixed(1)}; colour block or image elements over the art: ${await tintBoxes(s)}`);
+      rec(`covers, ${L}: the overlay's text, close button and focus work as usual`, await s.ev(`(()=>{const d=document.querySelector('.lib-over'); return getComputedStyle(d).visibility==='visible' && document.activeElement.classList.contains('gx-over__close') && d.querySelector('.lib-over__lesson').innerText.length>40})()`));
+      if (!respond) {
+        // the slow request finally answers: the real image is swapped in, in both places
+        for (const id of held) { try { await s.send("Fetch.fulfillRequest", { requestId: id, responseCode: 200, responseHeaders: [{ name: "Content-Type", value: "image/png" }, { name: "Access-Control-Allow-Origin", value: "*" }], body: COVER }); } catch {} }
+        await sleep(2500);
+        const arrived = await s.ev(`({poster: !!document.querySelector('.lib-over__poster [data-cover-image]'), imgs:[...document.querySelectorAll('.lib-cover-img')].filter(i=>i.complete&&i.naturalWidth>0&&Number(getComputedStyle(i).opacity)>0).length})`);
+        rec(`covers, ${L}: when the image finally arrives it replaces the artwork, in the overlay and on the shelf`, arrived.poster && arrived.imgs > 0, `overlay image ${arrived.poster}; shelf images showing ${arrived.imgs}`);
+      }
+      await s.send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 }); await sleep(900);
+      rec(`covers, ${L}: no script errors`, s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+      s.done();
+    }
+  }
+  // ═══ real touch dragging, odd layouts, overlay scrolling, reading order ═══
+  if (mode === "reading-room-touch") {
+    const drag = (s) => async (x0, x1, y) => {
+      await s.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x: x0, y }] }); await sleep(50);
+      for (let i = 1; i <= 14; i++) { await s.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: x0 + ((x1 - x0) * i) / 14, y }] }); await sleep(18); }
+      await s.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] }); await sleep(1300);
+    };
+    const swipeY = (s) => async (x, y, dy) => { await s.send("Input.synthesizeScrollGesture", { x, y, yDistance: -dy, gestureSourceType: "touch", speed: 700, preventFling: true }); await sleep(900); };
+    const srTitle = async (s) => (((await readCap(s)).sr.split(" by ")[0]) || "").trim();
+    for (const [w, h, name] of [[390, 844, "phone portrait 390x844"], [600, 900, "600x900"], [844, 390, "phone landscape 844x390"], [667, 375, "small phone landscape 667x375"]]) {
+      const s = await session({ w, h, mobile: true, touch: true });
+      await toLib(s);
+      const L = name, tp = tap(s), dr = drag(s), sy = swipeY(s);
+
+      // layout and reach
+      const lay = await s.ev(`(()=>{const vis=(e)=>{const r=e.getBoundingClientRect(); return r.left>=-0.5&&r.right<=innerWidth+0.5&&r.width>0}; const q=(x)=>[...document.querySelectorAll(x)]; const cv=[...document.querySelectorAll('.lib-tape')].filter(t=>getComputedStyle(t).visibility!=='hidden').map(t=>t.querySelector('.lib-cv').getBoundingClientRect()).sort((a,b)=>Math.abs(a.x+a.width/2-innerWidth/2)-Math.abs(b.x+b.width/2-innerWidth/2))[0]; return {over:document.documentElement.scrollWidth-innerWidth, tabs:q('.lib-tab').map(e=>({ok:vis(e),h:Math.round(e.getBoundingClientRect().height)})), ctl:q('.lib-ctl button').map(e=>({ok:vis(e),h:Math.round(e.getBoundingClientRect().height),w:Math.round(e.getBoundingClientRect().width)})), coverH:Math.round(cv.height), head:vis(document.querySelector('.lib-head__h')), foot:vis(document.querySelector('.lib-credit'))}})()`);
+      rec(`${L}: no sideways overflow; heading, 4 shelves, 3 controls and the credit link are inside the screen; controls at least 44px; the pulled-out cover is at least 120px tall`, lay.over <= 0 && lay.head && lay.foot && lay.tabs.length === 4 && lay.tabs.every((t) => t.ok && t.h >= 44) && lay.ctl.length === 3 && lay.ctl.every((c) => c.ok && c.h >= 44 && c.w >= 44) && lay.coverH >= 120, `overflow ${lay.over}; cover ${lay.coverH}px tall; controls ${lay.ctl.map((c) => `${c.w}x${c.h}`).join(" ")}`);
+      const hit = [], low = [];
+      for (const sel of [".lib-head__h", ".lib-tabs", ".lib-ctl"]) {
+        await s.ev(`document.querySelector(${JSON.stringify(sel)}).scrollIntoView({block:'center'})`); await sleep(500);
+        const r = await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-tab, .lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2,y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); const own=hit===e||e.contains(hit); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,16), ok:own, by: own?'':((f&&f!==document.body?'a fixed page button ('+(f.innerText||f.className).toString().trim().slice(0,14)+')':String(hit?.className||hit?.tagName).slice(0,24))), bottom: y > innerHeight - 110})} return out})()`);
+        hit.push(...r.filter((x) => !x.bottom)); low.push(...r.filter((x) => x.bottom && !x.ok));
+      }
+      rec(`${L}: a touch at the centre of every shelf tab and control that is not in the bottom 110px of the screen reaches it`, hit.length >= 7 && hit.every((x) => x.ok), `${hit.length} checks; ${hit.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
+      out.push(`INFO  ${L}: controls whose centre is in the bottom 110px of the screen and is covered: ${low.length ? [...new Set(low.map((x) => `${x.n} by ${x.by}`))].join("; ") : "none"}`);
+
+      // real touch drag on the shelf
+      await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(800);
+      const sh = await centre(s, ".lib-shelf");
+      const y0 = await s.ev(`scrollY`), t0 = await srTitle(s);
+      await dr(w * 0.78, w * 0.22, sh.y);
+      const t1 = await srTitle(s);
+      rec(`${L}: a real touch drag leftwards across the shelf changes the book, does not open the overlay, and does not scroll the page`, t1 !== t0 && (await over(s)).vis === "hidden" && Math.abs((await s.ev(`scrollY`)) - y0) <= 2, `"${t0}" to "${t1}"; scrollY moved ${Math.abs((await s.ev(`scrollY`)) - y0)}px`);
+      await dr(w * 0.22, w * 0.78, sh.y);
+      const t2 = await srTitle(s);
+      rec(`${L}: dragging back rightwards changes the book again (${t2 === t0 ? "back to the first" : "to a different one"})`, t2 !== t1, `"${t1}" to "${t2}"`);
+      const yA = await s.ev(`scrollY`);
+      const room = await s.ev(`document.documentElement.scrollHeight - innerHeight - scrollY`);
+      const dy = room >= 300 ? 260 : -260;   // down if the page has room below, otherwise back up
+      await sy(w / 2, sh.y, dy);
+      const moved2 = Math.abs((await s.ev(`scrollY`)) - yA);
+      rec(`${L}: a vertical swipe that starts on the shelf scrolls the page ${dy > 0 ? "down" : "up"} by about the distance swiped and leaves the book alone`, moved2 >= 200 && (await srTitle(s)) === t2, `scrollY moved ${moved2}px of 260; still "${await srTitle(s)}"`);
+      await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(800);
+      const sp = await s.ev(`(()=>{let best=null; for(const t of document.querySelectorAll('.lib-tape')){ if(getComputedStyle(t).visibility==='hidden') continue; const r=t.querySelector('.lib-sp').getBoundingClientRect(); const cx=r.x+r.width/2; if(r.width<14||cx<innerWidth/2+${Math.round(w * 0.2)}||cx>innerWidth-10) continue; const d=cx-innerWidth/2; if(!best||d<best.d) best={d,x:cx,y:r.y+r.height/2,name:t.querySelector('.lib-sp')?.parentElement?.getAttribute('data-name')||''}; } return best})()`);
+      if (sp) { const before = await srTitle(s); await tp(sp.x, sp.y); await sleep(900); rec(`${L}: tapping a neighbouring spine brings it forward (and does not open the overlay)`, (await srTitle(s)) !== before && (await over(s)).vis === "hidden", `"${before}" to "${await srTitle(s)}"`); }
+      else rec(`${L}: tapping a neighbouring spine brings it forward`, false, "no spine was visible beside the cover to tap");
+
+      // overlay: open by touch, scroll it by touch, close it
+      await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(600);
+      const op = await centre(s, ".lib-open"); await tp(op.x, op.y); await sleep(900);
+      let o = await over(s);
+      const sc = await s.ev(`(()=>{const d=document.querySelector('.lib-over'); return {scrollable:d.scrollHeight>d.clientHeight+4, sh:d.scrollHeight, ch:d.clientHeight}})()`);
+      const winY = await s.ev(`scrollY`);
+      if (sc.scrollable) await sy(w / 2, Math.round(h * 0.62), 400);
+      const st = await s.ev(`(()=>{const d=document.querySelector('.lib-over'); const b=document.querySelector('.gx-over__close').getBoundingClientRect(); const hit=document.elementFromPoint(b.x+b.width/2,b.y+b.height/2); return {top:d.scrollTop, closeVisible:b.top>=0&&b.bottom<=innerHeight, closeHit:hit===document.querySelector('.gx-over__close')||document.querySelector('.gx-over__close').contains(hit), page:scrollY}})()`);
+      rec(`${L}: the overlay opens full screen; ${sc.scrollable ? "a touch scroll moves its content (" + sc.sh + "px of content in " + sc.ch + "px)" : "its content fits"}; the page behind does not move; the close button stays reachable`, o.vis === "visible" && o.w === w && o.h === h && (!sc.scrollable || st.top >= Math.min(100, sc.sh - sc.ch) - 2) && st.page === winY && st.closeVisible && st.closeHit, `${o.w}x${o.h}; overlay scrollTop ${st.top}; page scrollY ${winY} to ${st.page}; close visible ${st.closeVisible}, hit ${st.closeHit}`);
+      const cc = await centre(s, ".gx-over__close"); await tp(cc.x, cc.y); await sleep(800);
+      o = await over(s); const a = await active(s);
+      rec(`${L}: touching Back to the shelf closes it, unlocks the page and returns focus to the action`, o.vis === "hidden" && o.overflow === "" && /lib-open/.test(a.cls), `visibility ${o.vis}; focus ${a.label}`);
+      rec(`${L}: no console errors`, s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
+
+      // reading order, on the phone portrait layout only
+      if (w === 390) {
+        await s.ev(`document.getElementById('library').scrollIntoView()`); await sleep(500);
+        await s.send("Accessibility.enable"); await s.send("DOM.enable");
+        const doc = await s.send("DOM.getDocument", { depth: 0 });
+        const sec = await s.send("DOM.querySelector", { nodeId: doc.result.root.nodeId, selector: "#library" });
+        const bid = (await s.send("DOM.describeNode", { nodeId: sec.result.nodeId })).result.node.backendNodeId;
+        const nodes = (await s.send("Accessibility.getFullAXTree")).result.nodes;
+        const byId = new Map(nodes.map((n) => [n.nodeId, n]));
+        const root = nodes.find((n) => n.backendDOMNodeId === bid);
+        const seq = [];
+        const walk = (n) => { if (!n) return; if (!n.ignored) { const r = n.role?.value, nm = (n.name?.value ?? "").toString().trim(); if (["heading", "button", "link"].includes(r) || (r === "StaticText" && nm)) seq.push({ r, nm, desc: n.description?.value ?? "" }); } (n.childIds ?? []).forEach((c) => walk(byId.get(c))); };
+        walk(root);
+        const names = seq.filter((x) => x.r !== "StaticText" || x.nm.length > 0).map((x) => `${x.r}:${x.nm}`);
+        const bookButtons = seq.filter((x) => x.r === "button" && / by /.test(x.nm)).length;
+        rec(`${L} reading order: the 42 shelf tapes (3 copies of 14 books) are not exposed to assistive technology as buttons`, bookButtons === 0, `${bookButtons} book buttons in the accessibility tree`);
+        const idx = (re) => names.findIndex((x) => re.test(x));
+        out.push(`INFO  ${L} reading order: what assistive technology meets, in order: ${names.map((x) => x.slice(0, 40)).join(" | ")}`);
+        const order = [idx(/heading:Books that shaped/i), idx(/button:All$/i), idx(/button:Engineering/i), idx(/button:Thinking/i), idx(/button:Philosophy/i), -2, idx(/button:Previous book/i), idx(/button:Open reading note/i), idx(/button:Next book/i), idx(/link:Covers via Open Library/i)];
+        order[5] = names.findIndex((x, i) => i > order[4] && /^StaticText:by$/.test(x));
+        rec(`${L} reading order: assistive technology meets the heading, the four shelves, the selection summary, Previous, Open reading note, Next, then the credit link, in that order`, order.every((v, i) => v >= 0 && (i === 0 || v > order[i - 1])), `positions ${order.join(",")}`);
+        const open = seq.find((x) => x.r === "button" && /Open reading note/.test(x.nm));
+        const note = (await readCap(s)).note;
+        rec(`${L} reading order: the book's note (otherwise visible but hidden from assistive technology) is the description of the Open reading note button`, !!open && note.length > 40 && (open.desc || "").includes(note.slice(0, 40)), `description "${(open?.desc || "").slice(0, 60)}"`);
+        // keyboard order against visual order
+        await s.ev(`document.activeElement.blur(); document.getElementById('library').focus()`);
+        const seen = [];
+        for (let i = 0; i < 8; i++) { await s.send("Input.dispatchKeyEvent", { type: "rawKeyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 }); await sleep(20); await s.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 }); await sleep(250); seen.push(await s.ev(`(()=>{const a=document.activeElement; const r=a.getBoundingClientRect(); return {n:(a.getAttribute('aria-label')||a.innerText||'').trim().slice(0,24), top:Math.round(r.top+scrollY), left:Math.round(r.left)}})()`)); }
+        const downward = seen.every((x, i) => i === 0 || x.top > seen[i - 1].top - 2 || (Math.abs(x.top - seen[i - 1].top) <= 2 && x.left >= seen[i - 1].left));
+        rec(`${L} reading order: Tab visits the controls in the order they appear on screen (top to bottom, left to right)`, seen.length === 8 && downward, seen.map((x) => `${x.n}@${x.top}`).join(" > "));
+        rec(`${L} reading order: on a phone the visible order is books, controls, then status, title, note; the focusable order is unaffected by that`, await s.ev(`(()=>{const t=(q)=>document.querySelector(q).getBoundingClientRect().top; return t('.lib-shelf')<t('.lib-ctl') && t('.lib-ctl')<t('.lib-cap-status') && t('.lib-cap-status')<t('.lib-cap-title') && t('.lib-cap-title')<t('.lib-cap-note') && t('.lib-cap-note')<t('.lib-foot')})()`));
+      }
+      s.done();
+    }
+
+    // the navigation bar against the Reading Room's own controls: scroll up through them with real input and check what a pointer would hit
+    for (const [w, h, touch, name] of [[390, 844, true, "phone portrait 390x844"], [844, 390, true, "phone landscape 844x390"], [1024, 768, false, "1024x768 with a mouse"], [1440, 900, false, "1440x900 with a mouse"]]) {
+      const s = await session({ w, h, mobile: touch, touch });
+      await toLib(s);
+      const swipe = async (dy) => { await s.send("Input.synthesizeScrollGesture", { x: Math.round(w / 2), y: Math.round(h / 2), yDistance: -dy, gestureSourceType: touch ? "touch" : "mouse", speed: touch ? 500 : 800, preventFling: true }); await sleep(800); };
+      const probe = () => s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-tab, .lib-ctl button, .lib-credit')){const r=e.getBoundingClientRect(); let l=Math.max(0,r.left),t=Math.max(0,r.top),rt=Math.min(innerWidth,r.right),b=Math.min(innerHeight,r.bottom); if(rt-l<4||b-t<4) continue; const hit=document.elementFromPoint((l+rt)/2,(t+b)/2); out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,16), nav:!!hit?.closest('.exnav'), own:hit===e||e.contains(hit)})} return {y:Math.round(scrollY), hidden:/is-hidden|is-yield/.test(document.querySelector('.exnav').className), tabsTop:document.querySelector('.lib-tabs').getBoundingClientRect().top, out}})()`);
+      await s.ev(`document.querySelector('.lib-credit').scrollIntoView({block:'start'})`); await sleep(900);   // lower controls at the top of the screen
+      let checks = 0, guard = 0, still = 0; const bad = []; let last = await s.ev(`scrollY`);
+      while (guard++ < 100) {
+        await swipe(-40);
+        const p = await probe(); checks += p.out.length;
+        p.out.filter((x) => x.nav).forEach((x) => bad.push(`${x.n} @scrollY ${p.y}`));
+        if (p.tabsTop > 150) break;   // the shelf tabs have passed under the bar
+        still = Math.abs(p.y - last) < 5 ? still + 1 : 0;
+        if (still >= 2) break;   // two gestures in a row that did not move the page: the top of the page
+        last = p.y;
+      }
+      // at 390 px the page ends before the shelf tabs can reach the bar, so only a few positions are reachable there; elsewhere the sweep must cover the tabs and the action row
+      rec(`${name}: scrolling up through the Reading Room, the navigation bar never sits on a shelf tab, a control or the credit link`, checks >= (w === 390 ? 7 : 25) && bad.length === 0, `${checks} checks in ${guard} steps; ${[...new Set(bad)].slice(0, 4).join("; ") || "none covered by the bar"}`);
+      s.done();
+    }
   }
 }
 console.log(out.join("\n")); process.exit(0);

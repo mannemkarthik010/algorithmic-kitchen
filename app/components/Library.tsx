@@ -28,11 +28,24 @@ type Api = {
 
 const statusLabel = (s: string) => (s === "Reading" ? "Reading now" : "Read");
 
+/** The remote cover is shown only once it has loaded. Until then, and for good if it never arrives, the generated artwork stays visible. */
+function CoverImg({ src, tint }: { src: string; tint: string }) {
+  const [ok, setOk] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
+  // an image that finished loading before React hydrated never fires onLoad, so look at it once
+  useEffect(() => { const i = ref.current; if (i && i.complete && i.naturalWidth > 0) setOk(true); }, []);
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img ref={ref} className={`lib-cover-img${ok ? " is-ok" : ""}`} src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={ok ? { background: tint } : undefined} onLoad={() => setOk(true)} onError={() => setOk(false)} />
+  );
+}
+
 export default function Library() {
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(START_INDEX);
   const [open, setOpen] = useState(false);
   const [detailIdx, setDetailIdx] = useState(START_INDEX);
+  const [coverOk, setCoverOk] = useState<string | null>(null); // the src of the overlay's cover once it has loaded
 
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -47,6 +60,18 @@ export default function Library() {
   const api = useRef<Api | null>(null);
 
   useEffect(() => { queueMicrotask(() => setMounted(true)); }, []);
+
+  /* The overlay draws the remote cover over the generated artwork only after it has loaded; a failed or slow image never hides the artwork. */
+  useEffect(() => {
+    const src = LIB_BOOKS[detailIdx].cover?.src;
+    if (!src) return;
+    let live = true;
+    const img = new Image();
+    img.referrerPolicy = "no-referrer";
+    img.onload = () => { if (live) setCoverOk(src); };
+    img.src = src;
+    return () => { live = false; };
+  }, [detailIdx]);
 
   const tabIndex = 1 + CATS.indexOf(LIB_BOOKS[active].cat);
 
@@ -398,17 +423,14 @@ export default function Library() {
 
       {/* 3D shelf */}
       <div className="lib-shelf" ref={shelfRef}>
-        <div className="lib-stage" ref={stageRef}>
+        <div className="lib-stage" ref={stageRef} aria-hidden="true">
           {Array.from({ length: TOTAL }).map((_, v) => {
             const b = LIB_BOOKS[v % N];
             return (
-              <div key={v} className="lib-tape" role="button" tabIndex={-1} aria-label={`${b.title} by ${b.author}`}>
+              <div key={v} className="lib-tape" data-title={b.title}>
                 <div className="lib-face lib-sp"><svg viewBox="0 0 142 840" preserveAspectRatio="none" aria-hidden="true"><SpineShapes book={b} /></svg></div>
                 <div className="lib-face lib-cv"><svg viewBox={`0 0 ${COVER_W} 900`} preserveAspectRatio="none" aria-hidden="true"><CoverShapes book={b} /></svg>
-                  {b.cover && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className="lib-cover-img" src={b.cover.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={{ background: b.cover.tint }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                  )}
+                  {b.cover && <CoverImg src={b.cover.src} tint={b.cover.tint} />}
                 </div>
               </div>
             );
@@ -419,6 +441,7 @@ export default function Library() {
       {/* the selected book: status and author, title, note, then one action row */}
       <div className="lib-cap">
         <span className="lib-sr" aria-live="polite">{act.title} by {act.author}. {statusLabel(act.status)}.</span>
+        <span className="lib-sr" id="lib-note-desc">{act.lesson}</span>
         <div className="lib-meta">
           <div className="lib-mask ex-mono lib-cap-status" ref={capStatus} aria-hidden="true" />
           <div className="lib-mask ex-mono lib-cap-sub" ref={capSub} aria-hidden="true" />
@@ -429,7 +452,7 @@ export default function Library() {
           <button type="button" className="lib-arrow" aria-label="Previous book" onClick={() => api.current?.step(-1)}>
             <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M5 1 L1 5 L5 9 M1 5 H17" /></svg>
           </button>
-          <button type="button" className="ex-cta ex-cta--orange lib-open" onClick={() => api.current?.open()}>Open reading note</button>
+          <button type="button" className="ex-cta ex-cta--orange lib-open" aria-describedby="lib-note-desc" onClick={() => api.current?.open()}>Open reading note</button>
           <button type="button" className="lib-arrow" aria-label="Next book" onClick={() => api.current?.step(1)}>
             <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M13 1 L17 5 L13 9 M17 5 H1" /></svg>
           </button>
@@ -453,9 +476,9 @@ export default function Library() {
               <div className="lib-over__poster">
                 <svg viewBox={`0 0 ${COVER_W} 900`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
                   <CoverShapes book={db} />
-                  {db.cover && (<>
-                    <rect width={COVER_W} height="900" fill={db.cover.tint} />
-                    <image href={db.cover.src} x="0" y="0" width={COVER_W} height="900" preserveAspectRatio="xMidYMid meet" />
+                  {db.cover && coverOk === db.cover.src && (<>
+                    <rect data-cover-tint width={COVER_W} height="900" fill={db.cover.tint} />
+                    <image data-cover-image href={db.cover.src} x="0" y="0" width={COVER_W} height="900" preserveAspectRatio="xMidYMid meet" />
                   </>)}
                 </svg>
               </div>

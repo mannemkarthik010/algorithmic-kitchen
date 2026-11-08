@@ -691,7 +691,8 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
 .lib-sp::after { opacity: var(--ssh, 0); }
 .lib-cv { width: var(--d); left: calc(var(--d) / -2); transform: rotateY(90deg) translateZ(calc(var(--ws) / 2)); box-shadow: inset 0 0 0 1px rgba(18,18,18,.16), 0 22px 36px -28px rgba(18,18,18,.5); }
 .lib-cv::after { opacity: var(--csh, .5); }
-.lib-cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; }
+.lib-cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; opacity: 0; }
+.lib-cover-img.is-ok { opacity: 1; transition: opacity .3s; }
 
 /* the selected book: status and author, title, note, then one action row */
 .lib-cap { width: min(100%, 820px); margin: clamp(4px, 1.5vw, 18px) auto 0; padding: 0 var(--gut); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; box-sizing: border-box; }
@@ -752,4 +753,4 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
   .lib-over__text { max-width: none; }
   .lib-over__title { font-size: 2.4rem; } .lib-over__title.is-long { font-size: 1.9rem; }
 }
-@media (prefers-reduced-motion: reduce) { .lib-tab, .lib-arrow { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .lib-tab, .lib-arrow, .lib-cover-img.is-ok { transition: none; } }
