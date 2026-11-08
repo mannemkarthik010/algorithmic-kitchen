@@ -746,7 +746,7 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
   .lib-ctl { order: -1; margin: 4px 0 6px; }
   .lib-cap-title { font-size: 2rem; }
   .lib-cap-note { font-size: 1.12rem; min-height: 0; }
-  .lib-ctl { gap: 10px; } .lib-arrow { width: 48px; height: 48px; } .lib .lib-open { padding: 0 18px; height: 48px; }
+  .lib-ctl { gap: 8px; } .lib-arrow { width: 44px; height: 44px; } .lib .lib-open { padding: 0 18px; height: 48px; }
   .lib-foot__hint { display: none; }
   .lib-over__body { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 20px 20px 64px; min-height: 0; }
   .lib-over__poster { height: min(46dvh, 420px); }
@@ -754,3 +754,15 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
   .lib-over__title { font-size: 2.4rem; } .lib-over__title.is-long { font-size: 1.9rem; }
 }
 @media (prefers-reduced-motion: reduce) { .lib-tab, .lib-arrow, .lib-cover-img.is-ok { transition: none; } }
+
+/* The page's fixed Sound and Terminal buttons (only /lab renders them). On a phone they shrink to 40px squares against the right edge, so they
+   can never sit over the Reading Room's controls: the shelf pills end left of that edge and the action row ends about 8px short of it at 360px wide.
+   Their accessible names are unchanged. */
+.lab-ex .lab-fab__glyph { display: none; }
+@media (max-width: 767px) {
+  .lab-ex .lab-fab { right: 4px !important; width: 40px; height: 40px; padding: 0 !important; gap: 0 !important; justify-content: center; box-sizing: border-box; }
+  .lab-ex .lab-fab__label, .lab-ex .lab-fab__key { display: none; }
+  .lab-ex .lab-fab__glyph { display: inline; color: var(--gold); font-size: 12px; }
+  .lab-ex .lab-fab--term { bottom: 12px !important; }
+  .lab-ex .lab-fab--sound { bottom: 58px !important; }
+}

@@ -275,8 +275,9 @@ export default function Terminal() {
             style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "rgba(10,8,3,0.88)", border: "1px solid rgba(244, 81, 50,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer", fontFamily: "var(--f-mono)", fontSize: 11, color: "var(--muted)", backdropFilter: "blur(10px)", transition: "all 0.2s ease" }}
             whileHover={{ borderColor: "rgba(244, 81, 50,0.6)", color: "var(--gold)" } as Parameters<typeof motion.button>[0]["whileHover"]}
             aria-label="Open developer terminal"
+            className="lab-fab lab-fab--term"
           >
-            <span style={{ color: "var(--gold)" }}>⌃`</span> Terminal
+            <span className="lab-fab__key" style={{ color: "var(--gold)" }}>⌃`</span><span className="lab-fab__label"> Terminal</span><span className="lab-fab__glyph" aria-hidden="true">&gt;_</span>
           </motion.button>
         )}
       </AnimatePresence>

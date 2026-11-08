@@ -39,6 +39,7 @@ if (suitesFile) {
     ["reading-room", ["qa/fqa.mjs", "reading-room", base]],
     ["rr-covers", ["qa/fqa.mjs", "reading-room-covers", base]],
     ["rr-touch", ["qa/fqa.mjs", "reading-room-touch", base]],
+    ["rr-fixed", ["qa/fqa.mjs", "reading-room-fab", base]],
     ["nav", ["qa/navobs.mjs", base]],
     ["hash", ["qa/hash.mjs", base]],
     ["structure", ["qa/axaudit.mjs", base]],

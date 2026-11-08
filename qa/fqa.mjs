@@ -1,4 +1,4 @@
-// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y|reading-room|reading-room-covers|reading-room-touch> [base]
+// Final QA over real browser input. usage: node fqa.mjs <layout|links|keys|touch|motion|new|finish|retail-a11y|case-a11y|reading-room|reading-room-covers|reading-room-touch|reading-room-fab> [base]
 import { spawn } from "node:child_process";
 import { CHROME } from "./chrome.mjs";
 const [mode, base = "http://localhost:3300"] = process.argv.slice(2);
@@ -345,7 +345,7 @@ if (mode === "case-a11y") {
   rec("no console errors on the Retail case study during keyboard selection", s.errors.length === 0, s.errors.slice(0, 2).join(" | "));
   s.done();
 }
-if (mode === "reading-room" || mode === "reading-room-covers" || mode === "reading-room-touch") {
+if (mode === "reading-room" || mode === "reading-room-covers" || mode === "reading-room-touch" || mode === "reading-room-fab") {
   // The Reading Room on /lab, in headless Chrome: desktop with a real keyboard and mouse, a phone with real touch, and reduced motion.
   const keyEv = (s) => async (k, mod = 0) => {
     const d = { Tab: [9, "Tab", ""], " ": [32, "Space", " "], Enter: [13, "Enter", "\r"], Escape: [27, "Escape", ""], ArrowRight: [39, "ArrowRight", ""], ArrowLeft: [37, "ArrowLeft", ""] }[k];
@@ -488,14 +488,14 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
     await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(800);
     const hits = await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-ctl button, .lib-tab')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2, y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,20), ok:hit===e||e.contains(hit), by: (hit===e||e.contains(hit))?'':(f&&f!==document.body?(f.className||f.tagName).toString().slice(0,20)+' (fixed)':String(hit?.className||hit?.tagName).slice(0,20))})} return out})()`);
     rec(`${L}: with the action row in the middle of the screen, a touch at the centre of each visible control reaches that control`, hits.length >= 3 && hits.every((x) => x.ok), `${hits.length} checked; ${hits.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
-    // information only: the page's own fixed Sound and Terminal buttons can sit over the action row when it is scrolled to the bottom of the screen
+    // the page's own fixed Sound and Terminal buttons must not cover the action row wherever it is on the screen (the full sweep is the rr-fixed suite)
     const zones = [];
-    for (const frac of [0.2, 0.5, 0.85]) {
+    for (const frac of [0.2, 0.5, 0.85, 0.95]) {
       await s.ev(`(()=>{const r=document.querySelector('.lib-ctl').getBoundingClientRect(); scrollBy(0, r.top + r.height/2 - innerHeight*${frac})})()`); await sleep(500);
-      const z = await s.ev(`(()=>{const bad=[]; for(const e of document.querySelectorAll('.lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2); if(!(hit===e||e.contains(hit))) bad.push((e.getAttribute('aria-label')||e.innerText).trim().slice(0,14)+' covered by '+String(hit?.closest('button')?.innerText||hit?.className||hit?.tagName).trim().slice(0,14))} return bad})()`);
-      zones.push(`${Math.round(frac * 100)}%: ${z.length ? z.join("; ") : "clear"}`);
+      const z = await s.ev(`(()=>{const bad=[]; for(const e of document.querySelectorAll('.lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2); if(!(hit===e||e.contains(hit))) bad.push((e.getAttribute('aria-label')||e.innerText).trim().slice(0,14)+' covered by '+String(hit?.closest('button')?.getAttribute('aria-label')||hit?.className||hit?.tagName).trim().slice(0,22))} return bad})()`);
+      zones.push(...z.map((x) => `${x} (${Math.round(frac * 100)}%)`));
     }
-    out.push(`INFO  ${L}: action row at 20% / 50% / 85% of the screen height: ${zones.join(" | ")}`);
+    rec(`${L}: the action row is never covered by the page's fixed buttons, with the row at 20%, 50%, 85% and 95% of the screen height`, zones.length === 0, zones.join("; ") || "none covered");
     await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(600);
     const t1 = (await readCap(s)).title;
     const nx = await centre(s, '.lib-arrow[aria-label="Next book"]'); await tp(nx.x, nx.y);
@@ -596,14 +596,12 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
       // layout and reach
       const lay = await s.ev(`(()=>{const vis=(e)=>{const r=e.getBoundingClientRect(); return r.left>=-0.5&&r.right<=innerWidth+0.5&&r.width>0}; const q=(x)=>[...document.querySelectorAll(x)]; const cv=[...document.querySelectorAll('.lib-tape')].filter(t=>getComputedStyle(t).visibility!=='hidden').map(t=>t.querySelector('.lib-cv').getBoundingClientRect()).sort((a,b)=>Math.abs(a.x+a.width/2-innerWidth/2)-Math.abs(b.x+b.width/2-innerWidth/2))[0]; return {over:document.documentElement.scrollWidth-innerWidth, tabs:q('.lib-tab').map(e=>({ok:vis(e),h:Math.round(e.getBoundingClientRect().height)})), ctl:q('.lib-ctl button').map(e=>({ok:vis(e),h:Math.round(e.getBoundingClientRect().height),w:Math.round(e.getBoundingClientRect().width)})), coverH:Math.round(cv.height), head:vis(document.querySelector('.lib-head__h')), foot:vis(document.querySelector('.lib-credit'))}})()`);
       rec(`${L}: no sideways overflow; heading, 4 shelves, 3 controls and the credit link are inside the screen; controls at least 44px; the pulled-out cover is at least 120px tall`, lay.over <= 0 && lay.head && lay.foot && lay.tabs.length === 4 && lay.tabs.every((t) => t.ok && t.h >= 44) && lay.ctl.length === 3 && lay.ctl.every((c) => c.ok && c.h >= 44 && c.w >= 44) && lay.coverH >= 120, `overflow ${lay.over}; cover ${lay.coverH}px tall; controls ${lay.ctl.map((c) => `${c.w}x${c.h}`).join(" ")}`);
-      const hit = [], low = [];
+      const hit = [];
       for (const sel of [".lib-head__h", ".lib-tabs", ".lib-ctl"]) {
         await s.ev(`document.querySelector(${JSON.stringify(sel)}).scrollIntoView({block:'center'})`); await sleep(500);
-        const r = await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-tab, .lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2,y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); const own=hit===e||e.contains(hit); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,16), ok:own, by: own?'':((f&&f!==document.body?'a fixed page button ('+(f.innerText||f.className).toString().trim().slice(0,14)+')':String(hit?.className||hit?.tagName).slice(0,24))), bottom: y > innerHeight - 110})} return out})()`);
-        hit.push(...r.filter((x) => !x.bottom)); low.push(...r.filter((x) => x.bottom && !x.ok));
+        hit.push(...await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-tab, .lib-ctl button')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2,y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); const own=hit===e||e.contains(hit); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,16), ok:own, by: own?'':((f&&f!==document.body?'a fixed page button ('+(f.getAttribute('aria-label')||f.innerText||f.className).toString().trim().slice(0,22)+')':String(hit?.className||hit?.tagName).slice(0,24)))})} return out})()`));
       }
-      rec(`${L}: a touch at the centre of every shelf tab and control that is not in the bottom 110px of the screen reaches it`, hit.length >= 7 && hit.every((x) => x.ok), `${hit.length} checks; ${hit.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
-      out.push(`INFO  ${L}: controls whose centre is in the bottom 110px of the screen and is covered: ${low.length ? [...new Set(low.map((x) => `${x.n} by ${x.by}`))].join("; ") : "none"}`);
+      rec(`${L}: a touch at the centre of every shelf tab and control, wherever it sits on the screen, reaches it`, hit.length >= 7 && hit.every((x) => x.ok), `${hit.length} checks; ${hit.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
 
       // real touch drag on the shelf
       await s.ev(`document.querySelector('.lib-shelf').scrollIntoView({block:'center'})`); await sleep(800);
@@ -694,6 +692,29 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
       }
       // at 390 px the page ends before the shelf tabs can reach the bar, so only a few positions are reachable there; elsewhere the sweep must cover the tabs and the action row
       rec(`${name}: scrolling up through the Reading Room, the navigation bar never sits on a shelf tab, a control or the credit link`, checks >= (w === 390 ? 7 : 25) && bad.length === 0, `${checks} checks in ${guard} steps; ${[...new Set(bad)].slice(0, 4).join("; ") || "none covered by the bar"}`);
+      s.done();
+    }
+  }
+  // ═══ the page's fixed Sound and Terminal buttons against the Reading Room's controls ═══
+  if (mode === "reading-room-fab") {
+    // The row is scrolled to many heights, down into the bottom band of the screen where the fixed buttons sit, and the centre of every
+    // Reading Room control is checked: it must be what a pointer would hit. The two fixed buttons must themselves stay present and usable.
+    for (const [w, h, name] of [[360, 740, "360x740 phone"], [390, 844, "390x844 phone"], [600, 900, "600x900"], [667, 375, "667x375 phone landscape"], [844, 390, "844x390 phone landscape"], [1024, 768, "1024x768"]]) {
+      const s = await session({ w, h, mobile: w < 1000, touch: w < 1000 });
+      await toLib(s);
+      await sleep(5500); // the Terminal button fades in after about 5 s
+      const probe = () => s.ev(`(()=>{const out=[]; const bandTop=innerHeight-110; for(const e of document.querySelectorAll('.lib-tab, .lib-ctl button, .lib-credit')){const r=e.getBoundingClientRect(); let l=Math.max(0,r.left),t=Math.max(0,r.top),rt=Math.min(innerWidth,r.right),b=Math.min(innerHeight,r.bottom); if(rt-l<4||b-t<4) continue; const x=(l+rt)/2,y=(t+b)/2; const hit=document.elementFromPoint(x,y); const own=hit===e||e.contains(hit); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,16), own, inBand:y>bandTop, by: own?'':(f&&f!==document.body?'fixed "'+(f.getAttribute('aria-label')||f.innerText||f.className).toString().trim().slice(0,22)+'"':String(hit?.className||hit?.tagName).slice(0,24))})} return out})()`);
+      let checks = 0, inBand = 0; const bad = [];
+      for (const target of [".lib-ctl", ".lib-credit", ".lib-tabs"]) {
+        for (const frac of [0.08, 0.25, 0.45, 0.65, 0.8, 0.88, 0.94, 0.98]) {
+          await s.ev(`(()=>{const r=document.querySelector(${JSON.stringify(target)}).getBoundingClientRect(); scrollBy(0, r.top + r.height/2 - innerHeight*${frac})})()`); await sleep(350);
+          const r = await probe(); checks += r.length; inBand += r.filter((x) => x.inBand).length;
+          r.filter((x) => !x.own).forEach((x) => bad.push(`${x.n} by ${x.by} (${target} at ${Math.round(frac * 100)}%)`));
+        }
+      }
+      rec(`${name}: at every scroll height tried, including the bottom 110px of the screen, nothing covers Previous, Open reading note, Next, the credit link or a shelf tab`, bad.length === 0 && checks >= 60 && inBand >= 8, `${checks} control checks (${inBand} with the control in the bottom band); ${[...new Set(bad)].slice(0, 4).join("; ") || "none covered"}`);
+      const fab = await s.ev(`[...document.querySelectorAll('.lab-fab')].map(e=>{const r=e.getBoundingClientRect(); const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2); return {n:e.getAttribute('aria-label'), w:Math.round(r.width), h:Math.round(r.height), vis:r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight, own:hit===e||e.contains(hit)}})`);
+      rec(`${name}: the Sound and Terminal buttons are both still on screen, hit at their centres and large enough to touch (at least 40px)`, fab.length === 2 && fab.every((f) => f.vis && f.own && f.w >= (w <= 767 ? 40 : 90) && f.h >= (w <= 767 ? 40 : 28)), fab.map((f) => `${f.n} ${f.w}x${f.h}`).join("; "));
       s.done();
     }
   }

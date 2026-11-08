@@ -38,6 +38,7 @@ For each step write **Pass**, **Fail** or **Not run**, and a note on any failure
 | A7 | Click each shelf pill (All, Engineering, Thinking, Philosophy) | The shelf moves to that group; the selected pill is filled | | |
 | A8 | Scroll the page up and down past the Reading Room at a normal window width, then in a window narrower than 960 px | The navigation bar never covers a shelf pill, the three round and orange controls, or the credit link at rest; at 960 px and below it tucks away when you scroll down | | |
 | A9 | Resize to about 600 px wide, then to a short wide window (about 840 × 390) | No sideways scrolling; everything reachable; the books are small but legible in the short window | | |
+| A10 | In a window 360 to 430 px wide (or on an iPhone), scroll slowly so the three round and orange controls, the credit link and the shelf pills each pass through the bottom of the screen | The page's Sound and Terminal buttons are 40 px squares against the right edge (a speaker icon and `>_`); they never sit over Previous, Open reading note, Next, the credit link or a shelf pill, and each still works (the speaker mutes and unmutes; `>_` opens the terminal) | | |
 
 ## B. Covers (VoiceOver off)
 
@@ -80,6 +81,7 @@ System Settings, Accessibility, Display, Reduce motion: on. Reload the page.
 | E2 | VO-Right through the section from the heading | You meet the four shelf buttons (announced with their pressed state), then a line like "Quiet … by Susan Cain. Reading now.", then Previous book, Open reading note, Next book, then the credit link. You do **not** hear a long list of book buttons (the 42 tapes are hidden from VoiceOver on purpose) | | |
 | E3 | Move onto Open reading note | VoiceOver reads the button and then the book's note as its description (for Quiet: "Deep, sustained focus is an introvert's native advantage…") | | |
 | E4 | Activate Next book, then Previous book | The new selection is announced ("… by … . Reading now." or "Read.") | | |
+| E4b | Move to the speaker and the `>_` squares at a phone width | VoiceOver names them "Mute sound" or "Enable sound" and "Open developer terminal", not "greater than underscore" | | |
 | E5 | Activate a shelf button | It is announced as pressed; the selected book changes | | |
 | E6 | Activate Open reading note | A dialog is announced, named with the book's full title; focus is on Back to the shelf | | |
 | E7 | VO-Right through the overlay | Author and genre, the title, status and shelf, the note, the story line, key ideas; no stray "image" or cover noise | | |
@@ -89,7 +91,7 @@ System Settings, Accessibility, Display, Reduce motion: on. Reload the page.
 
 ## Known, from the automated checks, so you are not surprised
 
-- On a phone-width screen, the page's own fixed "Sound off" and "Terminal" buttons (bottom right, part of `/lab`, not the Reading Room) can cover the **Next book** button when the action row is scrolled into the bottom 110 px of the screen. Scrolling it up clears it. This was found in Chrome and is **not fixed**.
+- On a phone-width screen (767 px and below) the page's own fixed Sound and Terminal buttons, which belong to `/lab` and not to the Reading Room, are shrunk to 40 px icon squares at the right edge. Before that change they covered **Next book** and the **Philosophy** shelf pill at 360 and 390 px (found and fixed in Chrome; step A10 is how to check it in Safari). The fix is arithmetic: it holds from 360 px wide up and was not tested below that.
 - The note is not shown to VoiceOver in the caption itself (the visible caption text is hidden from it to avoid double reading while it slides); it is the description of the Open reading note button and the text of the overlay.
 - Covers come from Open Library over the network; a cover that fails to load is expected to leave the generated artwork showing.
 
