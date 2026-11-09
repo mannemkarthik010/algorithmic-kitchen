@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { resume, bookArchive } from "../data/resume";
 
 type Line = { text: string; type: "output" | "input" | "system" | "gold" };
@@ -11,7 +11,7 @@ const proj = (slug: string) => resume.projects.find((p) => p.slug === slug)!;
 const CMD: Record<string, () => Line[]> = {
   help: () => [
     { text: "Available commands:", type: "system" },
-    { text: "  cooking                — what is on the line right now", type: "output" },
+    { text: "  now                    — what I am building right now", type: "output" },
     { text: "  load projects          — list all signature recipes", type: "output" },
     { text: "  inspect <slug>         — deep dive a project", type: "output" },
     { text: "    slugs: woodlands  taxproof  retail  rag-agent  splitwise  cnn  recommender  bert", type: "gold" },
@@ -19,19 +19,19 @@ const CMD: Record<string, () => Line[]> = {
     { text: "  show bookshelf         — the reading archive", type: "output" },
     { text: "  open currently-reading — current book spotlight", type: "output" },
     { text: "  why ai                 — the origin story", type: "output" },
-    { text: "  open resume            — chef credentials", type: "output" },
+    { text: "  open resume            — résumé summary", type: "output" },
     { text: "  why hire karthik       — the answer you need", type: "output" },
     { text: "  download resume        — opens resume PDF", type: "output" },
-    { text: "  contact chef           — reservation info", type: "output" },
+    { text: "  contact                — how to reach me", type: "output" },
     { text: "  whoami / ls / date     — classic shell", type: "output" },
     { text: "  clear / exit           — housekeeping", type: "output" },
   ],
 
-  cooking: () => [
-    { text: "The Pass — tickets up right now:", type: "system" },
+  now: () => [
+    { text: "In progress right now:", type: "system" },
     { text: "", type: "output" },
     ...resume.kitchenPass.flatMap((t) => [
-      { text: `  No. ${t.no}  ${t.dish}  [${t.status.toUpperCase()}]`, type: "gold" as const },
+      { text: `  #${t.no}  ${t.dish}  [${t.status.toUpperCase()}]`, type: "gold" as const },
       ...t.items.map((it) => ({ text: `      1×  ${it}`, type: "output" as const })),
       { text: "", type: "output" as const },
     ]),
@@ -40,7 +40,7 @@ const CMD: Record<string, () => Line[]> = {
   "inspect woodlands": () => {
     const p = proj("woodlands-ims");
     return [
-      { text: `◈  ${p.title}  [ON THE LINE]`, type: "gold" },
+      { text: `◈  ${p.title}  [IN PROGRESS]`, type: "gold" },
       { text: `   Stack      : ${p.ingredients.join(" · ")}`, type: "output" },
       { text: `   Core idea  : stock is an append-only ledger — balances are derived, never edited`, type: "output" },
       { text: `   AI         : the assistant proposes records; a person taps Confirm`, type: "output" },
@@ -174,7 +174,7 @@ const CMD: Record<string, () => Line[]> = {
 
   "open resume": () => [
     { text: "╔═══════════════════════════════════════════╗", type: "gold" },
-    { text: "║        KARTHIK MANNEM · HEAD CHEF         ║", type: "gold" },
+    { text: "║       KARTHIK MANNEM · AI ENGINEER        ║", type: "gold" },
     { text: "╚═══════════════════════════════════════════╝", type: "gold" },
     { text: "", type: "output" },
     { text: `  Name       : ${resume.name}`, type: "output" },
@@ -190,7 +190,7 @@ const CMD: Record<string, () => Line[]> = {
     { text: "", type: "output" },
     { text: "  End-to-end ML: data → model → production. Not just notebooks.", type: "gold" },
     { text: "  RAG pipelines that cite their sources instead of guessing.", type: "output" },
-    { text: "  CNN, NLP, Recommenders, full-stack AI — complete menu.", type: "output" },
+    { text: "  CNN, NLP, Recommenders, full-stack AI, the full range.", type: "output" },
     { text: "  1,000+ LLM responses scored as AI Model Evaluation Analyst @ Handshake AI.", type: "output" },
     { text: "  Docker + Flask + AWS: ships real systems, not demos.", type: "output" },
     { text: "  3.92 GPA M.S. CS — rigorous academic foundation.", type: "output" },
@@ -203,31 +203,31 @@ const CMD: Record<string, () => Line[]> = {
     return [{ text: "Opening resume PDF…", type: "system" }];
   },
 
-  "contact chef": () => [
+  contact: () => [
     { text: `  ◉  ${resume.location}`, type: "output" },
     { text: `  ▲  ${resume.email}`, type: "output" },
     { text: `  ◈  linkedin.com/in/karthik-mannem-2008b4225`, type: "output" },
     { text: `  ◎  github.com/mannemkarthik010`, type: "output" },
     { text: "", type: "output" },
-    { text: "  Scroll to § 07 to reserve a table.", type: "system" },
+    { text: "  The contact form is at the bottom of the home page.", type: "system" },
   ],
 
   whoami: () => [{ text: `${resume.name} — ML Engineer · AI Systems Architect`, type: "gold" }],
-  ls: () => [{ text: "hero  about  projects  skills  experience  live  reading  contact", type: "output" }],
+  ls: () => [{ text: "hero  work  proof  open-source  experience  about  contact  lab", type: "output" }],
   date: () => [{ text: new Date().toLocaleString(), type: "output" }],
 };
 
 const MOTD: Line[] = [
-  { text: "The Algorithmic Kitchen — Terminal v3.0", type: "system" },
+  { text: "karthikmannem.com — terminal", type: "system" },
   { text: `Type 'help' for commands.`, type: "output" },
   { text: "", type: "output" },
 ];
 
 const lineColor = (t: Line["type"]) =>
   t === "input" ? "var(--gold)" :
-  t === "system" ? "rgba(255,134,91,0.52)" :
+  t === "system" ? "rgba(244, 81, 50,0.52)" :
   t === "gold"   ? "rgba(228,174,82,0.88)" :
-  "rgba(242,239,232,0.66)";
+  "rgba(237, 235, 228,0.66)";
 
 export default function Terminal() {
   const [open, setOpen]       = useState(false);
@@ -272,11 +272,12 @@ export default function Terminal() {
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }} transition={{ delay: 5, duration: 0.5 }}
             onClick={() => setOpen(true)}
-            style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "rgba(10,8,3,0.88)", border: "1px solid rgba(255,134,91,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer", fontFamily: "var(--f-mono)", fontSize: 11, color: "var(--muted)", backdropFilter: "blur(10px)", transition: "all 0.2s ease" }}
-            whileHover={{ borderColor: "rgba(255,134,91,0.6)", color: "var(--gold)" } as Parameters<typeof motion.button>[0]["whileHover"]}
+            style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 8, padding: "7px 14px", background: "rgba(10,8,3,0.88)", border: "1px solid rgba(244, 81, 50,0.25)", borderRadius: "var(--radius-sm)", cursor: "pointer", fontFamily: "var(--f-mono)", fontSize: 11, color: "var(--muted)", backdropFilter: "blur(10px)", transition: "all 0.2s ease" }}
+            whileHover={{ borderColor: "rgba(244, 81, 50,0.6)", color: "var(--gold)" } as Parameters<typeof motion.button>[0]["whileHover"]}
             aria-label="Open developer terminal"
+            className="lab-fab lab-fab--term"
           >
-            <span style={{ color: "var(--gold)" }}>⌃`</span> Terminal
+            <span className="lab-fab__key" style={{ color: "var(--gold)" }}>⌃`</span><span className="lab-fab__label"> Terminal</span><span className="lab-fab__glyph" aria-hidden="true">&gt;_</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -289,17 +290,17 @@ export default function Terminal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 36, scale: 0.97 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            style={{ position: "fixed", bottom: 24, right: 24, width: "min(600px,calc(100vw - 48px))", height: 400, zIndex: 500, background: "rgba(5,3,1,0.97)", border: "1px solid rgba(255,134,91,0.3)", borderRadius: "var(--radius-lg)", display: "flex", flexDirection: "column", overflow: "hidden", backdropFilter: "blur(20px)", boxShadow: "0 28px 64px rgba(0,0,0,0.7)" }}
+            style={{ position: "fixed", bottom: 24, right: 24, width: "min(600px,calc(100vw - 48px))", height: 400, zIndex: 500, background: "rgba(5,3,1,0.97)", border: "1px solid rgba(244, 81, 50,0.3)", borderRadius: "var(--radius-lg)", display: "flex", flexDirection: "column", overflow: "hidden", backdropFilter: "blur(20px)", boxShadow: "0 28px 64px rgba(0,0,0,0.7)" }}
             onClick={() => inputRef.current?.focus()}
           >
             {/* Title bar */}
-            <div style={{ padding: "10px 14px", borderBottom: "1px solid rgba(255,134,91,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(0,0,0,0.18)" }}>
+            <div style={{ padding: "10px 14px", borderBottom: "1px solid rgba(244, 81, 50,0.12)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: "rgba(0,0,0,0.18)" }}>
               <div className="flex-row gap-1">
-                {["#E56B43","#FF865B","rgba(255,134,91,0.25)"].map((c, i) => (
+                {["#E56B43","#F45132","rgba(244, 81, 50,0.25)"].map((c, i) => (
                   <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c }} />
                 ))}
               </div>
-              <span className="mono c-muted" style={{ fontSize: 11, opacity: 0.5 }}>algorithmic-kitchen — bash</span>
+              <span className="mono c-muted" style={{ fontSize: 11, opacity: 0.5 }}>karthikmannem.com — bash</span>
               <button onClick={(e) => { e.stopPropagation(); setOpen(false); }}
                 style={{ background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 13 }} aria-label="Close">✕</button>
             </div>
@@ -313,7 +314,7 @@ export default function Terminal() {
             </div>
 
             {/* Input */}
-            <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(255,134,91,0.1)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <div style={{ padding: "8px 14px", borderTop: "1px solid rgba(244, 81, 50,0.1)", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <span className="mono c-gold">❯</span>
               <input ref={inputRef} value={input}
                 onChange={(e) => setInput(e.target.value)}

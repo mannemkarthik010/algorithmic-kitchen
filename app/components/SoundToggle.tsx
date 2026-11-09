@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useSound } from "../hooks/SoundContext";
 
 export default function SoundToggle() {
@@ -14,6 +14,7 @@ export default function SoundToggle() {
       transition={{ delay: 1, duration: 0.5 }}
       whileHover={{ borderColor: "var(--border-hover)" }}
       aria-label={muted ? "Enable sound" : "Mute sound"}
+      className="lab-fab lab-fab--sound"
       style={{
         position: "fixed",
         right: 24,
@@ -63,7 +64,7 @@ export default function SoundToggle() {
           </>
         )}
       </svg>
-      {muted ? "Sound off" : "Sound on"}
+      <span className="lab-fab__label">{muted ? "Sound off" : "Sound on"}</span>
     </motion.button>
   );
 }

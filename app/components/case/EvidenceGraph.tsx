@@ -1,6 +1,7 @@
 "use client";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
+import { createDrawable, createTimeline, stagger } from "animejs";
 import { taxproof, fmt, type TNode, type TEdge, type Trace, type TFlag } from "./taxproof-data";
 
 type Rect = { x: number; y: number; w: number; h: number };
@@ -106,6 +107,43 @@ function TraceView({ trace }: { trace: Trace }) {
     return () => ro.disconnect();
   }, [measure, showAll]);
 
+  // Stage of each node along the lineage: document, value read, then each calculation step to the result.
+  const tierOf = (id: string) => {
+    const n = byId[id];
+    if (!n) return 0;
+    if (n.kind === "doc") return 0;
+    if (n.kind === "evidence") return 1;
+    return 2 + nodes.filter((x) => x.kind === "line").findIndex((x) => x.id === id);
+  };
+  const rank = (from: string) => tierOf(from);
+
+  // Anime.js sequences the connections: on first view the whole lineage draws from document to result; on selection,
+  // unrelated wires dim and the related ones redraw in lineage order, so the eye follows the evidence.
+  const svgRef = useRef<SVGSVGElement>(null);
+  const seen = useRef(false);
+  const ready = geo.w > 0 && Object.keys(geo.r).length > 0;
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || !ready) return;
+    const all = [...svg.querySelectorAll<SVGPathElement>("path.tp-wire")].filter((el) => !el.classList.contains("tp-wire--duplicate") && !el.classList.contains("tp-wire--excluded"));
+    if (!all.length || reduce) { seen.current = true; return; }
+    const byRank = (a: SVGPathElement, b: SVGPathElement) => Number(a.dataset.rank) - Number(b.dataset.rank);
+    const first = !seen.current;
+    seen.current = true;
+    const related = first ? all : all.filter((el) => el.dataset.state !== "rest");
+    const rest = first ? [] : all.filter((el) => el.dataset.state === "rest");
+    const ordered = related.slice().sort(byRank);
+    const tl = createTimeline({ defaults: { ease: "outQuad" } });
+    if (rest.length) tl.add(rest, { opacity: 0.12, duration: 220 }, 0);
+    if (ordered.length) {
+      ordered.forEach((el) => { el.style.opacity = "1"; });
+      tl.add(createDrawable(ordered), { draw: ["0 0", "0 1"], duration: 460, delay: stagger(first ? 70 : 120) }, 0);
+    }
+    const chips = document.querySelectorAll(".tp-detail .tp-ref, .tp-detail .tp-member, .tp-detail .tp-callout");
+    if (chips.length) tl.add(chips, { opacity: [0, 1], translateY: [8, 0], duration: 320, delay: stagger(45) }, 160);
+    return () => { tl.revert(); all.forEach((el) => { el.style.opacity = ""; }); };
+  }, [sel, showAll, ready, reduce]);
+
   const docs = nodes.filter((n) => n.kind === "doc");
   const evs = nodes.filter((n) => n.kind === "evidence");
   const chain = nodes.filter((n) => n.kind === "line");
@@ -178,7 +216,7 @@ function TraceView({ trace }: { trace: Trace }) {
       <div className="tp-explorer">
         <div>
           <div className="tp-graph" ref={boxRef}>
-            <svg className="tp-wires" width={geo.w} height={geo.h} aria-hidden="true" focusable="false">
+            <svg className="tp-wires" ref={svgRef} width={geo.w} height={geo.h} aria-hidden="true" focusable="false">
               {drawEdges.map((e, i) => {
                 const a = geo.r[e.from], b = geo.r[e.to];
                 if (!a || !b) return null;
@@ -187,17 +225,12 @@ function TraceView({ trace }: { trace: Trace }) {
                 const on = e.kind !== "duplicate" && ((up.has(e.from) || e.from === sel) && (up.has(e.to) || e.to === sel) ? "up" : (down.has(e.from) || e.from === sel) && (down.has(e.to) || e.to === sel) ? "down" : "");
                 return (
                   <g key={`${e.from}>${e.to}`}>
-                    {e.kind === "duplicate" || e.kind === "excluded" ? (
-                      <path d={w.d} className={`tp-wire tp-wire--${e.kind}`} />
-                    ) : (
-                      <motion.path
-                        d={w.d}
-                        className={`tp-wire tp-wire--${e.kind}${on ? ` is-${on}` : ""}`}
-                        initial={reduce ? false : { pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.6, delay: Math.min(i * 0.025, 0.5) }}
-                      />
-                    )}
+                    <path
+                      d={w.d}
+                      className={`tp-wire tp-wire--${e.kind}${on ? ` is-${on}` : ""}`}
+                      data-rank={rank(e.from)}
+                      data-state={on || "rest"}
+                    />
                     {(e.hidden || (e.label && !(stacked && e.kind === "duplicate"))) && !toBus && (
                       <text x={w.mx} y={w.my - 7} textAnchor="middle" className={`tp-wire__lbl tp-wire__lbl--${e.kind}`}>
                         {e.label ?? `+${e.hidden} step${e.hidden === 1 ? "" : "s"}`}
@@ -327,9 +360,9 @@ export default function EvidenceGraph() {
     <div className="cs-panel tp-panel">
       <div className="cs-panel__top">
         <h3 className="cs-panel__title">Follow a number to its proof</h3>
-        <div className="cs-chips" role="tablist" aria-label="Choose a lineage">
+        <div className="cs-chips" role="group" aria-label="Choose a lineage">
           {taxproof.traces.map((t) => (
-            <button key={t.id} type="button" role="tab" aria-selected={t.id === id} className={`cs-chip${t.id === id ? " is-on" : ""}`} onClick={() => setId(t.id)}>{t.tab}</button>
+            <button key={t.id} type="button" aria-pressed={t.id === id} className={`cs-chip${t.id === id ? " is-on" : ""}`} onClick={() => setId(t.id)}>{t.tab}</button>
           ))}
         </div>
       </div>

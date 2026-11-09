@@ -2,17 +2,12 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Nav from "./Nav";
-import Footer from "./Footer";
-import PlayZone from "./PlayZone";
-import LiveKitchen from "./LiveKitchen";
 import Library from "./Library";
-import FooterPlay from "./FooterPlay";
 import Terminal from "./Terminal";
 import SoundToggle from "./SoundToggle";
 import CommandPalette from "./CommandPalette";
-import EmberCursor from "./EmberCursor";
 
-/** The optional side of the portfolio: games, the reading room, what is on the stove, and experiments. */
+/** The Lab: the one game, the reading room, and a terminal. The old mini-games live in Git history. */
 export default function LabPage() {
   // Deep links such as /lab#library: the sections mount on the client, so scroll once they exist.
   useEffect(() => {
@@ -23,29 +18,28 @@ export default function LabPage() {
   }, []);
 
   return (
-    <main>
+    <main id="main-content" tabIndex={-1} className="ex lab-ex">
       <Nav />
-      <header id="lab" className="lab-head">
-        <div className="container">
-          <p className="sh-label">The Lab</p>
-          <h1 className="lab-head__t">Things I make when nobody asked.</h1>
-          <p className="lab-head__p">
-            Two small games, a bookshelf of what I have read, what I am building right now, and a dosa-shaped
-            optical illusion. None of it is needed to hire me. It is here because I like making it.
-          </p>
-          <Link className="fw-ghost" href="/">← Back to the portfolio</Link>
-        </div>
+      <header id="lab" className="lab-hero">
+        <p className="ex-mono">(Lab) &nbsp;Things I make when nobody asked</p>
+        <h1>One game.<br /><em>One bookshelf.</em></h1>
+        <p className="lab-hero__p">None of this is needed to hire me. It is here because I like making it.</p>
       </header>
 
-      <PlayZone />
-      <LiveKitchen />
+      <section className="lab-play" aria-labelledby="lab-play-h">
+        <div>
+          <p className="ex-mono">A game, standing on its own</p>
+          <h2 id="lab-play-h"><span>ECHO</span>{"//"}<span>SHIFT</span></h2>
+          <p className="lab-play__p">A time-loop puzzle game. Your past self is your teammate: record a run, then let it hold the switch while you walk through the door. Six handcrafted levels and a daily challenge, with its own page.</p>
+          <Link className="ex-cta ex-cta--orange" href="/play">Play now</Link>
+        </div>
+        <div className="lab-play__art" aria-hidden="true"><i /><i /><i /></div>
+      </section>
+
       <Library />
-      <div id="tiffin"><FooterPlay /></div>
-      <Footer />
       <Terminal />
       <SoundToggle />
       <CommandPalette />
-      <EmberCursor />
     </main>
   );
 }

@@ -76,9 +76,9 @@ export default function HashChain() {
   return (
     <div className="tp-chain">
       <div className="tp-chain__ctl" role="group" aria-label="Tamper with the sample log">
-        <button type="button" className={`cs-chip${mode === "intact" ? " is-on" : ""}`} onClick={() => setMode("intact")}>Untouched</button>
-        <button type="button" className={`cs-chip${mode === "edited" ? " is-on" : ""}`} onClick={() => setMode("edited")}>Edit event 3 quietly</button>
-        <button type="button" className={`cs-chip${mode === "covered" ? " is-on" : ""}`} onClick={() => setMode("covered")}>Edit it and re-hash that row</button>
+        <button type="button" aria-pressed={mode === "intact"} className={`cs-chip${mode === "intact" ? " is-on" : ""}`} onClick={() => setMode("intact")}>Untouched</button>
+        <button type="button" aria-pressed={mode === "edited"} className={`cs-chip${mode === "edited" ? " is-on" : ""}`} onClick={() => setMode("edited")}>Edit event 3 quietly</button>
+        <button type="button" aria-pressed={mode === "covered"} className={`cs-chip${mode === "covered" ? " is-on" : ""}`} onClick={() => setMode("covered")}>Edit it and re-hash that row</button>
       </div>
 
       <ol className="tp-chain__list">

@@ -156,12 +156,12 @@ export const resume = {
       solution: "Split the work by what each part is good at. Plain Python implements the published ACC/AHA Pooled Cohort Equations for 10-year risk. A retriever pulls guideline passages from a Chroma index. The LLM drafts the care plan as structured output grounded only in those passages, then a second pass critiques it against a rubric, all four sections present, grounded, tailored to the risk tier, nothing contraindicated, looping back to revise at most twice.",
       architecture: [
         { step: "Risk",     desc: "Pooled Cohort Equations in plain Python, checked against the guideline's worked example" },
-        { step: "Retrieve", desc: "Top-5 similarity search over 512-token chunks (64 overlap), MiniLM embeddings in Chroma" },
+        { step: "Retrieve", desc: "Top-5 similarity search over 512-character chunks (64 overlap), MiniLM embeddings in Chroma" },
         { step: "Draft",    desc: "Care plan as structured output: screening, lifestyle, medication, follow-up" },
         { step: "Critique", desc: "Rubric: complete, grounded, tailored to the risk tier, nothing contraindicated" },
         { step: "Revise",   desc: "Failed critiques loop back with feedback, capped at two revisions" },
       ],
-      results: ["Risk function reproduces the guideline's published worked example for all four race/sex cases (2.1 / 3.0 / 5.4 / 6.1%)","Every recommendation traces to a cited source and page","Deployed publicly on Streamlit"],
+      results: ["Risk function reproduces the guideline's published worked example for all four race/sex cases (2.1 / 3.0 / 5.4 / 6.1%)","The five retrieved guideline sources are listed with file and page beside the plan","Deployed publicly on Streamlit"],
       learned: "Don't let the model do what code can do. Moving the risk math out of the LLM into tested Python, and making a critic enforce 'grounded in the excerpts', mattered more than any prompt tweak.",
       recruiterSnapshot: "Agentic design with guardrails: deterministic calculation, retrieval with citations, structured outputs and a critic-and-revise loop built in LangGraph, in a domain where an ungrounded answer is a liability.",
       evaluation: [
@@ -172,7 +172,7 @@ export const resume = {
       deployment: "Streamlit app (see Live Demo). Embeddings run locally (MiniLM); the chat model is Llama-3.1-8B-Instruct behind an OpenAI-compatible endpoint, with a JSON-mode fallback for backends that can't force tool calls.",
       decisions: [
         "Risk is calculated in code, not by the LLM; the model only ever sees the result.",
-        "Retrieval is capped to the top five chunks and the prompt says 'grounded ONLY in these excerpts', so each recommendation is traceable to a source and page.",
+        "Retrieval is capped to the top five chunks and the prompt says 'grounded ONLY in these excerpts'. The five sources are listed with file and page next to the plan; individual recommendations are not linked to a specific source.",
         "Plan and critique are Pydantic-schema structured outputs, with a JSON-mode fallback for inference backends that don't support forced tool calling.",
         "The revise loop is bounded (two revisions) and every model call has a timeout; a critic that can't loop forever.",
       ],
@@ -364,7 +364,8 @@ export const resume = {
       icon: "◈",
       bullets: [
         "Scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following.",
-        "Catalogued recurring failure modes and hallucination patterns into reusable categories that fed prompt-refinement workflows and tightened rubrics where graders disagreed.",
+        "Catalogued recurring failure and hallucination patterns into reusable categories that fed prompt refinement.",
+        "Tightened rubrics where graders disagreed, feeding prompt-refinement workflows.",
         "Sustained high inter-annotator agreement and escalated ambiguous rubric cases, improving benchmark reliability.",
       ],
     },
@@ -376,7 +377,7 @@ export const resume = {
       period: "Aug 2023 – Jun 2024",
       icon: "◇",
       bullets: [
-        "Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, feature engineering, cross-validated training, and the deployed inference endpoint.",
+        "Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, cross-validated training, and a Dockerized Flask inference API.",
         "Containerized ML services with Docker behind Flask REST APIs for reproducible deployment and real-time prediction.",
         "Cut training time by roughly 25% through pipeline profiling, batched preprocessing, and training-config tuning.",
       ],
@@ -439,13 +440,13 @@ export const resume = {
   kitchenPass: [
     {
       no: "041", table: "The Woodlands restaurants", dish: "Woodlands IMS", status: "cooking" as const,
-      items: ["Append-only stock ledger", "Run-out watch for the must-never-run-out items", "AI kitchen assistant: it proposes, a person confirms"],
-      cta: "Peek into the kitchen", href: "https://github.com/mannemkarthik010/woodlands-ims",
+      items: ["Append-only stock ledger", "Run-out watch for the must-never-run-out items", "AI assistant: it proposes, a person confirms"],
+      cta: "See the repository", href: "https://github.com/mannemkarthik010/woodlands-ims",
     },
     {
       no: "040", table: "Anyone with a browser", dish: "TaxProof", status: "live" as const,
       items: ["Every number linked to its evidence", "Hash-chained audit log, server-side roles", "230 backend tests, 10 iterations"],
-      cta: "Taste it live", href: "https://taxproof-web.vercel.app",
+      cta: "Open the live demo", href: "https://taxproof-web.vercel.app",
     },
     {
       no: "039", table: "Beta testers", dish: "SplitWise Pro", status: "beta" as const,
@@ -619,9 +620,9 @@ export const expertiseLab = [
     tagline: "Production-grade retrieval-augmented generation",
     what: "Design and deploy LLM pipelines that answer domain-specific questions with cited, grounded responses. Not demos: shipped systems.",
     tools: ["LangChain", "OpenAI", "FAISS", "Pinecone", "ChromaDB", "Prompt Eng."],
-    proof: "Preventive Care Agent: LangGraph + Chroma RAG with a critic loop; every recommendation cites its source and page",
+    proof: "Preventive Care Agent: LangGraph + Chroma RAG with a critic loop; retrieved sources are listed with file and page",
     color: "#20272F",
-    accent: "#FF865B",
+    accent: "#D87B55",
   },
   {
     id: "ml",
@@ -645,7 +646,7 @@ export const expertiseLab = [
     tools: ["PyTorch", "OpenCV", "Albumentations", "ONNX", "TorchVision"],
     proof: "Fake Currency CNN: 97.3% accuracy on custom banknote dataset with 5-layer custom architecture",
     color: "#20272F",
-    accent: "#FF9B76",
+    accent: "#E6946F",
   },
   {
     id: "rec",
@@ -768,11 +769,12 @@ export const featuredWork = [
   },
   {
     slug: "preventive-care",
+    caseStudy: "/work/preventive-care",
     shot: { src: "/images/projects/preventive-care.jpg", width: 1200, height: 676, alt: "Preventive Care Recommendation Agent: patient data form and the educational-demo notice", host: "preventive-care-recommendation.streamlit.app" },
-    headline: "A RAG agent that cites its sources and never does the arithmetic.",
+    headline: "A RAG agent that lists its sources and never does the arithmetic.",
     evalRows: [
       ["Reference check", "The risk function (Pooled Cohort Equations, plain Python) reproduces the guideline's published worked example: 2.1% / 3.0% (white / Black women) and 5.4% / 6.1% (white / Black men)."],
-      ["Grounding", "Plans are drafted only from the top-5 retrieved guideline chunks; every recommendation traces to a cited source and page."],
+      ["Grounding", "Plans are drafted only from the top-5 retrieved guideline chunks, and those five sources are listed with file and page. The prototype corpus is 12 mock placeholder PDFs."],
       ["Critic loop", "A four-point rubric (complete, grounded, tier-specific, nothing contraindicated) gates each plan, with at most two revisions."],
       ["Scope", "Prototype corpus of 12 mock guideline PDFs. It demonstrates the pipeline and is not medical advice."],
     ],

@@ -1,6 +1,6 @@
 "use client";
 /**
- * ui.tsx — Shared component library for The Algorithmic Kitchen.
+ * ui.tsx — Shared UI primitives for karthikmannem.com.
  *
  * Components:
  *   AKMark          — brand monogram (sizes: sm | md | lg)
@@ -17,7 +17,7 @@
  */
 
 import { ReactNode } from "react";
-import { motion, Variants, useReducedMotion } from "framer-motion";
+import { motion, Variants, useReducedMotion } from "motion/react";
 import { EASE, DUR } from "../lib/motion";
 
 // EASE imported from ../lib/motion
@@ -156,7 +156,7 @@ function AnimatedBlob({ size, color, style, duration }: { size: number; color: s
 
 /* ── Glow blob ───────────────────────────────────── */
 export function GlowBlob({
-  size = 400, color = "rgba(255,134,91,0.06)", style, animate: shouldAnimate = true,
+  size = 400, color = "rgba(244, 81, 50,0.06)", style, animate: shouldAnimate = true,
 }: { size?: number; color?: string; style?: React.CSSProperties; animate?: boolean }) {
   if (shouldAnimate) {
     return <AnimatedBlob size={size} color={color} style={style} duration={10 + size / 100} />;
@@ -228,7 +228,7 @@ export function Item({ children, style }: { children: ReactNode; style?: React.C
 export function SkillPill({ label }: { label: string }) {
   return (
     <motion.span className="badge"
-      whileHover={{ scale: 1.06, borderColor: "var(--border-active)", color: "var(--gold-hi)", background: "rgba(255,134,91,0.14)" }}
+      whileHover={{ scale: 1.06, borderColor: "var(--border-active)", color: "var(--gold-hi)", background: "rgba(244, 81, 50,0.14)" }}
       transition={{ duration: 0.14 }}
       style={{ cursor: "default" }}>
       {label}

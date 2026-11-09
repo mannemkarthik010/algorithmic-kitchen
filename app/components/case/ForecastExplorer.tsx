@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { MODELS, MODEL_LABEL, retail, type Model, type Series } from "./retail-data";
 import { dateLabel, money, moneyFull, monthIdx, niceStep, useWidth } from "./useWidth";
 
@@ -11,8 +11,8 @@ const RANGES: { k: Range; label: string; n: number }[] = [
   { k: "all", label: "All 5 years", n: 260 },
 ];
 
-const COLOR = { ink: "#101317", slate: "#6B7780", copper: "#D9532B", copperSoft: "rgba(217,83,43,0.16)", grid: "rgba(16,19,23,0.09)" };
-const MODEL_COLOR: Record<Model, string> = { seasonal_naive: "#6B7780", holt_winters: "#101317", global_gbm: "#D9532B" };
+const COLOR = { ink: "#121212", slate: "#5F6B74", copper: "#D9532B", copperSoft: "rgba(217,83,43,0.16)", grid: "rgba(16,19,23,0.09)" };
+const MODEL_COLOR: Record<Model, string> = { seasonal_naive: "#5F6B74", holt_winters: "#121212", global_gbm: "#D9532B" };
 
 interface Row { d: string; v: number; lo?: number; hi?: number; h: boolean; p: boolean; kind: "actual" | "forecast" }
 
@@ -130,9 +130,9 @@ export default function ForecastExplorer() {
           <p className="cs-eyebrow cs-eyebrow--ink">Interactive</p>
           <h3 className="cs-panel__title">Explore a forecast</h3>
         </div>
-        <div className="cs-chips" role="tablist" aria-label="Series">
+        <div className="cs-chips" role="group" aria-label="Series">
           {retail.series.map((x) => (
-            <button key={x.id} role="tab" aria-selected={x.id === sid} className={`cs-chip${x.id === sid ? " is-on" : ""}`} onClick={() => { setSid(x.id); setHover(null); }}>
+            <button key={x.id} type="button" aria-pressed={x.id === sid} className={`cs-chip${x.id === sid ? " is-on" : ""}`} onClick={() => { setSid(x.id); setHover(null); }}>
               Store {x.store} · Dept {x.dept}
             </button>
           ))}
@@ -144,7 +144,7 @@ export default function ForecastExplorer() {
       <div className="cs-controls">
         <div className="cs-seg" role="group" aria-label="Time range">
           {RANGES.map((r) => (
-            <button key={r.k} className={range === r.k ? "is-on" : ""} onClick={() => { setRange(r.k); setHover(null); }}>{r.label}</button>
+            <button key={r.k} type="button" aria-pressed={range === r.k} className={range === r.k ? "is-on" : ""} onClick={() => { setRange(r.k); setHover(null); }}>{r.label}</button>
           ))}
         </div>
         <label className="cs-check"><input type="checkbox" checked={band} onChange={(e) => setBand(e.target.checked)} /> 80% interval</label>
@@ -200,7 +200,7 @@ export default function ForecastExplorer() {
             {hv && hover !== null && (
               <g pointerEvents="none">
                 <line x1={x(hover)} x2={x(hover)} y1={m.t} y2={m.t + ih} stroke={COLOR.ink} strokeOpacity={0.35} />
-                <circle cx={x(hover)} cy={y(hv.v)} r={4.5} fill={hv.kind === "forecast" ? COLOR.copper : COLOR.ink} stroke="#F2EFE8" strokeWidth={2} />
+                <circle cx={x(hover)} cy={y(hv.v)} r={4.5} fill={hv.kind === "forecast" ? COLOR.copper : COLOR.ink} stroke="#EDEBE4" strokeWidth={2} />
               </g>
             )}
           </svg>
@@ -226,7 +226,7 @@ export default function ForecastExplorer() {
 
       <div className="cs-panel__grid">
         <div>
-          <h4 className="cs-h4">Model comparison for this series</h4>
+          <h3 className="cs-h4">Model comparison for this series</h3>
           <p className="cs-small">Backtest WAPE averaged over six rolling cutoffs. Lower is better.</p>
           <div className="cs-mbars">
             {MODELS.map((k) => (
@@ -239,7 +239,7 @@ export default function ForecastExplorer() {
             ))}
           </div>
 
-          <h4 className="cs-h4" style={{ marginTop: 22 }}>Error at each cutoff</h4>
+          <h3 className="cs-h4" style={{ marginTop: 22 }}>Error at each cutoff</h3>
           <div ref={cref} className="cs-cut">
             {cw > 0 && (
               <svg width={cw} height={CH} role="img" aria-label="Backtest error by cutoff for each model">
@@ -257,7 +257,7 @@ export default function ForecastExplorer() {
         </div>
 
         <div>
-          <h4 className="cs-h4">Why this model is serving</h4>
+          <h3 className="cs-h4">Why this model is serving</h3>
           <p className="cs-p">{selectionNote(s)}</p>
           <div className="cs-note-box">
             <b>What you are looking at.</b> The sales history is synthetic. The copper line and band are the platform&apos;s real 8-week output for this series, read from <code>reports/current_forecasts.csv</code>. The repo does not store the other two models&apos; forecast curves, so only their backtest error is shown, never an invented line.

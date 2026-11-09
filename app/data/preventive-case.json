@@ -1,0 +1,198 @@
+{
+ "meta": {
+  "repo": "mannemkarthik010/Preventive-Care-Recommendation",
+  "repoUrl": "https://github.com/mannemkarthik010/Preventive-Care-Recommendation",
+  "sha": "be17eae67e11e381eb98f6db19d28c234ed84b45",
+  "builtAt": "2026-11-05",
+  "demoUrl": "https://preventive-care-recommendation.streamlit.app/",
+  "utilsSha256": "a527dce374a2e697eb5715d3779fc057b695ce3114c357181c7c7cae836a292e"
+ },
+ "worked": [
+  {
+   "sex": "female",
+   "race": "white",
+   "risk": 2.1
+  },
+  {
+   "sex": "female",
+   "race": "black",
+   "risk": 3.0
+  },
+  {
+   "sex": "male",
+   "race": "white",
+   "risk": 5.4
+  },
+  {
+   "sex": "male",
+   "race": "black",
+   "risk": 6.1
+  }
+ ],
+ "patients": [
+  {
+   "id": "p1",
+   "label": "Sample patient 1",
+   "age": 45,
+   "sex": "female",
+   "race": "white",
+   "total_cholesterol": 185,
+   "hdl_cholesterol": 62,
+   "systolic_bp": 114,
+   "smoker": false,
+   "diabetes": false,
+   "bp_meds": false,
+   "risk": {
+    "risk_percentage": 0.5,
+    "risk_tier": "Low",
+    "method": "2013 ACC/AHA Pooled Cohort Equations",
+    "out_of_validated_age_range": false,
+    "race_approximated_as_white": false
+   },
+   "query": "Preventive cardiovascular care for a 45-year-old female with low 10-year ASCVD risk (0.5%), smoker=False, diabetes=False, on BP medication=False."
+  },
+  {
+   "id": "p2",
+   "label": "Sample patient 2",
+   "age": 60,
+   "sex": "male",
+   "race": "white",
+   "total_cholesterol": 205,
+   "hdl_cholesterol": 52,
+   "systolic_bp": 126,
+   "smoker": false,
+   "diabetes": false,
+   "bp_meds": false,
+   "risk": {
+    "risk_percentage": 8.3,
+    "risk_tier": "Intermediate",
+    "method": "2013 ACC/AHA Pooled Cohort Equations",
+    "out_of_validated_age_range": false,
+    "race_approximated_as_white": false
+   },
+   "query": "Preventive cardiovascular care for a 60-year-old male with intermediate 10-year ASCVD risk (8.3%), smoker=False, diabetes=False, on BP medication=False."
+  },
+  {
+   "id": "p3",
+   "label": "Sample patient 3",
+   "age": 58,
+   "sex": "male",
+   "race": "white",
+   "total_cholesterol": 232,
+   "hdl_cholesterol": 41,
+   "systolic_bp": 138,
+   "smoker": true,
+   "diabetes": false,
+   "bp_meds": true,
+   "risk": {
+    "risk_percentage": 21.4,
+    "risk_tier": "High",
+    "method": "2013 ACC/AHA Pooled Cohort Equations",
+    "out_of_validated_age_range": false,
+    "race_approximated_as_white": false
+   },
+   "query": "Preventive cardiovascular care for a 58-year-old male with high 10-year ASCVD risk (21.4%), smoker=True, diabetes=False, on BP medication=True."
+  }
+ ],
+ "corpus": [
+  {
+   "file": "AHA_2023_Prevention_Guidelines.pdf",
+   "pages": 1,
+   "chars": 106,
+   "text": "American Heart Association 2023 Prevention Guidelines Cardiovascular Disease Prevention Guidelines 2023...",
+   "boilerplate": false
+  },
+  {
+   "file": "ESC_2021_Cardiovascular_Risk_Guidelines.pdf",
+   "pages": 1,
+   "chars": 147,
+   "text": "European Society of Cardiology 2021 Cardiovascular Risk Guidelines 2021 ESC Guidelines on cardiovascular disease prevention in clinical practice...",
+   "boilerplate": false
+  },
+  {
+   "file": "Additional_Guideline_1.pdf",
+   "pages": 1,
+   "chars": 345,
+   "text": "Diabetes Type 2 Cardiovascular Management 2025 Diabetes Type 2 Cardiovascular Management 2025: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_2.pdf",
+   "pages": 1,
+   "chars": 321,
+   "text": "Hypertension Control Protocols WHO Hypertension Control Protocols WHO: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_3.pdf",
+   "pages": 1,
+   "chars": 333,
+   "text": "Cholesterol Statin Therapy Meta-Analysis Cholesterol Statin Therapy Meta-Analysis: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_4.pdf",
+   "pages": 1,
+   "chars": 333,
+   "text": "Heart Failure Early Detection Strategies Heart Failure Early Detection Strategies: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_5.pdf",
+   "pages": 1,
+   "chars": 337,
+   "text": "Lifestyle Med: Diet and Exercise for ASCVD Lifestyle Med: Diet and Exercise for ASCVD: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_6.pdf",
+   "pages": 1,
+   "chars": 317,
+   "text": "Smoking Cessation Framework 2024 Smoking Cessation Framework 2024: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_7.pdf",
+   "pages": 1,
+   "chars": 335,
+   "text": "Obesity and Metabolic Syndrome Guidelines Obesity and Metabolic Syndrome Guidelines: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_8.pdf",
+   "pages": 1,
+   "chars": 327,
+   "text": "Atrial Fibrillation Stroke Prevention Atrial Fibrillation Stroke Prevention: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_9.pdf",
+   "pages": 1,
+   "chars": 333,
+   "text": "Aspirin Use in Primary Prevention Update Aspirin Use in Primary Prevention Update: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  },
+  {
+   "file": "Additional_Guideline_10.pdf",
+   "pages": 1,
+   "chars": 323,
+   "text": "Women's Heart Health Special Report Women's Heart Health Special Report: Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+   "boilerplate": true
+  }
+ ],
+ "boilerplate": "Patients should adhere to best clinical practices regarding this topic. Regular screening, blood tests, and lifestyle improvements (diet, exercise) remain the core pillars. Pharmacological interventions should be assessed on an individual risk basis.",
+ "stats": {
+  "documents": 12,
+  "boilerplateDocs": 10,
+  "pagesEach": 1
+ },
+ "pipeline": {
+  "k": 5,
+  "chunkSize": 512,
+  "chunkOverlap": 64,
+  "chunkUnit": "characters",
+  "embedding": "all-MiniLM-L6-v2",
+  "maxRevisions": 2,
+  "temperature": 0
+ }
+}

@@ -1,49 +1,30 @@
 "use client";
-import Nav from "./components/Nav";
-import Hero from "./components/Hero";
-import KitchenStats from "./components/KitchenStats";
-import Ticker from "./components/Ticker";
-import Projects from "./components/Projects";
+import "./exhibit/exhibit.css";
+import ExNav from "./exhibit/ExNav";
+import Opening from "./exhibit/Opening";
+import Gallery from "./exhibit/Gallery";
+import Screens from "./exhibit/Screens";
+import ExAbout from "./exhibit/ExAbout";
+import ExContact from "./exhibit/ExContact";
+import ExFooter from "./exhibit/ExFooter";
 import Contributions from "./components/Contributions";
-import Experience from "./components/Experience";
-import ExpertiseLab from "./components/ExpertiseLab";
-import About from "./components/About";
-import LabTeaser from "./components/LabTeaser";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import Terminal from "./components/Terminal";
 import ScrollToTop from "./components/ScrollToTop";
-import SoundToggle from "./components/SoundToggle";
-import CourseRail from "./components/CourseRail";
-import EmberCursor from "./components/EmberCursor";
 import CommandPalette from "./components/CommandPalette";
-import { SectionDivider } from "./components/ui";
 
+/** The homepage as an exhibition: opening installation (ink), live exhibits (paper), code gallery (ink), about (paper), contact (ink). */
 export default function Home() {
   return (
-    <main>
+    <main id="main-content" tabIndex={-1} className="ex">
       <ScrollToTop />
-      <Nav />
-      <Hero />
-      <KitchenStats />
-      <Ticker />
-      <Projects />
-      <SectionDivider />
-      <Contributions />
-      <SectionDivider />
-      <Experience />
-      <SectionDivider />
-      <ExpertiseLab />
-      <SectionDivider />
-      <About />
-      <LabTeaser />
-      <Contact />
-      <Footer />
-      <Terminal />
-      <SoundToggle />
+      <ExNav />
+      <Opening />
+      <Gallery />
+      <Screens />
+      <div className="ex-code"><Contributions /></div>
+      <ExAbout />
+      <ExContact />
+      <ExFooter />
       <CommandPalette />
-      <CourseRail />
-      <EmberCursor />
     </main>
   );
 }

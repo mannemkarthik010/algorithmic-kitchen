@@ -2,9 +2,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Nav from "../Nav";
-import Footer from "../Footer";
+import ExFooter from "../../exhibit/ExFooter";
+import CaseNav from "../../exhibit/CaseNav";
+import CaseNext from "../../exhibit/CaseNext";
 import CommandPalette from "../CommandPalette";
 import EvidenceGraph from "./EvidenceGraph";
 import HashChain from "./HashChain";
@@ -73,14 +75,14 @@ export default function TaxProofCase() {
   const m = taxproof.meta;
 
   return (
-    <main className="cs">
+    <main id="main-content" tabIndex={-1} className="cs cs--tax">
       <Nav />
 
       <header className="cs-hero">
         <div className="container">
-          <Link className="cs-back" href="/#projects">← All work</Link>
+          <Link className="cs-back" href="/#work">← The exhibition</Link>
           <p className="cs-eyebrow">Case study 02 · Evidence graph, audit chain, guarded AI</p>
-          <motion.h1 className="cs-h1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
+          <motion.h1 className="cs-h1" initial={{ y: 22 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
             A tax return where every number can show its <em>proof</em>.
           </motion.h1>
 
@@ -111,8 +113,9 @@ export default function TaxProofCase() {
           </div>
         </div>
       </header>
+      <CaseNav />
 
-      <section className="cs-sec">
+      <section className="cs-sec cs-paper">
         <div className="container cs-split">
           <div className="cs-rail"><span>01</span><h2>The problem</h2></div>
           <div>
@@ -129,7 +132,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band">
+      <section id="challenge" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">02 · What the engine got confidently wrong</p>
@@ -168,7 +171,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band cs-band--soft">
+      <section id="source" className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">04 · System design</p>
@@ -205,7 +208,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-band">
+      <section id="permissions" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">06 · Access and identity</p>
@@ -233,7 +236,7 @@ export default function TaxProofCase() {
         </div>
       </section>
 
-      <section className="cs-sec">
+      <section className="cs-sec cs-paper">
         <div className="container cs-two">
           <motion.div {...reveal}>
             <p className="cs-eyebrow">07 · Decisions</p>
@@ -259,13 +262,14 @@ export default function TaxProofCase() {
           <div className="cs-end__links">
             <a className="pill-cta" href={DEMO_URL} target="_blank" rel="noopener noreferrer">Open the live demo ↗</a>
             <a className="fw-ghost" href={m.repoUrl} target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
-            <Link className="fw-ghost" href="/#projects">← Back to all work</Link>
+            <Link className="fw-ghost" href="/#work">← Back to the exhibition</Link>
           </div>
           <p className="cs-src">Values on this page are read from <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer">{m.repo} @ {m.sha.slice(0, 7)}</a> by <code>scripts/build-taxproof-data.py</code>, which asserts them against the packet and its own documentation. Test counts and the finding table come from the repository&apos;s iteration log. Packet SHA-256: <code>{m.packetSha256.slice(0, 16)}…</code></p>
         </div>
       </section>
 
-      <Footer />
+      <CaseNext current="taxproof" />
+      <ExFooter />
       <CommandPalette />
     </main>
   );

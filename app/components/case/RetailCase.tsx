@@ -1,9 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Nav from "../Nav";
-import Footer from "../Footer";
+import ExFooter from "../../exhibit/ExFooter";
+import CaseNav from "../../exhibit/CaseNav";
+import CaseNext from "../../exhibit/CaseNext";
 import CommandPalette from "../CommandPalette";
 import ForecastExplorer from "./ForecastExplorer";
 import FleetPanel from "./FleetPanel";
@@ -36,15 +38,15 @@ const LIMITS = [
 
 export default function RetailCase() {
   return (
-    <main className="cs">
+    <main id="main-content" tabIndex={-1} className="cs cs--retail">
       <Nav />
 
       {/* HERO: split, asymmetric */}
       <header className="cs-hero">
         <div className="container">
-          <Link className="cs-back" href="/#projects">← All work</Link>
+          <Link className="cs-back" href="/#work">← The exhibition</Link>
           <p className="cs-eyebrow">Case study 01 · Forecasting, anomaly detection, an auditable agent</p>
-          <motion.h1 className="cs-h1" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
+          <motion.h1 className="cs-h1" initial={{ y: 22 }} animate={{ y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
             Demand forecasts that are <em>honest</em> about their own accuracy.
           </motion.h1>
 
@@ -75,9 +77,10 @@ export default function RetailCase() {
           </div>
         </div>
       </header>
+      <CaseNav />
 
       {/* PROBLEM: sticky rail */}
-      <section className="cs-sec">
+      <section id="problem" className="cs-sec cs-paper">
         <div className="container cs-split">
           <div className="cs-rail"><span>01</span><h2>The problem</h2></div>
           <div>
@@ -95,7 +98,7 @@ export default function RetailCase() {
       </section>
 
       {/* FLEET: darker band */}
-      <section className="cs-band">
+      <section id="model-selection" className="cs-band">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">02 · Model selection</p>
@@ -107,7 +110,7 @@ export default function RetailCase() {
       </section>
 
       {/* CALIBRATION: what went wrong */}
-      <section className="cs-sec">
+      <section id="evaluation" className="cs-sec">
         <div className="container cs-split">
           <div className="cs-rail"><span>03</span><h2>What the model got wrong</h2></div>
           <div>
@@ -122,7 +125,7 @@ export default function RetailCase() {
       </section>
 
       {/* SYSTEM */}
-      <section className="cs-band cs-band--soft">
+      <section id="system-design" className="cs-band cs-band--soft">
         <div className="container">
           <motion.div {...reveal} className="cs-band__head">
             <p className="cs-eyebrow">04 · System design</p>
@@ -156,7 +159,7 @@ export default function RetailCase() {
       </section>
 
       {/* DECISIONS + LIMITS */}
-      <section className="cs-sec">
+      <section className="cs-sec cs-paper">
         <div className="container cs-two">
           <motion.div {...reveal}>
             <p className="cs-eyebrow">07 · Decisions</p>
@@ -183,13 +186,14 @@ export default function RetailCase() {
           <div className="cs-end__links">
             <a className="pill-cta" href="https://retail-intel-platform.vercel.app" target="_blank" rel="noopener noreferrer">Open the live demo ↗</a>
             <a className="fw-ghost" href="https://github.com/mannemkarthik010/retail-intel-platform" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
-            <Link className="fw-ghost" href="/#projects">← Back to all work</Link>
+            <Link className="fw-ghost" href="/#work">← Back to the exhibition</Link>
           </div>
           <p className="cs-src">Figures on this page are read from <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer">{retail.source.repo} @ {retail.source.commit.slice(0, 7)}</a> by <code>scripts/build-retail-data.py</code>, which asserts them against the repo&apos;s own evaluation report.</p>
         </div>
       </section>
 
-      <Footer />
+      <CaseNext current="retail" />
+      <ExFooter />
       <CommandPalette />
     </main>
   );

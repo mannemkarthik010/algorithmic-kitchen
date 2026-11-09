@@ -40,7 +40,7 @@ const COVERS: Record<string, { id: number; tint: string; ink: string; accent: st
   "Hands-On Machine Learning": { id: 9388208, tint: "#FFFFFF", ink: "#101317", accent: "#A79B8D" },
   "Designing Machine Learning Systems": { id: 13314480, tint: "#FFFFFF", ink: "#101317", accent: "#59483D" },
   "AI Engineering": { id: 15091156, tint: "#FFFFFF", ink: "#101317", accent: "#1C1611" },
-  "Quiet: The Power of Introverts in a World That Can't Stop Talking": { id: 7079753, tint: "#7F8185", ink: "#101317", accent: "#FF865B" },
+  "Quiet: The Power of Introverts in a World That Can't Stop Talking": { id: 7079753, tint: "#7F8185", ink: "#101317", accent: "#D87B55" },
   "Do Epic Shit": { id: 12550538, tint: "#FFF217", ink: "#101317", accent: "#9FC860" },
   "Rich Dad Poor Dad": { id: 8315603, tint: "#60544D", ink: "#F2EFE8", accent: "#1E1819" },
   "One Arranged Murder": { id: 10504047, tint: "#E7E6D2", ink: "#101317", accent: "#7E726A" },

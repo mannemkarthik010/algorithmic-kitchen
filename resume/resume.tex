@@ -5,7 +5,7 @@
 
 %---- Required Packages and Functions ----
 
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10pt]{article}
 \usepackage{latexsym}
 \usepackage{xcolor}
 \usepackage{float}
@@ -26,6 +26,7 @@
 \usepackage{cfr-lm}
 \usepackage[T1]{fontenc}
 \setlength{\multicolsep}{0pt} 
+\raggedbottom
 \pagestyle{fancy}
 \fancyhf{} % clear all header and footer fields
 \fancyfoot{}
@@ -177,16 +178,14 @@
   {Handshake AI}{Remote}
   \resumeItemListStart
     \item {Scored 1,000+ LLM responses against rubrics for factual accuracy, reasoning quality, and instruction-following.}
-    \item {Catalogued recurring failure modes and hallucination patterns into reusable categories that fed prompt-refinement workflows and tightened rubrics where graders disagreed.}
-    \item {Sustained high inter-annotator agreement and escalated ambiguous rubric cases, improving benchmark reliability.}
+    \item {Catalogued recurring failure and hallucination patterns into reusable categories that fed prompt refinement.}
   \resumeItemListEnd
 
 \resumeSubheading
   {Machine Learning Engineer (Freelance)}{Aug 2023 -- Jun 2024}
   {Self-Employed}{Remote}
   \resumeItemListStart
-    \item {Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, feature engineering, cross-validated training, and the deployed inference endpoint.}
-    \item {Containerized ML services with Docker behind Flask REST APIs for reproducible deployment and real-time prediction.}
+    \item {Delivered deep learning models (LSTM, CNN) for 3 client applications, owning preprocessing, cross-validated training, and a Dockerized Flask inference API.}
     \item {Cut training time by roughly 25\% through pipeline profiling, batched preprocessing, and training-config tuning.}
   \resumeItemListEnd
 
@@ -205,18 +204,28 @@
   \resumeItemListStart
     \item {Built a 3-model pipeline (seasonal-naive, Holt-Winters, GBM) over 240 series, rolling-origin backtested, selecting a winner per series (GBM: 7.9\% WAPE, best on 154/240).}
     \item {Shipped 80\% prediction intervals and occlusion-based feature attribution, reporting measured coverage on held-out data (74.2\% vs. 80\% nominal) instead of asserting calibration.}
-    \item {Designed a 6-tool agentic Q\&A layer over a pluggable LLM backend with audit logging, retry/backoff, token-cost tracking, and a 37-case eval harness scoring tool routing in CI.}
-    \item {Closed the MLOps loop: drift detection triggers per-series re-selection with a logged audit trail; deployed to AWS (SageMaker, Lambda, Bedrock) via Terraform, Docker, and CI.}
+    \item {Designed a 6-tool agentic Q\&A layer (pluggable LLM backend, audit logging, 37-case routing eval on a mock router in CI) and a drift-detection loop that re-selects models per series; AWS stack in Terraform, tested on mocks.}
   \resumeItemListEnd
 
 \resumeProject
-  {Preventive Care Recommendation Agent -- Agentic RAG for Clinical Decision Support}
-  {Python, LangChain, ChromaDB, Llama-3.1, Streamlit}
-  {\href{https://github.com/mannemkarthik010/Preventive-Care-Recommendation}{GitHub}}
-  {}
+  {TaxProof -- Evidence-Linked Tax Workpaper, Trustworthy-AI Prototype}
+  {Python, FastAPI, PostgreSQL, Next.js, TypeScript, Pytest, Vitest, Vercel}
+  {\href{https://github.com/mannemkarthik010/TaxGraph}{GitHub}}
+  {\href{https://taxproof-web.vercel.app}{Live Demo}}
   \resumeItemListStart
-    \item {Built a LangChain RAG pipeline over a ChromaDB index of cardiovascular and metabolic guideline PDFs, so recommendations cite retrieved text rather than model recall.}
-    \item {Combined a computed Framingham risk score with retrieved guidelines into a structured, risk-specific screening and vaccination plan.}
+    \item {Built an evidence graph over a SHA-256-frozen sample tax packet that traces each return line through its rule to the source page, plus a challenge engine that flags contradictions and misreads.}
+    \item {Enforced roles server-side with masked sensitive fields and a hash-chained audit log that detects any edited or deleted row; constrained the AI to cited evidence, so it investigates but never calculates.}
+    \item {Shipped in 10 tested iterations: 230 backend tests (SQLite and PostgreSQL) and 36 frontend tests; live on Vercel.}
+  \resumeItemListEnd
+
+\resumeProject
+  {Preventive Care Recommendation Agent -- Agentic RAG, Educational Prototype}
+  {Python, LangGraph, LangChain, ChromaDB, Llama-3.1, Streamlit}
+  {\href{https://github.com/mannemkarthik010/Preventive-Care-Recommendation}{GitHub}}
+  {\href{https://preventive-care-recommendation.streamlit.app/}{Live Demo}}
+  \resumeItemListStart
+    \item {Built a LangGraph agent that retrieves passages from a ChromaDB guideline index, drafts a structured care plan grounded in them, and lists the retrieved sources.}
+    \item {Implemented the ACC/AHA Pooled Cohort Equations in Python for 10-year ASCVD risk, verified on the guideline's worked example, plus a critic loop (max 2 revisions).}
   \resumeItemListEnd
 
 \resumeSubHeadingListEnd
@@ -227,7 +236,7 @@
 \begin{itemize}[leftmargin=0.05in, label={}, topsep=0pt, parsep=0pt, partopsep=0pt]
     \small{\item{
      \textbf{unionai-oss/pandera}{ -- 1 PR merged: \href{https://github.com/unionai-oss/pandera/pull/2437}{\#2437} itemsize-parameterized NumPy dtypes (\texttt{S16}, \texttt{U16}), with tests.} \\
-     \textbf{pytorch/pytorch}{ -- 1 PR approved, open for merge: \href{https://github.com/pytorch/pytorch/pull/191687}{\#191687} fixes \texttt{torch.fx} codegen for keyword/escaped names, with tests.}
+     \textbf{pytorch/pytorch}{ -- 1 PR approved, open: \href{https://github.com/pytorch/pytorch/pull/191687}{\#191687} fixes \texttt{torch.fx} codegen for escaped names, with tests.}
     }}
 \end{itemize}
 

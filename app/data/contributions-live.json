@@ -1,0 +1,875 @@
+{
+ "fetchedAt": "2026-11-05",
+ "author": "mannemkarthik010",
+ "prs": [
+  {
+   "slug": "pandera-itemsize-dtypes",
+   "repo": "unionai-oss/pandera",
+   "number": 2437,
+   "url": "https://github.com/unionai-oss/pandera/pull/2437",
+   "title": "Support itemsize-parameterized numpy dtypes in the pandas engine",
+   "state": "merged",
+   "draft": false,
+   "createdAt": "2026-08-07",
+   "updatedAt": "2026-08-19",
+   "mergedAt": "2026-08-19",
+   "closedAt": "2026-08-19",
+   "additions": 58,
+   "deletions": 1,
+   "changedFiles": 2,
+   "labels": [],
+   "reviews": [
+    {
+     "user": "cosmicbboy",
+     "state": "APPROVED",
+     "at": "2026-08-19",
+     "mine": false
+    }
+   ],
+   "latestDecisions": {
+    "cosmicbboy": "APPROVED"
+   },
+   "closingNote": null,
+   "files": [
+    {
+     "path": "pandera/engines/pandas_engine.py",
+     "status": "modified",
+     "additions": 8,
+     "deletions": 1,
+     "role": "source",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -265,7 +265,14 @@ def dtype(cls, data_type: Any) -> dtypes.DataType:"
+      },
+      {
+       "t": "ctx",
+       "s": "                if isinstance(np_or_pd_dtype, np.dtype):"
+      },
+      {
+       "t": "ctx",
+       "s": "                    # cast alias to platform-agnostic dtype"
+      },
+      {
+       "t": "ctx",
+       "s": "                    # e.g.: np.intc -> np.int32"
+      },
+      {
+       "t": "del",
+       "s": "                    common_np_dtype = np.dtype(np_or_pd_dtype.name)"
+      },
+      {
+       "t": "add",
+       "s": "                    try:"
+      },
+      {
+       "t": "add",
+       "s": "                        common_np_dtype = np.dtype(np_or_pd_dtype.name)"
+      },
+      {
+       "t": "add",
+       "s": "                    except TypeError:"
+      },
+      {
+       "t": "add",
+       "s": "                        # Itemsize-parameterized dtypes encode their width in"
+      },
+      {
+       "t": "add",
+       "s": "                        # ``name`` in a form ``np.dtype`` cannot parse back,"
+      },
+      {
+       "t": "add",
+       "s": "                        # e.g. np.dtype(\"S16\").name == \"bytes128\". Their scalar"
+      },
+      {
+       "t": "add",
+       "s": "                        # type is already platform-agnostic, so use it as-is."
+      },
+      {
+       "t": "add",
+       "s": "                        common_np_dtype = np_or_pd_dtype"
+      },
+      {
+       "t": "ctx",
+       "s": "                    np_or_pd_dtype = common_np_dtype.type"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": "            return engine.Engine.dtype(cls, np_or_pd_dtype)"
+      }
+     ]
+    },
+    {
+     "path": "tests/pandas/test_pandas_engine.py",
+     "status": "modified",
+     "additions": 50,
+     "deletions": 0,
+     "role": "test",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -884,3 +884,53 @@ def check_column(cls, element):"
+      },
+      {
+       "t": "ctx",
+       "s": "            assert ("
+      },
+      {
+       "t": "ctx",
+       "s": "                failure_case[\"failure_case\"] == expected_value[\"failure_case\"]"
+      },
+      {
+       "t": "ctx",
+       "s": "            )"
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "@pytest.mark.parametrize("
+      },
+      {
+       "t": "add",
+       "s": "    \"numpy_dtype, scalar_type\","
+      },
+      {
+       "t": "add",
+       "s": "    ["
+      },
+      {
+       "t": "add",
+       "s": "        (np.dtype(\"S16\"), np.bytes_),"
+      },
+      {
+       "t": "add",
+       "s": "        (np.dtype(\"S1\"), np.bytes_),"
+      },
+      {
+       "t": "add",
+       "s": "        (np.dtype(\"U16\"), np.str_),"
+      },
+      {
+       "t": "add",
+       "s": "        (np.dtype(\"U100\"), np.str_),"
+      },
+      {
+       "t": "add",
+       "s": "    ],"
+      },
+      {
+       "t": "add",
+       "s": ")"
+      },
+      {
+       "t": "add",
+       "s": "def test_itemsize_parameterized_numpy_dtype(numpy_dtype, scalar_type):"
+      },
+      {
+       "t": "add",
+       "s": "    \"\"\"Itemsize-parameterized numpy dtypes resolve like their scalar type."
+      },
+      {
+       "t": "add",
+       "s": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pytorch-fx-format-target",
+   "repo": "pytorch/pytorch",
+   "number": 191687,
+   "url": "https://github.com/pytorch/pytorch/pull/191687",
+   "title": "Fix FX codegen for module names that are keywords or need escaping",
+   "state": "open",
+   "draft": false,
+   "createdAt": "2026-07-30",
+   "updatedAt": "2026-10-09",
+   "mergedAt": null,
+   "closedAt": null,
+   "additions": 81,
+   "deletions": 3,
+   "changedFiles": 2,
+   "labels": [
+    "triaged",
+    "open source",
+    "Stale",
+    "release notes: fx"
+   ],
+   "reviews": [
+    {
+     "user": "Skylion007",
+     "state": "COMMENTED",
+     "at": "2026-07-31",
+     "mine": false
+    },
+    {
+     "user": "mannemkarthik010",
+     "state": "COMMENTED",
+     "at": "2026-07-31",
+     "mine": true
+    },
+    {
+     "user": "aorenste",
+     "state": "APPROVED",
+     "at": "2026-08-10",
+     "mine": false
+    }
+   ],
+   "latestDecisions": {
+    "aorenste": "APPROVED"
+   },
+   "closingNote": null,
+   "files": [
+    {
+     "path": "torch/fx/graph.py",
+     "status": "modified",
+     "additions": 20,
+     "deletions": 3,
+     "role": "source",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -258,14 +258,31 @@ class PythonCode:"
+      },
+      {
+       "t": "ctx",
+       "s": "    _prologue_start: int = 0"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "def _format_attr_literal(name: str) -> str:"
+      },
+      {
+       "t": "add",
+       "s": "    \"\"\"Return a Python string literal that evaluates to exactly ``name``."
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "    Historically this emitted ``\"{name}\"`` unconditionally, which produces"
+      },
+      {
+       "t": "add",
+       "s": "    invalid source when ``name`` contains a quote, a backslash, or a"
+      },
+      {
+       "t": "add",
+       "s": "    non-printable character. Keep the double-quoted spelling whenever it is"
+      },
+      {
+       "t": "add",
+       "s": "    safe -- it is by far the common case (e.g. ``nn.Sequential`` children are"
+      },
+      {
+       "t": "add",
+       "s": "    addressed as ``\"0\"``, ``\"1\"``, ...) and preserving it keeps generated code"
+      },
+      {
+       "t": "add",
+       "s": "    unchanged -- and fall back to ``repr`` otherwise."
+      },
+      {
+       "t": "add",
+       "s": "    \"\"\""
+      },
+      {
+       "t": "add",
+       "s": "    if '\"' not in name and \"\\\\\" not in name and name.isprintable():"
+      },
+      {
+       "t": "add",
+       "s": "        return f'\"{name}\"'"
+      },
+      {
+       "t": "add",
+       "s": "    return repr(name)"
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": "def _format_target(base: str, target: str) -> str:"
+      },
+      {
+       "t": "ctx",
+       "s": "    elems = target.split(\".\")"
+      },
+      {
+       "t": "ctx",
+       "s": "    r = base"
+      },
+      {
+       "t": "ctx",
+       "s": "    for e in elems:"
+      },
+      {
+       "t": "del",
+       "s": "        if not e.isidentifier():"
+      },
+      {
+       "t": "del",
+       "s": "            r = f'getattr({r}, \"{e}\")'"
+      },
+      {
+       "t": "del",
+       "s": "        else:"
+      }
+     ]
+    },
+    {
+     "path": "test/test_fx.py",
+     "status": "modified",
+     "additions": 61,
+     "deletions": 0,
+     "role": "test",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -1159,6 +1159,67 @@ def forward(self, a):"
+      },
+      {
+       "t": "ctx",
+       "s": "        for node in m_g.graph.nodes:"
+      },
+      {
+       "t": "ctx",
+       "s": "            self.assertTrue(node.name != \"getattr\")"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "    def test_format_target_unsafe_names(self):"
+      },
+      {
+       "t": "add",
+       "s": "        \"\"\"`_format_target` must emit valid Python for any legal module name.\"\"\""
+      },
+      {
+       "t": "add",
+       "s": "        from torch.fx.graph import _format_target"
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "        # Keywords pass `str.isidentifier()` but are not usable with dot syntax."
+      },
+      {
+       "t": "add",
+       "s": "        self.assertEqual(_format_target(\"self\", \"class\"), 'getattr(self, \"class\")')"
+      },
+      {
+       "t": "add",
+       "s": "        self.assertEqual("
+      },
+      {
+       "t": "add",
+       "s": "            _format_target(\"self\", \"seq.class\"), 'getattr(self.seq, \"class\")'"
+      },
+      {
+       "t": "add",
+       "s": "        )"
+      },
+      {
+       "t": "add",
+       "s": "        self.assertEqual(_format_target(\"self\", \"None\"), 'getattr(self, \"None\")')"
+      },
+      {
+       "t": "add",
+       "s": "        # Soft keywords are legal attribute names and stay on the dot path."
+      },
+      {
+       "t": "add",
+       "s": "        self.assertEqual(_format_target(\"self\", \"match\"), \"self.match\")"
+      },
+      {
+       "t": "add",
+       "s": "        # Names needing escapes must not be spliced into a double-quoted literal."
+      },
+      {
+       "t": "add",
+       "s": "        self.assertEqual("
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pytorch-dcp-grad-dtype",
+   "repo": "pytorch/pytorch",
+   "number": 191998,
+   "url": "https://github.com/pytorch/pytorch/pull/191998",
+   "title": "Respect Tensor.grad_dtype when priming optimizer state for checkpointing",
+   "state": "open",
+   "draft": false,
+   "createdAt": "2026-08-03",
+   "updatedAt": "2026-11-02",
+   "mergedAt": null,
+   "closedAt": null,
+   "additions": 42,
+   "deletions": 7,
+   "changedFiles": 2,
+   "labels": [
+    "triaged",
+    "open source",
+    "Stale",
+    "topic: bug fixes",
+    "release notes: distributed (checkpoint)",
+    "ciflow/torchtitan"
+   ],
+   "reviews": [
+    {
+     "user": "soulitzer",
+     "state": "CHANGES_REQUESTED",
+     "at": "2026-08-05",
+     "mine": false
+    }
+   ],
+   "latestDecisions": {
+    "soulitzer": "CHANGES_REQUESTED"
+   },
+   "closingNote": null,
+   "files": [
+    {
+     "path": "torch/distributed/checkpoint/state_dict.py",
+     "status": "modified",
+     "additions": 23,
+     "deletions": 7,
+     "role": "source",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -643,9 +643,19 @@ def _init_optim_state(optim: torch.optim.Optimizer) -> None:"
+      },
+      {
+       "t": "ctx",
+       "s": "            if param.grad is not None:"
+      },
+      {
+       "t": "ctx",
+       "s": "                return"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "    # A parameter can declare a gradient dtype that differs from its own dtype"
+      },
+      {
+       "t": "add",
+       "s": "    # (e.g. an fp32 master weight accumulating bf16 gradients). Autograd rejects"
+      },
+      {
+       "t": "add",
+       "s": "    # a gradient that does not match `grad_dtype`, while the optimizers require"
+      },
+      {
+       "t": "add",
+       "s": "    # the gradient to match the parameter dtype. The priming gradient is all"
+      },
+      {
+       "t": "add",
+       "s": "    # zeros and `lr` is forced to zero below, so the dtype used here cannot"
+      },
+      {
+       "t": "add",
+       "s": "    # affect the resulting optimizer state; relax `grad_dtype` for the duration"
+      },
+      {
+       "t": "add",
+       "s": "    # of the priming step and restore it afterwards."
+      },
+      {
+       "t": "add",
+       "s": "    grad_dtypes = []"
+      },
+      {
+       "t": "ctx",
+       "s": "    for param_group in optim.param_groups:"
+      },
+      {
+       "t": "ctx",
+       "s": "        for param in param_group[_PARAMS]:"
+      },
+      {
+       "t": "ctx",
+       "s": "            if param.requires_grad:"
+      },
+      {
+       "t": "add",
+       "s": "                grad_dtypes.append((param, param.grad_dtype))"
+      },
+      {
+       "t": "add",
+       "s": "                param.grad_dtype = None"
+      },
+      {
+       "t": "ctx",
+       "s": "                param.grad = torch.zeros_like(param)"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": "    # Some optimizers will update parameters regardless of grads due to lr, so"
+      }
+     ]
+    },
+    {
+     "path": "test/distributed/checkpoint/test_state_dict.py",
+     "status": "modified",
+     "additions": 19,
+     "deletions": 0,
+     "role": "test",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -1109,6 +1109,25 @@ def test_no_dist(self) -> None:"
+      },
+      {
+       "t": "ctx",
+       "s": "        set_optimizer_state_dict(model, optim, osd)"
+      },
+      {
+       "t": "ctx",
+       "s": "        set_optimizer_state_dict(model, optim, optim.state_dict())"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "    def test_optim_state_dict_with_grad_dtype(self) -> None:"
+      },
+      {
+       "t": "add",
+       "s": "        # A parameter may declare a gradient dtype that differs from its own"
+      },
+      {
+       "t": "add",
+       "s": "        # dtype, e.g. an fp32 master weight accumulating bf16 gradients."
+      },
+      {
+       "t": "add",
+       "s": "        # _init_optim_state() has to prime the optimizer without tripping over"
+      },
+      {
+       "t": "add",
+       "s": "        # that mismatch. See https://github.com/pytorch/pytorch/issues/191918."
+      },
+      {
+       "t": "add",
+       "s": "        self.assertFalse(dist.is_initialized())"
+      },
+      {
+       "t": "add",
+       "s": "        for optim_class in (torch.optim.Adam, torch.optim.SGD):"
+      },
+      {
+       "t": "add",
+       "s": "            model = nn.Linear(4, 4, dtype=torch.float32)"
+      },
+      {
+       "t": "add",
+       "s": "            for param in model.parameters():"
+      },
+      {
+       "t": "add",
+       "s": "                param.grad_dtype = torch.bfloat16"
+      },
+      {
+       "t": "add",
+       "s": "            optim = optim_class(model.parameters(), lr=1e-2)"
+      },
+      {
+       "t": "add",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "            get_optimizer_state_dict(model, optim)"
+      },
+      {
+       "t": "add",
+       "s": ""
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "slug": "pytorch-flight-recorder-gc",
+   "repo": "pytorch/pytorch",
+   "number": 191439,
+   "url": "https://github.com/pytorch/pytorch/pull/191439",
+   "title": "Restore caller's GC state in flight recorder read_dir",
+   "state": "closed",
+   "draft": false,
+   "createdAt": "2026-07-29",
+   "updatedAt": "2026-08-03",
+   "mergedAt": null,
+   "closedAt": "2026-08-03",
+   "additions": 67,
+   "deletions": 24,
+   "changedFiles": 2,
+   "labels": [
+    "triaged",
+    "open source",
+    "topic: not user facing",
+    "ciflow/torchtitan"
+   ],
+   "reviews": [
+    {
+     "user": "RohitRathore1",
+     "state": "APPROVED",
+     "at": "2026-07-29",
+     "mine": false
+    }
+   ],
+   "latestDecisions": {
+    "RohitRathore1": "APPROVED"
+   },
+   "closingNote": {
+    "by": "mannemkarthik010",
+    "at": "2026-08-03",
+    "text": "Superseded by #191607, which landed the same fix \u2014 thanks @yuyz-cyber. I see you'd commented your intent on the issue a few hours before mine; I missed that when I picked it up. Apologies for the duplicate work. Thanks @"
+   },
+   "files": [
+    {
+     "path": "torch/distributed/flight_recorder/components/loader.py",
+     "status": "modified",
+     "additions": 29,
+     "deletions": 24,
+     "role": "source",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -73,28 +73,33 @@ def _determine_prefix(files: list[str]) -> str:"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": "def read_dir(args: argparse.Namespace) -> tuple[dict[str, dict[str, Any]], str]:"
+      },
+      {
+       "t": "add",
+       "s": "    gc_was_enabled = gc.isenabled()"
+      },
+      {
+       "t": "ctx",
+       "s": "    gc.disable()"
+      },
+      {
+       "t": "del",
+       "s": "    prefix = args.prefix"
+      },
+      {
+       "t": "del",
+       "s": "    details = {}"
+      },
+      {
+       "t": "del",
+       "s": "    t0 = time.time()"
+      },
+      {
+       "t": "del",
+       "s": "    version = \"\""
+      },
+      {
+       "t": "del",
+       "s": "    filecount = 0"
+      },
+      {
+       "t": "del",
+       "s": "    if not os.path.isdir(args.trace_dir):"
+      },
+      {
+       "t": "del",
+       "s": "        raise AssertionError(f\"folder {args.trace_dir} does not exist\")"
+      },
+      {
+       "t": "del",
+       "s": "    for root, _, files in os.walk(args.trace_dir):"
+      },
+      {
+       "t": "del",
+       "s": "        if prefix is None:"
+      },
+      {
+       "t": "del",
+       "s": "            prefix = _determine_prefix(files)"
+      },
+      {
+       "t": "del",
+       "s": "        for f in files:"
+      },
+      {
+       "t": "del",
+       "s": "            if (offset := f.find(prefix)) == -1:"
+      },
+      {
+       "t": "del",
+       "s": "                continue"
+      },
+      {
+       "t": "del",
+       "s": "            details[f] = read_dump(f[:offset] + prefix, os.path.join(root, f))"
+      },
+      {
+       "t": "del",
+       "s": "            filecount += 1"
+      },
+      {
+       "t": "del",
+       "s": "            if not version:"
+      },
+      {
+       "t": "del",
+       "s": "                version = str(details[f][\"version\"])"
+      },
+      {
+       "t": "del",
+       "s": "    tb = time.time()"
+      },
+      {
+       "t": "del",
+       "s": "    if len(details) <= 0:"
+      },
+      {
+       "t": "del",
+       "s": "        raise AssertionError("
+      }
+     ]
+    },
+    {
+     "path": "test/distributed/flight_recorder/test_fr_analysis.py",
+     "status": "modified",
+     "additions": 38,
+     "deletions": 0,
+     "role": "test",
+     "hunk": [
+      {
+       "t": "meta",
+       "s": "@@ -1,11 +1,17 @@"
+      },
+      {
+       "t": "ctx",
+       "s": "# Owner(s): [\"oncall: distributed\"]"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "add",
+       "s": "import argparse"
+      },
+      {
+       "t": "ctx",
+       "s": "import copy"
+      },
+      {
+       "t": "add",
+       "s": "import gc"
+      },
+      {
+       "t": "ctx",
+       "s": "import math"
+      },
+      {
+       "t": "add",
+       "s": "import os"
+      },
+      {
+       "t": "add",
+       "s": "import pickle"
+      },
+      {
+       "t": "add",
+       "s": "import tempfile"
+      },
+      {
+       "t": "ctx",
+       "s": "from typing import Any"
+      },
+      {
+       "t": "ctx",
+       "s": ""
+      },
+      {
+       "t": "ctx",
+       "s": "from torch.distributed.flight_recorder.components.builder import build_db"
+      },
+      {
+       "t": "ctx",
+       "s": "from torch.distributed.flight_recorder.components.config_manager import JobConfig"
+      },
+      {
+       "t": "add",
+       "s": "from torch.distributed.flight_recorder.components.loader import read_dir"
+      },
+      {
+       "t": "ctx",
+       "s": "from torch.distributed.flight_recorder.components.types import ("
+      },
+      {
+       "t": "ctx",
+       "s": "    COLLECTIVES,"
+      },
+      {
+       "t": "ctx",
+       "s": "    MatchInfo,"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

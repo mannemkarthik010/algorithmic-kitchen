@@ -5,25 +5,19 @@ import { LIB_BOOKS, CATS, START_INDEX } from "../lib/library";
 import { CoverShapes, SpineShapes, COVER_W } from "./LibraryArt";
 
 /**
- * The Library: a 3D shelf of book spines. One book is pulled out and turned to show its cover.
- * Click, drag, arrows, tabs or keys change the book; opening one grows a sheet of paper out of the cover.
- * One requestAnimationFrame loop drives the shelf; the Web Animations API drives reveals. No opacity fades.
+ * The Reading Room: a 3D shelf of book spines on a paper scene. One book is pulled out and turned to show its cover.
+ * Click, drag, arrows, tabs or keys change the book; "Open reading note" (or the cover) opens the note in an overlay that
+ * grows out of the cover, like the exhibits. One requestAnimationFrame loop drives the shelf; the Web Animations API
+ * drives the caption and the overlay. The engine measures the shelf element, so the section is an ordinary flowing layout.
  */
 
 const N = LIB_BOOKS.length;
 const COPIES = 3;
 const TOTAL = N * COPIES;
 const EASE = "cubic-bezier(.2,.8,.2,1)";
-const SHEET_EASE = "cubic-bezier(.76,0,.18,1)";
+const OVER_EASE = "cubic-bezier(.22,1,.36,1)"; // the exhibit overlays' easing
 const smooth = (x: number) => x * x * (3 - 2 * x);
 const mod = (a: number, n: number) => ((a % n) + n) % n;
-const upper = (s: string) => s.toUpperCase();
-
-const BLOBS = [
-  { cx: 194, cy: 330, delay: 0 }, { cx: 439, cy: 600, delay: 120 }, { cx: 323, cy: 120, delay: 220 },
-  { cx: 116, cy: 760, delay: 300 }, { cx: 516, cy: 250, delay: 360 }, { cx: 335, cy: 860, delay: 420 },
-  { cx: 297, cy: 470, delay: 180 },
-];
 
 type Api = {
   step: (n: number) => void;
@@ -32,68 +26,75 @@ type Api = {
   close: () => void;
 };
 
-const statusLabel = (s: string) => (s === "Reading" ? "READING NOW" : "READ");
+const statusLabel = (s: string) => (s === "Reading" ? "Reading now" : "Read");
+
+/** The remote cover is shown only once it has loaded. Until then, and for good if it never arrives, the generated artwork stays visible. */
+function CoverImg({ src, tint }: { src: string; tint: string }) {
+  const [ok, setOk] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
+  // an image that finished loading before React hydrated never fires onLoad, so look at it once
+  useEffect(() => { const i = ref.current; if (i && i.complete && i.naturalWidth > 0) setOk(true); }, []);
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img ref={ref} className={`lib-cover-img${ok ? " is-ok" : ""}`} src={src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={ok ? { background: tint } : undefined} onLoad={() => setOk(true)} onError={() => setOk(false)} />
+  );
+}
 
 export default function Library() {
   const [mounted, setMounted] = useState(false);
   const [active, setActive] = useState(START_INDEX);
   const [open, setOpen] = useState(false);
   const [detailIdx, setDetailIdx] = useState(START_INDEX);
+  const [coverOk, setCoverOk] = useState<string | null>(null); // the src of the overlay's cover once it has loaded
 
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const shelfRef = useRef<HTMLDivElement>(null);
-  const indRef = useRef<HTMLSpanElement>(null);
-  const playRef = useRef<HTMLButtonElement>(null);
   const capTitle = useRef<HTMLDivElement>(null);
   const capSub = useRef<HTMLDivElement>(null);
-  const capYear = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
+  const capStatus = useRef<HTMLDivElement>(null);
+  const capNote = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const api = useRef<Api | null>(null);
 
   useEffect(() => { queueMicrotask(() => setMounted(true)); }, []);
 
-  const tabIndex = 1 + CATS.indexOf(LIB_BOOKS[active].cat);
-
-  /* The cobalt block under the decade-style tabs slides and stretches to the active tab. */
+  /* The overlay draws the remote cover over the generated artwork only after it has loaded; a failed or slow image never hides the artwork. */
   useEffect(() => {
-    if (!mounted) return;
-    const place = () => {
-      const t = tabRefs.current[tabIndex];
-      const ind = indRef.current;
-      if (!t || !ind) return;
-      ind.style.width = `${t.offsetWidth}px`;
-      ind.style.transform = `translateX(${t.offsetLeft}px)`;
-    };
-    place();
-    window.addEventListener("resize", place);
-    document.fonts?.ready.then(place);
-    return () => window.removeEventListener("resize", place);
-  }, [mounted, tabIndex]);
+    const src = LIB_BOOKS[detailIdx].cover?.src;
+    if (!src) return;
+    let live = true;
+    const img = new Image();
+    img.referrerPolicy = "no-referrer";
+    img.onload = () => { if (live) setCoverOk(src); };
+    img.src = src;
+    return () => { live = false; };
+  }, [detailIdx]);
+
+  const tabIndex = 1 + CATS.indexOf(LIB_BOOKS[active].cat);
 
   /* The engine: geometry, the animation loop, and every input. */
   useEffect(() => {
     if (!mounted) return;
     const root = rootRef.current, stage = stageRef.current, shelf = shelfRef.current;
-    const play = playRef.current, cursor = cursorRef.current, dlg = detailRef.current;
-    const cT = capTitle.current, cS = capSub.current, cY = capYear.current;
-    if (!root || !stage || !shelf || !play || !cursor || !dlg || !cT || !cS || !cY) return;
+    const dlg = detailRef.current, inner = innerRef.current;
+    const cT = capTitle.current, cS = capSub.current, cY = capStatus.current, cN = capNote.current;
+    if (!root || !stage || !shelf || !dlg || !inner || !cT || !cS || !cY || !cN) return;
 
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fine = window.matchMedia("(pointer: fine)").matches;
     const tapes = Array.from(stage.children) as HTMLElement[];
 
-    const g = { W: 0, H: 0, ws: 0, d: 0, gap: 0, rootH: 0, left: 0, top: 0 };
+    const g = { W: 0, H: 0, ws: 0, d: 0, gap: 0, cy: 0, left: 0, top: 0 }; // cy: the shelf's vertical centre, from the top of the section
     const S = {
       s: START_INDEX + N, T: START_INDEX + N, hover: -1,
       mx: 0, my: 0, cx: 0, cy: 0, tiltX: 0, tiltY: 0,
-      onCover: false, open: false, dragging: false, didDrag: false, inside: false, overBtn: false,
+      onCover: false, open: false, dragging: false, didDrag: false, inside: false,
       active: START_INDEX, pendingOpen: false, visible: true, running: false,
       drag: null as null | { x: number; T0: number }, wheelT: 0 as unknown as ReturnType<typeof setTimeout>,
-      curState: "", curOn: false, ps: -1,
     };
+    let opener: HTMLElement | null = null; // what had focus when the note opened, so focus can go back there
     const lift = new Float32Array(TOTAL);
     const hidden = tapes.map(() => true);
     const spFaces = tapes.map((t) => t.querySelector(".lib-sp") as HTMLElement);
@@ -105,15 +106,15 @@ export default function Library() {
 
     const measure = () => {
       const r = root.getBoundingClientRect();
-      g.W = r.width; g.rootH = r.height; g.left = r.left; g.top = r.top;
+      g.W = r.width; g.left = r.left; g.top = r.top;
+      const sr = shelf.getBoundingClientRect();
+      g.cy = sr.top - r.top + sr.height / 2;
       g.H = probe.offsetHeight;
       g.ws = (g.H * 142) / 840;
       g.d = (g.H * COVER_W) / 900;
       g.gap = g.H * 0.03;
       root.style.setProperty("--ws", `${g.ws}px`);
       root.style.setProperty("--d", `${g.d}px`);
-      play.style.left = `${g.W / 2 - g.d / 2 - 6}px`;
-      play.style.top = `${g.rootH / 2 + 0.36 * g.H}px`;
     };
 
     const rel = (v: number, s: number) => {
@@ -153,8 +154,10 @@ export default function Library() {
     const fillCaption = (idx: number, dir: number, instant = false) => {
       const b = LIB_BOOKS[idx];
       swap(cT, b.short, dir, instant);
-      swap(cS, `${upper(b.author)} / ${upper(b.genre)}`, dir, instant);
+      swap(cS, `${b.author} · ${b.genre}`, dir, instant);
       swap(cY, statusLabel(b.status), dir, instant);
+      swap(cN, b.lesson, dir, instant);
+      cY.dataset.reading = b.status === "Reading" ? "1" : "0";
     };
     fillCaption(S.active, 1, true);
 
@@ -201,9 +204,9 @@ export default function Library() {
 
       // is the pointer on the open cover? then lean the cover toward it
       const rx = S.mx - g.left, ry = S.my - g.top;
-      S.onCover = !S.open && S.inside && Math.abs(rx - W / 2) < 0.55 * d && Math.abs(ry - g.rootH / 2) < 0.55 * H && Math.abs(S.T - S.s) < 0.3;
+      S.onCover = !S.open && S.inside && Math.abs(rx - W / 2) < 0.55 * d && Math.abs(ry - g.cy) < 0.55 * H && Math.abs(S.T - S.s) < 0.3;
       const tx = S.onCover ? ((rx - W / 2) / (0.55 * d)) * 9 : ((S.mx - g.left - W / 2) / Math.max(W, 1)) * 5 * (S.inside ? 1 : 0);
-      const ty = S.onCover ? (-(ry - g.rootH / 2) / (H / 2)) * 6 : 0;
+      const ty = S.onCover ? (-(ry - g.cy) / (H / 2)) * 6 : 0;
       const ek = rm ? 1 : 1 - Math.exp(-7 * dt);
       S.tiltY += (tx - S.tiltY) * ek;
       S.tiltX += (ty - S.tiltX) * ek;
@@ -231,102 +234,59 @@ export default function Library() {
         el.style.setProperty("--csh", ((1 - o) * 0.5).toFixed(3));
       }
 
-      // hovered book (lifts a spine, shrinks the cursor)
+      // hovered book (lifts a spine)
       if (S.inside && !S.open && !S.dragging) S.hover = pick(S.mx, S.my);
       else if (!S.inside) S.hover = -1;
 
-      // play ring pops in once the shelf settles
-      const ps = S.open ? 0 : smooth(Math.max(0, 1 - Math.abs(S.T - S.s) * 3));
-      if (Math.abs(ps - S.ps) > 0.002) {
-        S.ps = ps;
-        play.style.transform = `translate(-50%,-50%) scale(${ps.toFixed(3)})`;
-        play.style.pointerEvents = ps < 0.2 ? "none" : "auto";
-      }
-
       if (S.pendingOpen && Math.abs(S.T - S.s) < 0.01) { S.pendingOpen = false; openDetail(); }
-
-      // cursor
-      if (fine) {
-        S.cx += (S.mx - S.cx) * (rm ? 1 : 1 - Math.exp(-16 * dt));
-        S.cy += (S.my - S.cy) * (rm ? 1 : 1 - Math.exp(-16 * dt));
-        cursor.style.transform = `translate3d(${S.cx.toFixed(1)}px,${S.cy.toFixed(1)}px,0)`;
-        const on = S.inside || S.open;
-        if (on !== S.curOn) { S.curOn = on; cursor.classList.toggle("is-on", on); }
-        const hovRel = S.hover >= 0 ? Math.abs(rel(S.hover, S.s)) : 0;
-        const state = S.open ? (S.overBtn ? "btn" : "") : S.onCover ? "open" : S.hover >= 0 && hovRel > 0.5 ? "spine" : S.overBtn ? "btn" : "";
-        if (state !== S.curState) {
-          cursor.classList.remove("spine", "btn", "open");
-          if (state) cursor.classList.add(state);
-          S.curState = state;
-        }
-      }
 
       if (S.visible || S.open) raf = requestAnimationFrame(frame);
       else S.running = false;
     };
     const start = () => { if (S.running) return; S.running = true; last = 0; raf = requestAnimationFrame(frame); };
 
-    /* ── detail sheet ── */
-    let inkRaf = 0;
+    /* ── the reading-note overlay: grows from the cover like the exhibits, focus goes in and comes back ── */
     const coverRect = () => (activeTape().querySelector(".lib-cv") as HTMLElement).getBoundingClientRect();
-    const insetFrom = (r: DOMRect) => `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 3px)`;
+    const box = (r: DOMRect) => ({ top: `${r.top}px`, left: `${r.left}px`, width: `${r.width}px`, height: `${r.height}px` });
+    const FULL = { top: "0px", left: "0px", width: "100vw", height: "100dvh" };
 
     function openDetail() {
       if (S.open) return;
       if (Math.abs(S.T - S.s) > 0.02) { S.T = Math.round(S.T); S.pendingOpen = true; return; }
+      const ae = document.activeElement as HTMLElement | null;
+      opener = ae && root!.contains(ae) ? ae : root;
       const r = coverRect();
       flushSync(() => { setDetailIdx(S.active); setOpen(true); });
       S.open = true;
       S.hover = -1;
       document.documentElement.style.overflow = "hidden";
       dlg!.getAnimations().forEach((an) => an.cancel());
+      inner!.getAnimations().forEach((an) => an.cancel());
       dlg!.style.visibility = "visible";
-      dlg!.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height / 2}px`;
-      dlg!.animate(
-        [{ clipPath: insetFrom(r), transform: "rotate(-4.5deg)" }, { clipPath: "inset(0px 0px 0px 0px round 0px)", transform: "rotate(0deg)" }],
-        { duration: rm ? 1 : 1050, easing: SHEET_EASE, fill: "both" },
-      );
-      dlg!.querySelectorAll<HTMLElement>("[data-line]").forEach((el, i) => {
-        el.getAnimations().forEach((an) => an.cancel());
-        el.animate([{ transform: "translateY(110%)" }, { transform: "translateY(0)" }], { duration: rm ? 1 : 900, delay: rm ? 0 : 620 + i * 75, easing: EASE, fill: "both" });
-      });
-      // the poster bleeds in as ragged ink blots
-      const circles = Array.from(dlg!.querySelectorAll<SVGCircleElement>(".lib-ink-c"));
-      circles.forEach((c) => c.setAttribute("r", "0"));
-      const t0 = performance.now() + 520 - (rm ? 5000 : 0);
-      cancelAnimationFrame(inkRaf);
-      const tick = () => {
-        const now = performance.now();
-        let done = true;
-        circles.forEach((c) => {
-          const p = Math.min(Math.max((now - t0 - Number(c.dataset.delay)) / 1250, 0), 1);
-          c.setAttribute("r", String(720 * (1 - Math.pow(1 - p, 3))));
-          if (p < 1) done = false;
-        });
-        if (!done && S.open) inkRaf = requestAnimationFrame(tick);
-      };
-      inkRaf = requestAnimationFrame(tick);
-      (dlg!.querySelector(".lib-close") as HTMLElement | null)?.focus({ preventScroll: true });
+      if (!rm) {
+        dlg!.animate([box(r), FULL], { duration: 600, easing: OVER_EASE, fill: "both" });
+        inner!.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: 350, easing: "linear", fill: "both" });
+      }
+      closeRef.current?.focus({ preventScroll: true });
       start();
     }
 
     function closeDetail() {
       if (!S.open) return;
       S.open = false;
-      cancelAnimationFrame(inkRaf);
-      setOpen(false);
-      const r = coverRect();
-      const an = dlg!.animate(
-        [{ clipPath: "inset(0px 0px 0px 0px round 0px)", transform: "rotate(0deg)" }, { clipPath: insetFrom(r), transform: "rotate(-4.5deg)" }],
-        { duration: rm ? 1 : 850, easing: SHEET_EASE, fill: "both" },
-      );
-      an.onfinish = () => {
+      const finish = () => {
         dlg!.style.visibility = "hidden";
         dlg!.getAnimations().forEach((x) => x.cancel());
-        dlg!.querySelectorAll<HTMLElement>("[data-line]").forEach((el) => el.getAnimations().forEach((x) => x.cancel()));
+        inner!.getAnimations().forEach((x) => x.cancel());
         document.documentElement.style.overflow = "";
-        root!.focus({ preventScroll: true });
+        ((opener && opener.isConnected ? opener : root) as HTMLElement).focus({ preventScroll: true });
+        setOpen(false);
       };
+      if (rm) { finish(); return; }
+      inner!.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, easing: "linear", fill: "both" });
+      const an = dlg!.animate([FULL, box(coverRect())], { duration: 500, easing: OVER_EASE, fill: "both" });
+      an.onfinish = finish;
+      setTimeout(() => { if (dlg!.style.visibility === "visible" && !S.open) finish(); }, 800); // a throttled tab may never fire onfinish
     }
 
     /* ── inputs ── */
@@ -368,10 +328,6 @@ export default function Library() {
         if (S.dragging) S.T = S.drag.T0 - dx / (g.ws + g.gap);
       }
     };
-    const onOver = (e: PointerEvent) => {
-      const el = e.target as HTMLElement | null;
-      S.overBtn = !!el?.closest?.("button, a, [data-cur='btn']") && !el.closest(".lib-tape");
-    };
     const onDown = (e: PointerEvent) => {
       if (S.open || (e.target as HTMLElement).closest("button, a")) return;
       S.drag = { x: e.clientX, T0: S.T };
@@ -395,7 +351,19 @@ export default function Library() {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (S.open) { if (e.key === "Escape") { e.preventDefault(); closeDetail(); } return; }
+      if (S.open) {
+        if (e.key === "Escape") { e.preventDefault(); closeDetail(); }
+        else if (e.key === "Tab") {
+          // keep focus inside the overlay: its controls are the close button, and the dialog itself for scrolling
+          const f = Array.from(dlg!.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),[tabindex="0"]'));
+          if (!f.length) { e.preventDefault(); return; }
+          const first = f[0], last = f[f.length - 1], a = document.activeElement;
+          if (!dlg!.contains(a)) { e.preventDefault(); first.focus(); }
+          else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+        }
+        return;
+      }
       if (!S.inside && !root.contains(document.activeElement)) return;
       if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
@@ -409,7 +377,6 @@ export default function Library() {
     start();
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerover", onOver, { passive: true });
     shelf.addEventListener("pointerdown", onDown);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
@@ -420,10 +387,8 @@ export default function Library() {
 
     return () => {
       cancelAnimationFrame(raf);
-      cancelAnimationFrame(inkRaf);
       io.disconnect();
       window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerover", onOver);
       shelf.removeEventListener("pointerdown", onDown);
       shelf.removeEventListener("click", onShelfClick);
       window.removeEventListener("pointerup", onUp);
@@ -438,41 +403,34 @@ export default function Library() {
   }, [mounted]);
 
   const db = LIB_BOOKS[detailIdx];
-  const long = db.title.length > 34;
+  const act = LIB_BOOKS[active];
 
   return (
     <section id="library" ref={rootRef} className="lib" tabIndex={0} aria-label="Reading room: Karthik's bookshelf" data-no-ember>
-      {/* top bar */}
-      <div className="lib-bar">
-        <span className="lib-lbl lib-box">LAB / Library</span>
-        <div className="lib-logo">
-          <span className="lib-logo__t">The Reading Room</span>
-          <span className="lib-logo__s">KARTHIK MANNEM</span>
+      <header className="lib-head">
+        <div className="lib-head__row">
+          <p className="ex-mono lib-head__n"><span>(01)</span> &nbsp;The Reading Room</p>
+          <p className="ex-mono lib-head__c">{N} books · {CATS.length} shelves</p>
         </div>
-        <span className="lib-lbl lib-right">{N} BOOKS / {CATS.length} SHELVES</span>
-      </div>
+        <h2 className="lib-head__h">Books that shaped the way <em>I build.</em></h2>
+      </header>
 
-      {/* shelf tabs */}
       <nav className="lib-tabs" aria-label="Shelves">
-        <span className="lib-ind" ref={indRef} aria-hidden="true" />
         {["All", ...CATS].map((c, i) => (
-          <button key={c} type="button" ref={(el) => { tabRefs.current[i] = el; }} className={`lib-lbl lib-tab${tabIndex === i ? " is-on" : ""}`} onClick={() => api.current?.goTab(i)}>{c}</button>
+          <button key={c} type="button" className={`lib-tab${tabIndex === i ? " is-on" : ""}`} aria-pressed={tabIndex === i} onClick={() => api.current?.goTab(i)}>{c}</button>
         ))}
       </nav>
 
       {/* 3D shelf */}
       <div className="lib-shelf" ref={shelfRef}>
-        <div className="lib-stage" ref={stageRef}>
+        <div className="lib-stage" ref={stageRef} aria-hidden="true">
           {Array.from({ length: TOTAL }).map((_, v) => {
             const b = LIB_BOOKS[v % N];
             return (
-              <div key={v} className="lib-tape" role="button" tabIndex={-1} aria-label={`${b.title} by ${b.author}`}>
+              <div key={v} className="lib-tape" data-title={b.title}>
                 <div className="lib-face lib-sp"><svg viewBox="0 0 142 840" preserveAspectRatio="none" aria-hidden="true"><SpineShapes book={b} /></svg></div>
                 <div className="lib-face lib-cv"><svg viewBox={`0 0 ${COVER_W} 900`} preserveAspectRatio="none" aria-hidden="true"><CoverShapes book={b} /></svg>
-                  {b.cover && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className="lib-cover-img" src={b.cover.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" style={{ background: b.cover.tint }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                  )}
+                  {b.cover && <CoverImg src={b.cover.src} tint={b.cover.tint} />}
                 </div>
               </div>
             );
@@ -480,82 +438,61 @@ export default function Library() {
         </div>
       </div>
 
-      <button type="button" ref={playRef} className="lib-play" aria-label="Open book" onClick={() => api.current?.open()}>
-        <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1 L11 6 L2 11 Z" fill="currentColor" /></svg>
-      </button>
-
-      {/* caption */}
-      <div className="lib-cap" aria-live="polite">
-        <span className="lib-sr">{LIB_BOOKS[active].title} by {LIB_BOOKS[active].author}</span>
+      {/* the selected book: status and author, title, note, then one action row */}
+      <div className="lib-cap">
+        <span className="lib-sr" aria-live="polite">{act.title} by {act.author}. {statusLabel(act.status)}.</span>
+        <span className="lib-sr" id="lib-note-desc">{act.lesson}</span>
+        <div className="lib-meta">
+          <div className="lib-mask ex-mono lib-cap-status" ref={capStatus} aria-hidden="true" />
+          <div className="lib-mask ex-mono lib-cap-sub" ref={capSub} aria-hidden="true" />
+        </div>
         <div className="lib-mask lib-cap-title" ref={capTitle} aria-hidden="true" />
-        <div className="lib-mask lib-lbl lib-cap-sub" ref={capSub} aria-hidden="true" />
-        <div className="lib-mask lib-cap-year" ref={capYear} aria-hidden="true" />
+        <div className="lib-mask lib-cap-note" ref={capNote} aria-hidden="true" />
+        <div className="lib-ctl">
+          <button type="button" className="lib-arrow" aria-label="Previous book" onClick={() => api.current?.step(-1)}>
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M5 1 L1 5 L5 9 M1 5 H17" /></svg>
+          </button>
+          <button type="button" className="ex-cta ex-cta--orange lib-open" aria-describedby="lib-note-desc" onClick={() => api.current?.open()}>Open reading note</button>
+          <button type="button" className="lib-arrow" aria-label="Next book" onClick={() => api.current?.step(1)}>
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="M13 1 L17 5 L13 9 M17 5 H1" /></svg>
+          </button>
+        </div>
       </div>
-
-      <button type="button" className="lib-arrow lib-arrow--l" aria-label="Previous book" onClick={() => api.current?.step(-1)}>
-        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M5 1 L1 5 L5 9 M1 5 H17" /></svg>
-      </button>
-      <button type="button" className="lib-arrow lib-arrow--r" aria-label="Next book" onClick={() => api.current?.step(1)}>
-        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true"><path d="M13 1 L17 5 L13 9 M17 5 H1" /></svg>
-      </button>
 
       <div className="lib-foot">
-        <span className="lib-lbl">BOOKS THAT SHAPED THE WAY I BUILD.</span>
-        <span className="lib-foot__r">
-          <span className="lib-lbl lib-foot__hint">DRAG · ← → · CLICK THE COVER</span>
-          <a className="lib-lbl lib-credit" href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">COVERS VIA OPEN LIBRARY</a>
-        </span>
+        <a className="ex-mono lib-credit" href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">Covers via Open Library</a>
+        <span className="ex-mono lib-foot__hint">Drag · ← → · click the cover</span>
       </div>
 
-      <div className="lib-grain" aria-hidden="true" />
-
       {mounted && createPortal(
-        <>
-          <div className="lib-cursor" ref={cursorRef} aria-hidden="true">
-            <i className="lib-ring" /><i className="lib-dot" />
-            <span className="lib-lbl lib-cur-lbl">OPEN<br />BOOK</span>
-          </div>
-
-          <div className="lib-detail" ref={detailRef} role="dialog" aria-modal="true" aria-label={db.title} aria-hidden={!open} data-no-ember>
-            <div className="lib-d-top">
-              <button type="button" className="lib-lbl lib-box lib-close" onClick={() => api.current?.close()}>CLOSE</button>
-              <div className="lib-logo lib-logo--d"><span className="lib-logo__t">The Reading Room</span><span className="lib-logo__s">KARTHIK MANNEM</span></div>
-            </div>
-            <div className="lib-d-grid">
-              <div className="lib-d-text">
-                <div className="lib-mask"><div data-line className="lib-lbl lib-cobalt">{upper(db.author)} / {upper(db.genre)}</div></div>
-                <div className="lib-mask"><h3 data-line className={`lib-d-title${long ? " is-long" : ""}`}>{db.title}</h3></div>
-                <div className="lib-mask"><div data-line className="lib-lbl lib-muted">{statusLabel(db.status)} / {upper(db.cat)} SHELF</div></div>
-                <div className="lib-mask"><p data-line className="lib-d-syn">{db.lesson}</p></div>
-                {db.story && <div className="lib-mask"><p data-line className="lib-d-credit">{db.story}</p></div>}
-                {db.concept && <div className="lib-mask"><div data-line className="lib-lbl lib-muted">KEY IDEAS / {upper(db.concept).replace(/\.$/, "")}</div></div>}
-                <div className="lib-mask"><button data-line type="button" className="lib-lbl lib-watch" onClick={() => api.current?.close()}>BACK TO THE SHELF</button></div>
-              </div>
-              <div className="lib-d-poster">
+        <div className="gx-over gx-over--lib lib-over" ref={detailRef} role="dialog" aria-modal="true" aria-label={db.title} aria-hidden={!open} data-no-ember>
+          <div className="gx-over__in" ref={innerRef}>
+            <header className="gx-over__bar">
+              <button ref={closeRef} type="button" className="gx-over__close" onClick={() => api.current?.close()}>← Back to the shelf <kbd>Esc</kbd></button>
+              <span className="gx-over__t">Reading note</span>
+              <span className="ex-mono lib-over__n">{String(detailIdx + 1).padStart(2, "0")} / {N}</span>
+            </header>
+            <div className="lib-over__body">
+              <div className="lib-over__poster">
                 <svg viewBox={`0 0 ${COVER_W} 900`} aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-                  <defs>
-                    <filter id="lib-inkf" filterUnits="userSpaceOnUse" x="-300" y="-300" width="1212" height="1500">
-                      <feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="3" seed="7" result="n" />
-                      <feDisplacementMap in="SourceGraphic" in2="n" scale="120" xChannelSelector="R" yChannelSelector="G" />
-                    </filter>
-                    <mask id="lib-ink" maskUnits="userSpaceOnUse" x="-200" y="-200" width="1012" height="1300">
-                      <g filter="url(#lib-inkf)">
-                        {BLOBS.map((b, i) => <circle key={i} className="lib-ink-c" cx={b.cx} cy={b.cy} r="0" data-delay={b.delay} fill="#fff" />)}
-                      </g>
-                    </mask>
-                  </defs>
-                  <g mask="url(#lib-ink)">
-                    <CoverShapes book={db} />
-                    {db.cover && (<>
-                      <rect width={COVER_W} height="900" fill={db.cover.tint} />
-                      <image href={db.cover.src} x="0" y="0" width={COVER_W} height="900" preserveAspectRatio="xMidYMid meet" />
-                    </>)}
-                  </g>
+                  <CoverShapes book={db} />
+                  {db.cover && coverOk === db.cover.src && (<>
+                    <rect data-cover-tint width={COVER_W} height="900" fill={db.cover.tint} />
+                    <image data-cover-image href={db.cover.src} x="0" y="0" width={COVER_W} height="900" preserveAspectRatio="xMidYMid meet" />
+                  </>)}
                 </svg>
               </div>
+              <div className="lib-over__text">
+                <p className="ex-mono lib-over__eyebrow">{db.author} · {db.genre}</p>
+                <h3 className={`lib-over__title${db.title.length > 34 ? " is-long" : ""}`}>{db.title}</h3>
+                <p className="ex-mono lib-over__status" data-reading={db.status === "Reading" ? "1" : "0"}>{statusLabel(db.status)} · {db.cat} shelf</p>
+                <p className="lib-over__lesson">{db.lesson}</p>
+                {db.story && <p className="lib-over__story">{db.story}</p>}
+                {db.concept && <p className="ex-mono lib-over__ideas"><span>Key ideas</span> {db.concept.replace(/\.$/, "")}</p>}
+              </div>
             </div>
           </div>
-        </>,
+        </div>,
         document.body,
       )}
     </section>
