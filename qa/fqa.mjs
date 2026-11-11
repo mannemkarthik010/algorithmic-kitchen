@@ -488,7 +488,7 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
     await s.ev(`document.querySelector('.lib-ctl').scrollIntoView({block:'center'})`); await sleep(800);
     const hits = await s.ev(`(()=>{const out=[]; for(const e of document.querySelectorAll('.lib-ctl button, .lib-tab')){const r=e.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) continue; const x=r.x+r.width/2, y=r.y+r.height/2; const hit=document.elementFromPoint(x,y); let f=hit; while(f&&f!==document.body&&getComputedStyle(f).position!=='fixed') f=f.parentElement; out.push({n:(e.getAttribute('aria-label')||e.innerText).trim().slice(0,20), ok:hit===e||e.contains(hit), by: (hit===e||e.contains(hit))?'':(f&&f!==document.body?(f.className||f.tagName).toString().slice(0,20)+' (fixed)':String(hit?.className||hit?.tagName).slice(0,20))})} return out})()`);
     rec(`${L}: with the action row in the middle of the screen, a touch at the centre of each visible control reaches that control`, hits.length >= 3 && hits.every((x) => x.ok), `${hits.length} checked; ${hits.filter((x) => !x.ok).map((x) => `${x.n} hit by ${x.by}`).join("; ") || "none obstructed"}`);
-    // the page's own fixed Sound and Terminal buttons must not cover the action row wherever it is on the screen (the full sweep is the rr-fixed suite)
+    // the page's own fixed Terminal button must not cover the action row wherever it is on the screen (the full sweep is the rr-fixed suite)
     const zones = [];
     for (const frac of [0.2, 0.5, 0.85, 0.95]) {
       await s.ev(`(()=>{const r=document.querySelector('.lib-ctl').getBoundingClientRect(); scrollBy(0, r.top + r.height/2 - innerHeight*${frac})})()`); await sleep(500);
@@ -695,10 +695,18 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
       s.done();
     }
   }
-  // ═══ the page's fixed Sound and Terminal buttons against the Reading Room's controls ═══
+  // ═══ the page's fixed Terminal button against the Reading Room's controls (the Sound button was removed) ═══
   if (mode === "reading-room-fab") {
     // The row is scrolled to many heights, down into the bottom band of the screen where the fixed buttons sit, and the centre of every
     // Reading Room control is checked: it must be what a pointer would hit. The two fixed buttons must themselves stay present and usable.
+    // The site has no background sound: no sound control, no audio elements, no shipped script that references the ambient loop, and the file is gone.
+    {
+      const s = await session();
+      await s.go("/lab", 6500);
+      const r = await s.ev(`(async()=>{ const ctl=[...document.querySelectorAll('button,a')].filter(e=>/sound|mute|audio|music/i.test((e.getAttribute('aria-label')||'')+' '+e.innerText)).map(e=>(e.getAttribute('aria-label')||e.innerText).trim().slice(0,30)); const scripts=[...document.querySelectorAll('script[src]')].map(x=>x.src).filter(u=>new URL(u).origin===location.origin); let hits=[]; for (const u of scripts) { try { const t=await (await fetch(u)).text(); if (/ambient-kitchen/.test(t)) hits.push(u.split('/').pop()); } catch {} } const f=await fetch('/sounds/ambient-kitchen.mp3'); return {ctl, media:document.querySelectorAll('audio,video').length, scripts:scripts.length, hits, fileStatus:f.status, htmlMentions:document.documentElement.innerHTML.includes('ambient-kitchen')}; })()`);
+      rec("/lab has no sound control, no audio or video element, no script that references the ambient loop, and the loop file is no longer served", r.ctl.length === 0 && r.media === 0 && r.scripts >= 3 && r.hits.length === 0 && r.fileStatus === 404 && !r.htmlMentions, `controls: ${r.ctl.join(", ") || "none"}; media elements ${r.media}; ${r.scripts} scripts checked, ${r.hits.length} mention the loop; file status ${r.fileStatus}`);
+      s.done();
+    }
     for (const [w, h, name] of [[360, 740, "360x740 phone"], [390, 844, "390x844 phone"], [600, 900, "600x900"], [667, 375, "667x375 phone landscape"], [844, 390, "844x390 phone landscape"], [1024, 768, "1024x768"]]) {
       const s = await session({ w, h, mobile: w < 1000, touch: w < 1000 });
       await toLib(s);
@@ -714,7 +722,7 @@ if (mode === "reading-room" || mode === "reading-room-covers" || mode === "readi
       }
       rec(`${name}: at every scroll height tried, including the bottom 110px of the screen, nothing covers Previous, Open reading note, Next, the credit link or a shelf tab`, bad.length === 0 && checks >= 60 && inBand >= 8, `${checks} control checks (${inBand} with the control in the bottom band); ${[...new Set(bad)].slice(0, 4).join("; ") || "none covered"}`);
       const fab = await s.ev(`[...document.querySelectorAll('.lab-fab')].map(e=>{const r=e.getBoundingClientRect(); const hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2); return {n:e.getAttribute('aria-label'), w:Math.round(r.width), h:Math.round(r.height), vis:r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight, own:hit===e||e.contains(hit)}})`);
-      rec(`${name}: the Sound and Terminal buttons are both still on screen, hit at their centres and large enough to touch (at least 40px)`, fab.length === 2 && fab.every((f) => f.vis && f.own && f.w >= (w <= 767 ? 40 : 90) && f.h >= (w <= 767 ? 40 : 28)), fab.map((f) => `${f.n} ${f.w}x${f.h}`).join("; "));
+      rec(`${name}: the Terminal button is still on screen, hit at its centre and large enough to touch (at least 40px), and it is the only fixed button`, fab.length === 1 && fab[0].n === "Open developer terminal" && fab[0].vis && fab[0].own && fab[0].w >= (w <= 767 ? 40 : 90) && fab[0].h >= (w <= 767 ? 40 : 28), fab.map((f) => `${f.n} ${f.w}x${f.h}`).join("; ") || "no fixed button found");
       s.done();
     }
   }

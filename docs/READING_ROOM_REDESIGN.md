@@ -1,5 +1,7 @@
 # Reading Room redesign (`/lab`)
 
+> **Update (after this document was written):** the site's background sound and the fixed **Sound** button were removed, so `app/components/SoundToggle.tsx` no longer exists and the "Sound" mentions below describe the state at that time. Only the Terminal button remains in the fixed corner.
+
 Branch `redesign/reading-room`, cut from `bbbb543` (the manual-review candidate on `redesign/exhibition`, which is untouched). Nothing here is merged, deployed or pushed.
 
 Scope: the Reading Room section, plus two small supporting changes it turned out to need (both described under "Finishing pass" and "Fixed Sound and Terminal buttons"). The homepage, the case studies, the game, the hero and ECHO//SHIFT block of `/lab`, and the rest of the navigation are unchanged. Application code changed in six files: `app/components/Library.tsx`, `app/exhibit/exhibit.css` and `app/globals.css` (the Reading Room's styles; in `globals.css` only `.lib*` rules were removed); `app/exhibit/ExNav.tsx` (one selector, so the navigation bar also steps aside for the Reading Room's shelf tabs, action row and credit link, as it already did for the gallery); and `app/components/SoundToggle.tsx` and `app/components/Terminal.tsx` (class names and label spans only, so that on a phone the page's fixed Sound and Terminal buttons can shrink to 40 px squares; only `/lab` renders them, and the matching rules in `exhibit.css` apply at 767 px and below). The QA scripts (`qa/fqa.mjs`, `qa/run-all.mjs`, `qa/README.md`) gained the Reading Room suites.

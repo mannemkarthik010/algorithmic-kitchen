@@ -755,14 +755,13 @@ body:has(.exnav.is-hidden) .cn { top: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .lib-tab, .lib-arrow, .lib-cover-img.is-ok { transition: none; } }
 
-/* The page's fixed Sound and Terminal buttons (only /lab renders them). On a phone they shrink to 40px squares against the right edge, so they
-   can never sit over the Reading Room's controls: the shelf pills end left of that edge and the action row ends about 8px short of it at 360px wide.
-   Their accessible names are unchanged. */
+/* The page's fixed Terminal button (only /lab renders it; there used to be a Sound button above it, now removed). On a phone it shrinks to a 40px
+   square against the right edge, so it can never sit over the Reading Room's controls: the shelf pills end left of that edge and the action row ends
+   about 8px short of it at 360px wide. Its accessible name is unchanged. */
 .lab-ex .lab-fab__glyph { display: none; }
 @media (max-width: 767px) {
   .lab-ex .lab-fab { right: 4px !important; width: 40px; height: 40px; padding: 0 !important; gap: 0 !important; justify-content: center; box-sizing: border-box; }
   .lab-ex .lab-fab__label, .lab-ex .lab-fab__key { display: none; }
   .lab-ex .lab-fab__glyph { display: inline; color: var(--gold); font-size: 12px; }
   .lab-ex .lab-fab--term { bottom: 12px !important; }
-  .lab-ex .lab-fab--sound { bottom: 58px !important; }
 }

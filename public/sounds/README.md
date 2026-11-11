@@ -11,7 +11,6 @@ no attribution required) — not empty placeholders and not synthesized audio.
 | `error.mp3` | ~1.3s | ~41 KB | Contact form send failure, ChefGPT chat error |
 | `notification.mp3` | ~1.3s | ~43 KB | Contact form sent successfully, ChefGPT chat reply received |
 | `timer.mp3` | ~1.3s | ~43 KB | Reserved — not wired to any feature yet (no timer UI exists in this portfolio). Safe to use if you add one. |
-| `ambient-kitchen.mp3` | ~62s loop | ~1.8 MB | Background ambience loop after the hero reveal |
 
 ## Replacing these files
 
