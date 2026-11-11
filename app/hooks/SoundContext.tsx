@@ -1,53 +1,30 @@
 "use client";
 
-import { createContext, useContext, useState, useRef, useCallback, ReactNode, MutableRefObject } from "react";
+import { createContext, useContext, useRef, ReactNode, MutableRefObject } from "react";
 
 interface SoundContextType {
+  /** Always true: the site has no background sound and no control that switches sound on. */
   muted: boolean;
-  toggle: () => void;
-  /** Shared audio element cache — lets toggle() stop every sound immediately on mute. */
+  /** Shared audio element cache used by useSoundFx. */
   registry: MutableRefObject<Map<string, HTMLAudioElement>>;
 }
 
-const AMBIENT = "/sounds/ambient-kitchen.mp3";
 const noopRegistry = { current: new Map<string, HTMLAudioElement>() };
 
 const SoundContext = createContext<SoundContextType>({
   muted: true,
-  toggle: () => {},
   registry: noopRegistry,
 });
 
+/**
+ * The ambient background loop and its Sound button were removed. Nothing starts audio on its own and nothing
+ * can unmute, so the interface click sounds that still call useSoundFx stay silent. (The game at /play has its
+ * own optional synthesized effects, switched in its own settings, which do not use this context.)
+ */
 export function SoundProvider({ children }: { children: ReactNode }) {
-  // Sound is opt-in: browsers block autoplay anyway, so the site starts silent
-  // and the toggle starts the ambient loop on the visitor's first click.
-  const [muted, setMuted] = useState(true);
   const registry = useRef<Map<string, HTMLAudioElement>>(new Map());
-
-  const toggle = useCallback(() => {
-    const next = !muted;
-    setMuted(next);
-    if (next) {
-      // Muting: stop every currently playing sound immediately, including any ambient loop.
-      registry.current.forEach((audio) => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-      return;
-    }
-    let ambient = registry.current.get(AMBIENT);
-    if (!ambient) {
-      ambient = new Audio(AMBIENT);
-      ambient.addEventListener("error", () => {});
-      registry.current.set(AMBIENT, ambient);
-    }
-    ambient.loop = true;
-    ambient.volume = 0.06;
-    ambient.play().catch(() => {});
-  }, [muted]);
-
   return (
-    <SoundContext.Provider value={{ muted, toggle, registry }}>
+    <SoundContext.Provider value={{ muted: true, registry }}>
       {children}
     </SoundContext.Provider>
   );

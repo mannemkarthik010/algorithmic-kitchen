@@ -4,7 +4,6 @@ import Link from "next/link";
 import Nav from "./Nav";
 import Library from "./Library";
 import Terminal from "./Terminal";
-import SoundToggle from "./SoundToggle";
 import CommandPalette from "./CommandPalette";
 
 /** The Lab: the one game, the reading room, and a terminal. The old mini-games live in Git history. */
@@ -38,7 +37,6 @@ export default function LabPage() {
 
       <Library />
       <Terminal />
-      <SoundToggle />
       <CommandPalette />
     </main>
   );
